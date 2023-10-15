@@ -1,24 +1,24 @@
 package com.backendIntegrador.service.impl;
 
-import com.backendIntegrador.model.Client;
-import com.backendIntegrador.repository.ClientRepository;
-import com.backendIntegrador.service.IClientService;
+import com.backendIntegrador.model.Reserve;
+import com.backendIntegrador.repository.ReserveRepository;
+import com.backendIntegrador.service.IReserveService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
-public class ClientService implements IClientService {
-    @Autowired
-    private final ClientRepository clientRepository;
+public class ReserveService implements IReserveService {
 
     @Autowired
-    public ClientService( ClientRepository clientRepository ) {
-        this.clientRepository = clientRepository;
+    private final ReserveRepository reserveRepository;
+
+    @Autowired
+    public ReserveService( ReserveRepository reserveRepository ) {
+        this.reserveRepository = reserveRepository;
     }
 
     @Autowired
@@ -26,41 +26,40 @@ public class ClientService implements IClientService {
 
     @Override
     @Transactional
-    public Client save( Client client ) throws Exception {
+    public Reserve save( Reserve reserve ) throws Exception {
         try {
-            clientRepository.save(client);
-            return client;
+            reserveRepository.save(reserve);
+            return reserve;
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
     }
+
 
     @Override
     @Transactional
-    public List<Client> clientList() throws Exception {
+    public List<Reserve> reserveList() throws Exception {
         try {
-            return clientRepository.findAll();
+            return reserveRepository.findAll();
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
     }
 
     @Override
-    public Client getClientById( String id ) throws Exception {
+    public Reserve getReserveById( String id ) throws Exception {
         try {
-            return clientRepository.findById(id).orElse(null);
+            return reserveRepository.findById(id).orElse(null);
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
-
-
     }
 
     @Override
     public boolean delete( String id ) throws Exception {
         try {
-            if (clientRepository.existsById(id)) {
-                clientRepository.deleteById(id);
+            if (reserveRepository.existsById(id)) {
+                reserveRepository.deleteById(id);
                 return true;
             }
 
@@ -68,12 +67,6 @@ public class ClientService implements IClientService {
             throw new Exception(e.getMessage());
         }
         return false;
+
     }
-
-    @Override
-    public Optional<Client> getClientByClientName( String clientName ) {
-        return clientRepository.findByClientName(clientName);
-    }
-
-
 }

@@ -1,24 +1,24 @@
 package com.backendIntegrador.service.impl;
 
-import com.backendIntegrador.model.Client;
-import com.backendIntegrador.repository.ClientRepository;
-import com.backendIntegrador.service.IClientService;
+import com.backendIntegrador.model.Product;
+import com.backendIntegrador.repository.ProductRespository;
+import com.backendIntegrador.service.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
-public class ClientService implements IClientService {
-    @Autowired
-    private final ClientRepository clientRepository;
+public class ProductService implements IProductService {
 
     @Autowired
-    public ClientService( ClientRepository clientRepository ) {
-        this.clientRepository = clientRepository;
+    private final ProductRespository productRespository;
+
+    @Autowired
+    public ProductService( ProductRespository productRespository ) {
+        this.productRespository = productRespository;
     }
 
     @Autowired
@@ -26,41 +26,39 @@ public class ClientService implements IClientService {
 
     @Override
     @Transactional
-    public Client save( Client client ) throws Exception {
+    public Product save( Product product ) throws Exception {
         try {
-            clientRepository.save(client);
-            return client;
+            productRespository.save(product);
+            return product;
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
     }
 
     @Override
-    @Transactional
-    public List<Client> clientList() throws Exception {
+    public List<Product> productList() throws Exception {
         try {
-            return clientRepository.findAll();
+            return productRespository.findAll();
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
+
     }
 
     @Override
-    public Client getClientById( String id ) throws Exception {
+    public Product getProductById( String id ) throws Exception {
         try {
-            return clientRepository.findById(id).orElse(null);
+            return productRespository.findById(id).orElse(null);
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
-
-
     }
 
     @Override
     public boolean delete( String id ) throws Exception {
         try {
-            if (clientRepository.existsById(id)) {
-                clientRepository.deleteById(id);
+            if (productRespository.existsById(id)) {
+                productRespository.deleteById(id);
                 return true;
             }
 
@@ -69,11 +67,4 @@ public class ClientService implements IClientService {
         }
         return false;
     }
-
-    @Override
-    public Optional<Client> getClientByClientName( String clientName ) {
-        return clientRepository.findByClientName(clientName);
-    }
-
-
 }
