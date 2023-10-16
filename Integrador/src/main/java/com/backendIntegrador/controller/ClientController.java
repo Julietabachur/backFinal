@@ -8,10 +8,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @RestController
 @RequestMapping("api/v1/clients")
@@ -30,6 +31,25 @@ public class ClientController {
         }
 
     }
+
+    @GetMapping("/getMe")
+    public ResponseEntity<?> getUserData() {
+        // Get the authenticated user's details
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        // You can access user details, such as username, email, etc., from userDetails
+        String username = userDetails.getUsername();
+        // You can also access other user-specific information depending on your application's UserDetailsService implementation.
+
+        // Return the user data as a JSON response
+        Map<String, Object> response = new HashMap<>();
+        response.put("username", username);
+
+        // Add other user data as needed
+
+        return ResponseEntity.ok(response);
+    }
+
 
     @GetMapping("")
     public ResponseEntity<?> findAll() {
@@ -70,9 +90,29 @@ public class ClientController {
         }
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<?> getPersonByUsername( @RequestParam("username") String username ) {
+        Optional<Client> user = clientService.getClientByClientName(username);
+
+
+        if (user.isPresent()) {
+            // Clonar el objeto Person y eliminar el campo 'password'
+            Client userWithoutPassword = user.get();
+            userWithoutPassword.setPassword(null);
+
+            // Devolver la respuesta con el objeto modificado
+            return ResponseEntity.ok().body(userWithoutPassword);
+        } else {
+            // Manejar el caso en que el usuario no existe
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete( @PathVariable("id") String id ) throws Exception {
         clientService.delete(id);
         return ResponseEntity.noContent().build();
     }
+
+
 }
