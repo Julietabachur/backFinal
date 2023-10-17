@@ -9,6 +9,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data //getters y setters
 @Builder
@@ -19,11 +20,13 @@ import java.time.LocalDate;
 public class Product {
     @Id
     private String id;
-    private String productName;
-    private Size productSize;
+    private String name;
+    private Size size;
     private Type type;
     private LocalDate productionTime;
     private String set;
     private String customSet;
+    private String thumbnail;
+    private List<String> gallery;
 
 }

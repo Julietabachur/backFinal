@@ -19,7 +19,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor //constructor vacio
 @AllArgsConstructor //constructor con todos los atributos
-@Document(collection = "client") // nombre de la ubicación de los datos en la BD
+@Document(collection = "client") // nombre de la ubicación de los datos en la BD de mongo
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Client implements UserDetails {
 
