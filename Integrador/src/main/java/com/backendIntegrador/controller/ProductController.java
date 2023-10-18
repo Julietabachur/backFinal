@@ -5,9 +5,12 @@ import com.backendIntegrador.model.Product;
 import com.backendIntegrador.service.impl.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 
 import java.util.List;
 
@@ -18,6 +21,9 @@ public class ProductController {
 
     @Autowired
     private final ProductService productService;
+
+    @Autowired
+    private final MongoTemplate mongoTemplate;
 
     @PostMapping("")
     public ResponseEntity<?> save( @RequestBody Product product ) {
@@ -39,6 +45,18 @@ public class ProductController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error. en Findall");
         }
 
+    }
+
+
+    //metodo para que en vez de obtener todos los productos solo mande 10
+    @GetMapping("/gallery")
+    public ResponseEntity<List<Product>> getTenItems(){
+        int limit = 10;
+
+        Query query = new Query().limit(limit);
+        List<Product> limitedList = mongoTemplate.find(query, Product.class);
+
+        return  ResponseEntity.ok(limitedList);
     }
 
 
