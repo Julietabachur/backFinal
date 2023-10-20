@@ -4,7 +4,6 @@ package com.backendIntegrador.controller;
 import com.backendIntegrador.model.Product;
 import com.backendIntegrador.service.impl.ProductService;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -31,6 +30,7 @@ public class ProductController {
     }
 
     @PostMapping("")
+    @PreAuthorize("hasAuthority('admin:create')")
     public ResponseEntity<?> save( @RequestBody Product product ) {
         Product checkedProduct = productService.checkProductName(product.getProductName());
         if (checkedProduct == null) {
@@ -56,18 +56,8 @@ public class ProductController {
 
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getProductById( @PathVariable("id") String id ) {
-        try {
-            Product product = productService.getProductById(id);
-
-            return ResponseEntity.ok().body(product);
-        } catch (Exception e) {
-            return ResponseEntity.status((HttpStatus.NOT_FOUND)).body("{\"error\":\"Error. En getProductById\"}");
-        }
-    }
-
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('admin:delete')")
     public ResponseEntity<?> delete( @PathVariable("id") String id ) throws Exception {
         productService.delete(id);
         return ResponseEntity.noContent().build();
