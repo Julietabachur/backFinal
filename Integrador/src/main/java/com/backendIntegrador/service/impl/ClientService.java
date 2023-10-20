@@ -75,5 +75,16 @@ public class ClientService implements IClientService {
         return clientRepository.findByClientName(clientName);
     }
 
+    @Override
+    public Client checkEmail( String email ) {
+        return clientRepository.checkEmail(email);
+    }
+
+    @Override
+    public Client checkClientName( String clientName ) {
+
+        return clientRepository.checkClientName(clientName);
+    }
+
 
 }

@@ -20,13 +20,14 @@ import java.util.List;
 public class Product {
     @Id
     private String id;
-    private String name;
-    private Size size;
+    private String productName;
+    private Size productSize;
     private Type type;
     private LocalDate productionTime;
-    private String set;
-    private String customSet;
     private String thumbnail;
     private List<String> gallery;
+    private String set;
+    private String customSet;
+    private String Detail;
 
 }
