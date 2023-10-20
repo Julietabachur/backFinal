@@ -15,6 +15,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+import static com.backendIntegrador.model.Role.ADMIN;
+
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -31,9 +33,11 @@ public class SecurityConfig {
                                 .disable())
                 .authorizeHttpRequests(authRequest ->
                         authRequest
-                                .requestMatchers("/admin/**").hasRole("ADMIN")
+                                .requestMatchers("/api/v1/admin/**").hasRole(ADMIN.name())
                                 .requestMatchers("/auth/**").permitAll()
-                                .anyRequest().authenticated()
+                                .requestMatchers("/api/v1/public/**").permitAll()
+                                .anyRequest()
+                                .authenticated()
                 )
                 .sessionManagement(sessionManager ->
                         sessionManager
