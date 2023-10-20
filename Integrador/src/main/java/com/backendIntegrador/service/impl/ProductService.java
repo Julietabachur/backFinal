@@ -4,6 +4,8 @@ import com.backendIntegrador.model.Product;
 import com.backendIntegrador.repository.ProductRespository;
 import com.backendIntegrador.service.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,9 +38,9 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public List<Product> productList() throws Exception {
+    public Page<Product> productList( Pageable pageable ) throws Exception {
         try {
-            return productRespository.findAll();
+            return productRespository.findAll(pageable);
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
@@ -67,4 +69,16 @@ public class ProductService implements IProductService {
         }
         return false;
     }
+
+    @Override
+    public List<Product> productPublicList() {
+        return productRespository.findAll();
+    }
+
+    @Override
+    public Product checkProductName( String productName ) {
+        return productRespository.checkProductName(productName);
+    }
+
+
 }

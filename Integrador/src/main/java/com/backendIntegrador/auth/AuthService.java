@@ -25,7 +25,7 @@ public class AuthService {
         // Autenticar al usuario utilizando el gestor de autenticación
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getClientName(), request.getPassword()));
         // Obtener detalles del usuario desde el repositorio
-        UserDetails user = clientRepository.findByClientName(request.getClientName()).orElseThrow();
+        Client user = clientRepository.findByClientName(request.getClientName()).orElseThrow();
         // Generar un token JWT para el usuario autenticado
         String token = jwtService.getToken(user);
         // Devolver una respuesta de autenticación que incluye el token

@@ -17,4 +17,8 @@ public interface IClientService {
 
     @Transactional
     Optional<Client> getClientByClientName( String clientName );
+
+    Client checkEmail(String email);
+
+    Client checkClientName( String clientName );
 }
