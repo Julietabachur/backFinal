@@ -22,8 +22,8 @@ public class ProductController {
     @Autowired
     private final ProductService productService;
 
-    @GetMapping("/clientName")
-    public boolean checkClientName( @RequestParam String productName ) {
+    @GetMapping("/productName")
+    public boolean checkProductName( @RequestParam String productName ) {
         Product product = productService.checkProductName(productName);
         return product == null;
 
