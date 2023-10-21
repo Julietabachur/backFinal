@@ -1,7 +1,8 @@
 package com.backendIntegrador.service.impl;
 
 import com.backendIntegrador.model.Product;
-import com.backendIntegrador.repository.ProductRespository;
+import com.backendIntegrador.model.Type;
+import com.backendIntegrador.repository.ProductRepository;
 import com.backendIntegrador.service.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -16,14 +17,14 @@ import java.util.List;
 public class ProductService implements IProductService {
 
     @Autowired
-    private final ProductRespository productRespository;
+    private final ProductRepository productRepository;
 
     @Autowired
     private final ProductIdService productIdService = null;
 
     @Autowired
-    public ProductService( ProductRespository productRespository ) {
-        this.productRespository = productRespository;
+    public ProductService( ProductRepository productRepository ) {
+        this.productRepository = productRepository;
     }
 
     @Autowired
@@ -35,7 +36,7 @@ public class ProductService implements IProductService {
         try {
             Long generatedProductId = productIdService.getNextSequence("product");
             product.setProductId(generatedProductId);
-            productRespository.save(product);
+            productRepository.save(product);
             return product;
         } catch (Exception e) {
             throw new Exception(e.getMessage());
@@ -45,17 +46,21 @@ public class ProductService implements IProductService {
     @Override
     public Page<Product> productList( Pageable pageable ) throws Exception {
         try {
-            return productRespository.findAll(pageable);
+            return productRepository.findAll(pageable);
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
 
     }
 
+    public List<Product> getProductsByType( Type type ) {
+        return productRepository.findByType(type);
+    }
+
     @Override
     public Product getProductById( String id ) throws Exception {
         try {
-            return productRespository.findById(id).orElse(null);
+            return productRepository.findById(id).orElse(null);
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
@@ -64,8 +69,8 @@ public class ProductService implements IProductService {
     @Override
     public boolean delete( String id ) throws Exception {
         try {
-            if (productRespository.existsById(id)) {
-                productRespository.deleteById(id);
+            if (productRepository.existsById(id)) {
+                productRepository.deleteById(id);
                 return true;
             }
 
@@ -77,12 +82,12 @@ public class ProductService implements IProductService {
 
     @Override
     public List<Product> productPublicList() {
-        return productRespository.findAll();
+        return productRepository.findAll();
     }
 
     @Override
     public Product checkProductName( String productName ) {
-        return productRespository.checkProductName(productName);
+        return productRepository.checkProductName(productName);
     }
 
 

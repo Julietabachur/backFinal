@@ -1,6 +1,7 @@
 package com.backendIntegrador.service;
 
 import com.backendIntegrador.model.Product;
+import com.backendIntegrador.model.Type;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -21,4 +22,6 @@ public interface IProductService {
     List<Product> productPublicList();
 
     Product checkProductName( String productName );
+
+    List<Product> getProductsByType( Type type );
 }

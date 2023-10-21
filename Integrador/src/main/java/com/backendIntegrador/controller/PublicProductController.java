@@ -2,6 +2,7 @@ package com.backendIntegrador.controller;
 
 
 import com.backendIntegrador.model.Product;
+import com.backendIntegrador.model.Type;
 import com.backendIntegrador.service.impl.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,5 +65,13 @@ public class PublicProductController {
         }
     }
 
+    @GetMapping("/byType/{type}")
+    public ResponseEntity<List<Product>> getProductsByType(@PathVariable Type type) {
+        List<Product> products = productService.getProductsByType(type);
+        if (products.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(products, HttpStatus.OK);
+    }
 
 }
