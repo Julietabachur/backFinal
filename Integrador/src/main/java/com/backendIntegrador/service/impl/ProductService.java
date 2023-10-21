@@ -19,6 +19,9 @@ public class ProductService implements IProductService {
     private final ProductRespository productRespository;
 
     @Autowired
+    private final ProductIdService productIdService = null;
+
+    @Autowired
     public ProductService( ProductRespository productRespository ) {
         this.productRespository = productRespository;
     }
@@ -30,6 +33,8 @@ public class ProductService implements IProductService {
     @Transactional
     public Product save( Product product ) throws Exception {
         try {
+            Long generatedProductId = productIdService.getNextSequence("product");
+            product.setProductId(generatedProductId);
             productRespository.save(product);
             return product;
         } catch (Exception e) {
