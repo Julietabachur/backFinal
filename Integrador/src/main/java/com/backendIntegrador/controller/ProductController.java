@@ -56,6 +56,39 @@ public class ProductController {
 
     }
 
+    @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('admin:update')")
+    public ResponseEntity<?> update(@PathVariable String id, @RequestBody Product updatedProduct) {
+        try {
+            // Verifica si el producto con el ID existe
+            Product existingProduct = productService.getProductById(id);
+
+            if (existingProduct == null) {
+                // Producto no encontrado, devuelve un error 404
+                return ResponseEntity.notFound().build();
+            }
+
+            // Actualiza los campos relevantes del producto con los datos proporcionados
+            existingProduct.setProductName(updatedProduct.getProductName());
+            existingProduct.setProductionTime(updatedProduct.getProductionTime());
+            existingProduct.setCollection(updatedProduct.getCollection());
+            existingProduct.setCustomCollection(updatedProduct.getCustomCollection());
+            existingProduct.setDetail(updatedProduct.getDetail());
+            existingProduct.setProductSize(updatedProduct.getProductSize());
+            existingProduct.setType(updatedProduct.getType());
+            existingProduct.setThumbnail(updatedProduct.getThumbnail());
+            existingProduct.setGallery(updatedProduct.getGallery());
+
+            // Llama al servicio para realizar la actualización
+            Product updated = productService.update(existingProduct);
+
+            return ResponseEntity.ok(updated);
+        } catch (Exception e) {
+            // Maneja cualquier excepción que pueda ocurrir
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error en la actualización");
+        }
+    }
+
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('admin:delete')")
     public ResponseEntity<?> delete( @PathVariable("id") String id ) throws Exception {
