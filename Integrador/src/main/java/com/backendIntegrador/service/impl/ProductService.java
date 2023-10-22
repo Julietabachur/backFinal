@@ -90,5 +90,19 @@ public class ProductService implements IProductService {
         return productRepository.checkProductName(productName);
     }
 
+    /* EDICION  VERIFICAR SI FUNCIONA */
+    @Override
+    public Product editProduct(String id, Product product) throws Exception {
+        try {
+            if (productRepository.existsById(id)) {
+                productRepository.save(product);
+            }
+
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+        return product;
+    }
+
 
 }
