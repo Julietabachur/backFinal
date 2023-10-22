@@ -58,6 +58,27 @@ public class ProductService implements IProductService {
     }
 
     @Override
+    public Product update( Product product ) throws Exception {
+        try {
+            Product existingProduct = productRepository.findById(product.getId()).orElse(null);
+
+            if (existingProduct != null) {
+                Product updatedProduct = productRepository.save(product);
+                return updatedProduct;
+            }else{
+                throw new RuntimeException("El producto no se encontró para la actualización");
+            }
+
+            // Actualiza el producto en la base de datos
+
+
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+
+    }
+
+    @Override
     public Product getProductById( String id ) throws Exception {
         try {
             return productRepository.findById(id).orElse(null);

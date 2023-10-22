@@ -24,4 +24,6 @@ public interface IProductService {
     Product checkProductName( String productName );
 
     List<Product> getProductsByType( Type type );
+
+    Product update( Product existingProduct ) throws Exception;
 }
