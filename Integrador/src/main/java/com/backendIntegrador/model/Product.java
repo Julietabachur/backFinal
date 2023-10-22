@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Data //getters y setters
@@ -24,11 +23,11 @@ public class Product {
     private String productName;
     private Size productSize;
     private Type type;
-    private LocalDate productionTime;
+    private int productionTime;
     private String thumbnail;
     private List<String> gallery;
-    private String set;
-    private String customSet;
+    private String collection;
+    private String customCollection;
     private String Detail;
 
 }
