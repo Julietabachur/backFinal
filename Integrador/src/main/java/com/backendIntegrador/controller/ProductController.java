@@ -63,21 +63,5 @@ public class ProductController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('admin:create')")
-    public ResponseEntity<?> edit( @PathVariable("id") String id , @RequestBody Product product  ) throws Exception {
-        Product checkedProduct = productService.getProductById(id);
-
-        if (checkedProduct != null) {
-            try {
-                return ResponseEntity.ok().body(productService.editProduct(id,product));
-            } catch (Exception e) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\"Error. En save\"}");
-            }
-        } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\"Error. Producto inexistente. No puede editarse.\"}");
-        }
-
-    }
 
 }

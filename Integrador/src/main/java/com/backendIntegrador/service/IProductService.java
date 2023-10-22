@@ -23,8 +23,5 @@ public interface IProductService {
 
     Product checkProductName( String productName );
 
-    Product editProduct(String id, Product product) throws Exception;
-
-
     List<Product> getProductsByType( Type type );
 }
