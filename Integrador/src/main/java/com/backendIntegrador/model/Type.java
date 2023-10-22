@@ -6,4 +6,5 @@ public enum Type {
     SKIRT,
     JACKET,
     PANT,
+    ACCESSORY
 }
