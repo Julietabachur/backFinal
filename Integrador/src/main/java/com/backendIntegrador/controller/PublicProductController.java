@@ -6,8 +6,12 @@ import com.backendIntegrador.model.Type;
 import com.backendIntegrador.service.impl.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,6 +40,8 @@ public class PublicProductController {
         }
 
     }
+
+
     @GetMapping("/random")
     public ResponseEntity<?> findTenRandomProducts() {
         try {
@@ -66,12 +72,14 @@ public class PublicProductController {
     }
 
     @GetMapping("/byType/{type}")
-    public ResponseEntity<List<Product>> getProductsByType(@PathVariable Type type) {
-        List<Product> products = productService.getProductsByType(type);
+    public ResponseEntity<Page<Product>> getProductsByType(@PathVariable Type type, @PageableDefault(page = 0, size = 10)Pageable pageable) throws Exception {
+        Page<Product> products = productService.getProductsByType(pageable, type);
         if (products.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
+
+
 
 }
