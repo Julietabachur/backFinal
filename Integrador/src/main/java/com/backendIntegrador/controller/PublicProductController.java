@@ -29,34 +29,16 @@ public class PublicProductController {
     private final ProductService productService;
 
     @GetMapping("")
-    public ResponseEntity<?> findAll() {
+    public ResponseEntity<?> findAll(@PageableDefault(page = 0, size = 10) Pageable pageable) {
         try {
-            List<Product> productList = productService.productPublicList();
-            Collections.shuffle(productList);
+            Page<Product> productList = productService.productPublicList(pageable);
+
 
             return ResponseEntity.ok().body(productList);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error. en Findall");
         }
 
-    }
-
-
-    @GetMapping("/random")
-    public ResponseEntity<?> findTenRandomProducts() {
-        try {
-            List<Product> productList = productService.productPublicList();
-
-            // Shuffle the entire productList to randomize the order
-            Collections.shuffle(productList);
-
-            // Take the first 10 products to get a random selection
-            List<Product> randomProducts = productList.subList(0, Math.min(productList.size(), 10));
-
-            return ResponseEntity.ok().body(randomProducts);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error in findRandomProducts");
-        }
     }
 
 
