@@ -6,11 +6,18 @@ import com.backendIntegrador.repository.ProductRepository;
 import com.backendIntegrador.service.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
+import org.springframework.data.mongodb.core.aggregation.AggregationResults;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -53,10 +60,10 @@ public class ProductService implements IProductService {
 
     }
 
-    public Page<Product> getProductsByType( Pageable pageable,Type type ) throws Exception {
-        try{
+    public Page<Product> getProductsByType( Pageable pageable, Type type ) throws Exception {
+        try {
             return productRepository.findByType(pageable, type);
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
 
@@ -70,7 +77,7 @@ public class ProductService implements IProductService {
             if (existingProduct != null) {
                 Product updatedProduct = productRepository.save(product);
                 return updatedProduct;
-            }else{
+            } else {
                 throw new RuntimeException("El producto no se encontró para la actualización");
             }
 
@@ -107,8 +114,18 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public List<Product> productPublicList() {
-        return productRepository.findAll();
+    public Page<Product> productPublicList(Pageable pageable) {
+        AggregationOperation sampleOperation = Aggregation.sample(pageable.getPageSize());
+        Aggregation randomAggregation = Aggregation.newAggregation(
+                sampleOperation
+        );
+
+        AggregationResults<Product> aggregationResults = mongoTemplate.aggregate(randomAggregation, "product", Product.class);
+
+        // Reemplaza null con un criterio apropiado para contar documentos, por ejemplo, un filtro vacío.
+        long count = mongoTemplate.count(new Query(), Product.class);
+
+        return PageableExecutionUtils.getPage(aggregationResults.getMappedResults(), pageable, () -> count);
     }
 
     @Override

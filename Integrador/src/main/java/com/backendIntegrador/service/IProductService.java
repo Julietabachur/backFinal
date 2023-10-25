@@ -10,8 +10,6 @@ import java.util.List;
 public interface IProductService {
     Product save( Product product ) throws Exception;
 
-    /*List<Product> productList() throws Exception;*/
-
     Page<Product> productList( Pageable pageable ) throws Exception;
 
     Product getProductById( String id ) throws Exception;
@@ -19,7 +17,7 @@ public interface IProductService {
     boolean delete( String id ) throws Exception;
 
 
-    List<Product> productPublicList();
+    Page<Product> productPublicList(Pageable pageable);
 
     Product checkProductName( String productName );
 
