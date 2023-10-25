@@ -53,8 +53,13 @@ public class ProductService implements IProductService {
 
     }
 
-    public List<Product> getProductsByType( Type type ) {
-        return productRepository.findByType(type);
+    public Page<Product> getProductsByType( Pageable pageable,Type type ) throws Exception {
+        try{
+            return productRepository.findByType(pageable, type);
+        } catch (Exception e){
+            throw new Exception(e.getMessage());
+        }
+
     }
 
     @Override
