@@ -17,7 +17,7 @@ public interface IProductService {
     boolean delete( String id ) throws Exception;
 
 
-    Page<Product> productPublicList(Pageable pageable);
+    Page<Product> getAll(Pageable pageable);
 
     Product checkProductName( String productName );
 
