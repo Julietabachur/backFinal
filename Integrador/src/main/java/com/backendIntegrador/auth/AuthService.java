@@ -39,6 +39,9 @@ public class AuthService {
         // Crear un objeto Cliente con los datos proporcionados en la solicitud
         Client client = Client.builder()
                 .clientName(request.getClientName())
+                .firstName(request.getFirstName())
+                .lastName(request.getLastName())
+                .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword())) // Encriptar la contraseña
                 .role(Role.USER) // Asignar un rol al usuario (en este caso, USER)
                 .build();

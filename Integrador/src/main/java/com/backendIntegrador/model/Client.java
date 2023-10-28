@@ -26,6 +26,8 @@ public class Client implements UserDetails {
 
     @Id
     private String id;
+    private String firstName;
+    private String lastName;
     private String clientName;
     private String password;
     private Role role = Role.USER;
