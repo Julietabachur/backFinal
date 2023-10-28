@@ -8,8 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
@@ -28,7 +26,7 @@ public class PublicProductController {
     private final ProductService productService;
 
     @GetMapping("")
-    public ResponseEntity<?> findAll( @RequestParam Map<String, Object> params, Model model) {
+    public ResponseEntity<?> findAll( @RequestParam Map<String, Object> params, Model model ) {
         int page = params.get("page") != null ? (Integer.parseInt(params.get("page").toString()) - 1) : 0;
 
         PageRequest pageRequest = PageRequest.of(page, 10);
@@ -36,19 +34,21 @@ public class PublicProductController {
         Page<Product> pageProduct = productService.getAll(pageRequest);
 
         int totalPage = pageProduct.getTotalPages();
-        if(totalPage > 0) {
+        if (totalPage > 0) {
             List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
             model.addAttribute("pages", pages);
         }
 
-        model.addAttribute("content", pageProduct.getContent());
+        List<Product> shuffledList = pageProduct.getContent();
+
+
+        model.addAttribute("content", shuffledList);
         model.addAttribute("current", page + 1);
         model.addAttribute("next", page + 2);
         model.addAttribute("prev", page);
         model.addAttribute("last", totalPage);
         return ResponseEntity.ok().body(model);
     }
-
 
 
     @GetMapping("/{id}")
@@ -63,7 +63,7 @@ public class PublicProductController {
     }
 
     @GetMapping("/byType")
-    public ResponseEntity<?> findAllByType( @RequestParam Map<String, Object> params,Type type, Model model ) throws Exception {
+    public ResponseEntity<?> findAllByType( @RequestParam Map<String, Object> params, Type type, Model model ) throws Exception {
 
         int page = params.get("page") != null ? (Integer.parseInt(params.get("page").toString()) - 1) : 0;
 
@@ -72,7 +72,7 @@ public class PublicProductController {
         Page<Product> pageProduct = productService.getProductsByType(pageRequest, type);
 
         int totalPage = pageProduct.getTotalPages();
-        if(totalPage > 0) {
+        if (totalPage > 0) {
             List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
             model.addAttribute("pages", pages);
         }
@@ -83,13 +83,7 @@ public class PublicProductController {
         model.addAttribute("prev", page);
         model.addAttribute("last", totalPage);
         return ResponseEntity.ok().body(model);
-        /*Page<Product> products = productService.getProductsByType(pageable, type);
-        if (products.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(products, HttpStatus.OK);
 
-         */
     }
 
 

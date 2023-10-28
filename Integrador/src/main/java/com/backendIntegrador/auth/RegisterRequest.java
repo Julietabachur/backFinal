@@ -27,6 +27,6 @@ public class RegisterRequest {
     String password;
 
     @NotBlank(message = "El campo de correo electrónico no puede estar en blanco.")
-    @Email(message = "El correo electrónico no es válido.")
+    @Email( regexp = "^[\\w\\.-]+@[a-zA-Z\\d\\.-]+\\.[a-zA-Z]{2,}$",message = "El correo electrónico no es válido.")
     String email;
 }

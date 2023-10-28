@@ -43,6 +43,7 @@ public class JwtService {
 
 
        extraClaims.put("role", user.getRole());
+       extraClaims.put("email", user.getEmail());
 
         return Jwts.builder()
                 .setClaims(extraClaims)  // Agregar claims adicionales (si los hay)
@@ -71,7 +72,7 @@ public class JwtService {
     }
 
     // Método para obtener todos los claims (datos) contenidos en un token
-    private Claims getAllClaims(String token) {
+    public Claims getAllClaims( String token ) {
         return Jwts.parserBuilder()
                 .setSigningKey(getKey())
                 .build()
@@ -97,33 +98,3 @@ public class JwtService {
         return getExpiration(token).isBefore(LocalDateTime.now(ZoneId.of("UTC")));
     }
 }
-/*
-    public String getToken(UserDetails user) {
-        // Llama a la versión sobrecargada de getToken con claims vacíos y el UserDetails del usuario
-        return getToken(new HashMap<>(), user);
-    }
-
-    // Método para generar un token JWT con claims adicionales y detalles del usuario
-    private String getToken(Map<String, Object> extraClaims, UserDetails user) {
-        // Obtener la fecha y hora actual en UTC
-        LocalDateTime currentTime = LocalDateTime.now(ZoneId.of("UTC"));
-
-        // Agregar 7 días a la fecha actual para definir la expiración del token
-        LocalDateTime expirationTime = currentTime.plus(7, ChronoUnit.DAYS);
-
-        if (user.hasRole(Role.ADMIN)) {
-            extraClaims.put("role", "ADMIN");
-        } else {
-            extraClaims.put("role", "USER");
-        }
-
-        extraClaims.put("role", "admin");
-        return Jwts.builder()
-                .setClaims(extraClaims)  // Agregar claims adicionales (si los hay)
-                .setSubject(user.getUsername())  // Establecer el nombre de usuario como el "subject" del token
-                .setIssuedAt(java.sql.Timestamp.valueOf(currentTime))  // Establecer la fecha y hora de emisión del token
-                .setExpiration(java.sql.Timestamp.valueOf(expirationTime))  // Establecer la fecha y hora de expiración del token
-                .signWith(getKey(), SignatureAlgorithm.HS256)  // Firmar el token utilizando una clave
-                .compact();
-    }
-*/
