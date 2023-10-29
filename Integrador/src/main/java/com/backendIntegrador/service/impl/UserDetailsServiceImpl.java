@@ -22,9 +22,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     ClientRepository clientRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         UserDetails user = null;
-        Client client = clientRepository.findByEmail(username);
+        Client client = clientRepository.findByEmail(email);
 
         if (client != null) {
             Set<GrantedAuthority> grantList = new HashSet<>();
@@ -33,7 +33,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 grantList.add(new SimpleGrantedAuthority("ROLE_" + role.name()));
             }
 
-            user = new User(username, client.getPassword(), grantList);
+            user = new User(email, client.getPassword(), grantList);
         }
 
         return user;
