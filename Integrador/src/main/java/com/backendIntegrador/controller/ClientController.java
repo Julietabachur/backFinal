@@ -37,9 +37,12 @@ public class ClientController {
     @GetMapping("/getMe")
     @PreAuthorize("hasAuthority('user:read')")
     public ResponseEntity<?> getUserData() {
+        try{
+
+
         // Get the authenticated user's details
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
+System.out.println(userDetails);
         // You can access user details, such as username, email, etc., from userDetails
         String username = userDetails.getUsername();
         // You can also access other user-specific information depending on your application's UserDetailsService implementation.
@@ -50,7 +53,9 @@ public class ClientController {
 
         // Add other user data as needed
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(response);   }catch(Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error. en getme");
+        }
     }
 
 

@@ -22,7 +22,7 @@ public class AuthService {
     // Método para iniciar sesión
     public AuthResponse login( LoginRequest request ) {
         // Autenticar al usuario utilizando el gestor de autenticación
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken( request.getEmail(), request.getPassword()));
         // Obtener detalles del usuario desde el repositorio
         Client user = clientRepository.findByEmail(request.getEmail()).orElseThrow();
         // Generar un token JWT para el usuario autenticado

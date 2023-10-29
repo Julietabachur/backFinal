@@ -6,6 +6,7 @@ import com.backendIntegrador.repository.ProductRepository;
 import com.backendIntegrador.service.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
@@ -15,6 +16,9 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Collections;
+import java.util.List;
 
 @Service
 public class ProductService implements IProductService {
@@ -46,8 +50,6 @@ public class ProductService implements IProductService {
         }
     }
 
-
-
     @Override
     public Page<Product> productList( Pageable pageable ) throws Exception {
         try {
@@ -55,8 +57,8 @@ public class ProductService implements IProductService {
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
-    }
 
+    }
 
     public Page<Product> getProductsByType( Pageable pageable, Type type ) throws Exception {
         try {
@@ -109,19 +111,10 @@ public class ProductService implements IProductService {
             throw new Exception(e.getMessage());
         }
         return false;
-
-
     }
 
     @Override
-    public Page<Product> getAll(Pageable pageable){
-
-        return productRepository.findAll(pageable);
-    }
-
-    /*
-    @Override
-    public Page<Product> getAll( Pageable pageable ) {
+    public Page<Product> productPublicList(Pageable pageable) {
         AggregationOperation sampleOperation = Aggregation.sample(pageable.getPageSize());
         Aggregation randomAggregation = Aggregation.newAggregation(
                 sampleOperation
@@ -134,9 +127,6 @@ public class ProductService implements IProductService {
 
         return PageableExecutionUtils.getPage(aggregationResults.getMappedResults(), pageable, () -> count);
     }
-
-
-     */
 
     @Override
     public Product checkProductName( String productName ) {

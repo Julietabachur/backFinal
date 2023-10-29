@@ -1,7 +1,6 @@
 package com.backendIntegrador.config;
 
 
-import com.backendIntegrador.model.Client;
 import com.backendIntegrador.repository.ClientRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -10,14 +9,10 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Configuration
 @RequiredArgsConstructor
@@ -27,7 +22,7 @@ public class ApplicationConfig {
 
     // Definición de un bean para AuthenticationManager
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+    public AuthenticationManager authenticationManager( AuthenticationConfiguration config ) throws Exception {
         return config.getAuthenticationManager();
     }
 
@@ -56,14 +51,12 @@ public class ApplicationConfig {
      */
     @Bean
     public UserDetailsService userDetailService() {
-        return email ->
-            clientRepository.findByEmail(email)
-                    .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
-
+        return username ->
+                clientRepository.findByEmail(username)
+                        .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
 
 
     }
-
 
 
 }

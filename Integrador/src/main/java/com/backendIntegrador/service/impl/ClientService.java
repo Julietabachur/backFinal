@@ -76,7 +76,6 @@ public class ClientService implements IClientService {
     }
 
 
-
     @Override
     public Client checkEmail( String email ) {
         return clientRepository.checkEmail(email);
