@@ -1,8 +1,11 @@
 package com.backendIntegrador.config;
 
 
+
 import com.backendIntegrador.repository.ClientRepository;
+import com.backendIntegrador.service.impl.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,7 +21,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @RequiredArgsConstructor
 public class ApplicationConfig {
 
+    @Autowired
     private final ClientRepository clientRepository; // Repositorio para gestionar datos de clientes
+    @Autowired
+    private UserDetailsServiceImpl userDetailsService;
+
 
     // Definición de un bean para AuthenticationManager
     @Bean
@@ -30,10 +37,12 @@ public class ApplicationConfig {
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-        authenticationProvider.setUserDetailsService(userDetailService()); // Configuración del servicio de detalles de usuario
+        authenticationProvider.setUserDetailsService(userDetailsService); // Configuración del servicio de detalles de usuario
         authenticationProvider.setPasswordEncoder(passwordEncoder()); // Configuración del encriptador de contraseñas
         return authenticationProvider;
     }
+
+
 
     // Definición de un bean para el encriptador de contraseñas (BCrypt)
     @Bean
@@ -48,15 +57,7 @@ public class ApplicationConfig {
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
     }
 
-     */
-    @Bean
-    public UserDetailsService userDetailService() {
-        return username ->
-                clientRepository.findByEmail(username)
-                        .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
-
-
-    }
+*/
 
 
 }

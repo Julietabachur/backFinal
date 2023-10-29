@@ -88,7 +88,7 @@ public class ClientService implements IClientService {
     }
 
     @Override
-    public Optional<Client> getClientByEmail( String email ) {
+    public Client getClientByEmail( String email ) {
         return clientRepository.findByEmail(email);
     }
 

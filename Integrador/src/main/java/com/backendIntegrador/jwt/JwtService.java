@@ -40,7 +40,7 @@ public class JwtService {
         LocalDateTime expirationTime = currentTime.plus(7, ChronoUnit.DAYS);
 
 
-        extraClaims.put("ROLE_", user.getRole());
+        extraClaims.put("role", user.getAuthorities());
         extraClaims.put("clientName", user.getClientName());
 
         return Jwts.builder()

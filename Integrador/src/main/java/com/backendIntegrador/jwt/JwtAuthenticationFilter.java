@@ -48,10 +48,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             if (jwtService.isTokenValid(token, userDetails)) {
                 Claims claims = jwtService.getAllClaims(token);
                 String clientName = claims.get("clientName", String.class);
-                String role = claims.get("role", String.class);
+                String role = claims.get("ROLE_", String.class);
 
-                // Crear una autoridad basada en el rol del token
-                SimpleGrantedAuthority roleAuthority = new SimpleGrantedAuthority("ROLE_" + role);
 
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails, // Detalles del usuario
@@ -60,7 +58,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 );
 
                 // Agregar la autoridad del rol
-                authToken.getAuthorities().add(roleAuthority);
+
 
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 

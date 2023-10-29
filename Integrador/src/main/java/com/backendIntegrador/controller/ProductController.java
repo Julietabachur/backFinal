@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/admin/products")
-@PreAuthorize("hasRole('ADMIN')")
 @RequiredArgsConstructor
 public class ProductController {
 
@@ -55,7 +54,6 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('admin:update')")
     public ResponseEntity<?> update( @PathVariable String id, @RequestBody Product updatedProduct ) {
         try {
             // Verifica si el producto con el ID existe
@@ -88,7 +86,6 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('admin:delete')")
     public ResponseEntity<?> delete( @PathVariable("id") String id ) throws Exception {
         productService.delete(id);
         return ResponseEntity.noContent().build();
