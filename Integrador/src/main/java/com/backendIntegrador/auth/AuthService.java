@@ -7,7 +7,6 @@ import com.backendIntegrador.repository.ClientRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -21,11 +20,11 @@ public class AuthService {
     private final AuthenticationManager authenticationManager; // Gestor de autenticación - libreria
 
     // Método para iniciar sesión
-    public AuthResponse login(LoginRequest request) {
+    public AuthResponse login( LoginRequest request ) {
         // Autenticar al usuario utilizando el gestor de autenticación
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getClientName(), request.getPassword()));
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
         // Obtener detalles del usuario desde el repositorio
-        Client user = clientRepository.findByClientName(request.getClientName()).orElseThrow();
+        Client user = clientRepository.findByEmail(request.getEmail()).orElseThrow();
         // Generar un token JWT para el usuario autenticado
         String token = jwtService.getToken(user);
         // Devolver una respuesta de autenticación que incluye el token
@@ -34,11 +33,17 @@ public class AuthService {
                 .build();
     }
 
+
+
+
     // Método para registrar un nuevo usuario
-    public AuthResponse register(RegisterRequest request) {
+    public AuthResponse register( RegisterRequest request ) {
         // Crear un objeto Cliente con los datos proporcionados en la solicitud
         Client client = Client.builder()
                 .clientName(request.getClientName())
+                .firstName(request.getFirstName())
+                .lastName(request.getLastName())
+                .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword())) // Encriptar la contraseña
                 .role(Role.USER) // Asignar un rol al usuario (en este caso, USER)
                 .build();

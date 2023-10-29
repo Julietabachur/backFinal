@@ -1,5 +1,9 @@
 package com.backendIntegrador.jwt;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,12 +19,14 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import javax.crypto.SecretKey;
 import java.io.IOException;
 
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
+    private static final String SECRET_KEY = "586E3272357538782F413F4428472B4B6250655368566B597033733676397924";
     private final JwtService jwtService; // Servicio para trabajar con tokens JWT
     private final UserDetailsService userDetailsService; // Servicio para gestionar detalles de usuarios
 
@@ -36,12 +42,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        username = jwtService.getUsernameFromToken(token); // Obtener el nombre de usuario desde el token
+
+        username = jwtService.getEmailFromToken(token); // Obtener el nombre de usuario desde el token
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(username); // Cargar detalles del usuario
 
             if (jwtService.isTokenValid(token, userDetails)) { // Verificar la validez del token
+
+                   Claims claims = jwtService.getAllClaims(token);
+                String email = claims.get("email", String.class);
+
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails, // Detalles del usuario
                         null,

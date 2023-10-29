@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
@@ -26,13 +25,20 @@ public class Client implements UserDetails {
 
     @Id
     private String id;
+    private String firstName;
+    private String lastName;
     private String clientName;
     private String password;
     private Role role = Role.USER;
     private String email;
     private String cel;
     private Address address;
+    private List<Reserve> reserves;
 
+    public Client(String email, String username) {
+        this.email = email;
+        this.clientName = username;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -43,6 +49,12 @@ public class Client implements UserDetails {
     public String getUsername() {
         return clientName;
     }
+
+
+    public String getEmail() {
+        return email;
+    }
+
 
     @Override
     public boolean isAccountNonExpired() {

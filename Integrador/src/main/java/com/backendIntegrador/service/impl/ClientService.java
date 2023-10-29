@@ -75,6 +75,8 @@ public class ClientService implements IClientService {
         return clientRepository.findByClientName(clientName);
     }
 
+
+
     @Override
     public Client checkEmail( String email ) {
         return clientRepository.checkEmail(email);
@@ -84,6 +86,11 @@ public class ClientService implements IClientService {
     public Client checkClientName( String clientName ) {
 
         return clientRepository.checkClientName(clientName);
+    }
+
+    @Override
+    public Optional<Client> getClientByEmail( String email ) {
+        return clientRepository.findByEmail(email);
     }
 
 
