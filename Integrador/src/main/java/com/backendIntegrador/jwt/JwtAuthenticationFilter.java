@@ -42,14 +42,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        username = jwtService.getUsernameFromToken(token); // Obtener el nombre de usuario desde el token
+
+        username = jwtService.getEmailFromToken(token); // Obtener el nombre de usuario desde el token
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(username); // Cargar detalles del usuario
 
             if (jwtService.isTokenValid(token, userDetails)) { // Verificar la validez del token
-                //SecretKey secret = Keys.hmacShaKeyFor(Decoders.BASE64.decode(SECRET_KEY));
-                //Claims claims = Jwts.parserBuilder().setSigningKey(secret).build().parseClaimsJws(token).getBody();
+
                    Claims claims = jwtService.getAllClaims(token);
                 String email = claims.get("email", String.class);
 

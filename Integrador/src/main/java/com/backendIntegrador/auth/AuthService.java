@@ -7,7 +7,6 @@ import com.backendIntegrador.repository.ClientRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +20,7 @@ public class AuthService {
     private final AuthenticationManager authenticationManager; // Gestor de autenticación - libreria
 
     // Método para iniciar sesión
-    public AuthResponse login(LoginRequest request) {
+    public AuthResponse login( LoginRequest request ) {
         // Autenticar al usuario utilizando el gestor de autenticación
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
         // Obtener detalles del usuario desde el repositorio
@@ -34,8 +33,11 @@ public class AuthService {
                 .build();
     }
 
+
+
+
     // Método para registrar un nuevo usuario
-    public AuthResponse register(RegisterRequest request) {
+    public AuthResponse register( RegisterRequest request ) {
         // Crear un objeto Cliente con los datos proporcionados en la solicitud
         Client client = Client.builder()
                 .clientName(request.getClientName())
