@@ -8,15 +8,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -33,9 +29,9 @@ public class PublicProductController {
     public ResponseEntity<?> findAll( @RequestParam Map<String, Object> params, Model model ) {
         int page = params.get("page") != null ? (Integer.parseInt(params.get("page").toString()) - 1) : 0;
 
+        PageRequest pageRequest = PageRequest.of(page, 10);
 
-
-        Page<Product> pageProduct = productService.productList();
+        Page<Product> pageProduct = productService.getAll(pageRequest);
 
         int totalPage = pageProduct.getTotalPages();
         if (totalPage > 0) {
