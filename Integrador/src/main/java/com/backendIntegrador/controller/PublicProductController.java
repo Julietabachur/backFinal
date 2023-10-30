@@ -38,6 +38,9 @@ public class PublicProductController {
             List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
             model.addAttribute("pages", pages);
         }
+        if(page > totalPage){
+            return ResponseEntity.status((HttpStatus.NOT_FOUND)).body("{\"error\":\"Error. No existe esa pagina\"}");
+        }
 
         List<Product> shuffledList = pageProduct.getContent();
 
@@ -75,6 +78,10 @@ public class PublicProductController {
         if (totalPage > 0) {
             List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
             model.addAttribute("pages", pages);
+        }
+
+        if(page > totalPage){
+            return ResponseEntity.status((HttpStatus.NOT_FOUND)).body("{\"error\":\"Error. No existe esa pagina\"}");
         }
 
         model.addAttribute("content", pageProduct.getContent());
