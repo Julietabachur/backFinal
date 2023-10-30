@@ -17,7 +17,6 @@ import java.util.*;
 
 @RestController
 @RequestMapping("api/v1/private/clients")
-@PreAuthorize("hasRole('USER')")
 @RequiredArgsConstructor
 public class ClientController {
 
@@ -35,22 +34,27 @@ public class ClientController {
     }
 
     @GetMapping("/getMe")
-    @PreAuthorize("hasAuthority('user:read')")
     public ResponseEntity<?> getUserData() {
+        try{
+
+
         // Get the authenticated user's details
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         // You can access user details, such as username, email, etc., from userDetails
         String username = userDetails.getUsername();
+        Client client = clientService.getClientByEmail(username);
         // You can also access other user-specific information depending on your application's UserDetailsService implementation.
 
         // Return the user data as a JSON response
         Map<String, Object> response = new HashMap<>();
-        response.put("username", username);
+        response.put("username",client.getClientName() );
 
         // Add other user data as needed
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(response);   }catch(Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error. en getme");
+        }
     }
 
 

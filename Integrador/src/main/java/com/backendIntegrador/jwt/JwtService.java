@@ -40,7 +40,7 @@ public class JwtService {
         LocalDateTime expirationTime = currentTime.plus(7, ChronoUnit.DAYS);
 
 
-        extraClaims.put("role", user.getRole());
+        extraClaims.put("role", user.getAuthorities());
         extraClaims.put("clientName", user.getClientName());
 
         return Jwts.builder()
@@ -67,8 +67,10 @@ public class JwtService {
      */
 
     public String getEmailFromToken( String token ) {
-        return getClaim(token, claims -> claims.get("email", String.class));
+        return getClaim(token, Claims::getSubject);
     }
+
+
 
     public Claims getAllClaims( String token ) {
         return Jwts.parserBuilder()

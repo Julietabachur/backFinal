@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/admin/products")
-@PreAuthorize("hasRole('ADMIN')")
 @RequiredArgsConstructor
 public class ProductController {
 
@@ -30,7 +29,6 @@ public class ProductController {
     }
 
     @PostMapping("")
-    @PreAuthorize("hasAuthority('admin:create')")
     public ResponseEntity<?> save( @RequestBody Product product ) {
         Product checkedProduct = productService.checkProductName(product.getProductName());
         if (checkedProduct == null) {
@@ -46,19 +44,17 @@ public class ProductController {
     }
 
     @GetMapping("")
-    @PreAuthorize("hasAuthority('admin:read')")
     public Page<Product> findAll( @PageableDefault(page = 0, size = 10) Pageable pageable ) {
         try {
             return productService.productList(pageable);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(e.getMessage());
         }
 
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('admin:update')")
-    public ResponseEntity<?> update(@PathVariable String id, @RequestBody Product updatedProduct) {
+    public ResponseEntity<?> update( @PathVariable String id, @RequestBody Product updatedProduct ) {
         try {
             // Verifica si el producto con el ID existe
             Product existingProduct = productService.getProductById(id);
@@ -90,7 +86,6 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('admin:delete')")
     public ResponseEntity<?> delete( @PathVariable("id") String id ) throws Exception {
         productService.delete(id);
         return ResponseEntity.noContent().build();

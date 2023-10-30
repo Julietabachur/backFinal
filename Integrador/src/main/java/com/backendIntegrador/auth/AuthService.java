@@ -10,6 +10,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -22,9 +24,9 @@ public class AuthService {
     // Método para iniciar sesión
     public AuthResponse login( LoginRequest request ) {
         // Autenticar al usuario utilizando el gestor de autenticación
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken( request.getEmail(), request.getPassword()));
         // Obtener detalles del usuario desde el repositorio
-        Client user = clientRepository.findByEmail(request.getEmail()).orElseThrow();
+        Client user = clientRepository.findByEmail(request.getEmail());
         // Generar un token JWT para el usuario autenticado
         String token = jwtService.getToken(user);
         // Devolver una respuesta de autenticación que incluye el token
@@ -45,7 +47,7 @@ public class AuthService {
                 .lastName(request.getLastName())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword())) // Encriptar la contraseña
-                .role(Role.USER) // Asignar un rol al usuario (en este caso, USER)
+                .roles(Collections.singleton(Role.USER))// Asignar un rol al usuario (en este caso, USER)
                 .build();
 
         // Guardar el nuevo cliente en el repositorio
