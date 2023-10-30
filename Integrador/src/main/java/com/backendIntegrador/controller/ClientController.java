@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -35,24 +34,25 @@ public class ClientController {
 
     @GetMapping("/getMe")
     public ResponseEntity<?> getUserData() {
-        try{
+        try {
 
 
-        // Get the authenticated user's details
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            // Get the authenticated user's details
+            UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        // You can access user details, such as username, email, etc., from userDetails
-        String username = userDetails.getUsername();
-        Client client = clientService.getClientByEmail(username);
-        // You can also access other user-specific information depending on your application's UserDetailsService implementation.
+            // You can access user details, such as username, email, etc., from userDetails
+            String username = userDetails.getUsername();
+            Client client = clientService.getClientByEmail(username);
+            // You can also access other user-specific information depending on your application's UserDetailsService implementation.
 
-        // Return the user data as a JSON response
-        Map<String, Object> response = new HashMap<>();
-        response.put("username",client.getClientName() );
+            // Return the user data as a JSON response
+            Map<String, Object> response = new HashMap<>();
+            response.put("username", client.getClientName());
 
-        // Add other user data as needed
+            // Add other user data as needed
 
-        return ResponseEntity.ok(response);   }catch(Exception e){
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error. en getme");
         }
     }

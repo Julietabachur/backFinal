@@ -6,12 +6,19 @@ import com.backendIntegrador.service.impl.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @RestController
 @RequestMapping("/api/v1/admin/products")
@@ -44,13 +51,28 @@ public class ProductController {
     }
 
     @GetMapping("")
-    public Page<Product> findAll( @PageableDefault(page = 0, size = 10) Pageable pageable ) {
-        try {
-            return productService.productList(pageable);
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
+    public ResponseEntity<?> findAll( @RequestParam Map<String, Object> params, Model model ) {
+        int page = params.get("page") != null ? (Integer.parseInt(params.get("page").toString()) - 1) : 0;
+
+        PageRequest pageRequest = PageRequest.of(page, 10);
+
+        Page<Product> pageProduct = productService.getAll(pageRequest);
+
+        int totalPage = pageProduct.getTotalPages();
+        if (totalPage > 0) {
+            List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
+            model.addAttribute("pages", pages);
         }
 
+        List<Product> shuffledList = pageProduct.getContent();
+
+
+        model.addAttribute("content", shuffledList);
+        model.addAttribute("current", page + 1);
+        model.addAttribute("next", page + 2);
+        model.addAttribute("prev", page);
+        model.addAttribute("last", totalPage);
+        return ResponseEntity.ok().body(model);
     }
 
     @PutMapping("/{id}")
