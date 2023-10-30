@@ -3,11 +3,13 @@ package com.backendIntegrador.controller;
 
 import com.backendIntegrador.DTO.ClientDto;
 import com.backendIntegrador.model.Client;
+import com.backendIntegrador.model.Role;
 import com.backendIntegrador.service.impl.ClientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -43,11 +45,13 @@ public class ClientController {
             // You can access user details, such as username, email, etc., from userDetails
             String username = userDetails.getUsername();
             Client client = clientService.getClientByEmail(username);
+            Collection<? extends GrantedAuthority> roles = userDetails.getAuthorities();
             // You can also access other user-specific information depending on your application's UserDetailsService implementation.
 
             // Return the user data as a JSON response
             Map<String, Object> response = new HashMap<>();
             response.put("username", client.getClientName());
+            response.put("roles", roles);
 
             // Add other user data as needed
 
@@ -66,9 +70,14 @@ public class ClientController {
 
             for (Client client : clientList) {
                 ClientDto clientDto = new ClientDto();
+                clientDto.setFirstName(client.getFirstName());
+                clientDto.setLastName(client.getLastName());
                 clientDto.setClientName(client.getClientName());
                 clientDto.setId(client.getId());
                 clientDto.setEmail(client.getEmail());
+                clientDto.setAddress(client.getAddress());
+                clientDto.setRoles(client.getRoles());
+                clientDto.setReserves(client.getReserves());
                 clientDto.setCel(client.getCel());
                 clientDtoList.add(clientDto);
             }
@@ -86,9 +95,14 @@ public class ClientController {
         try {
             Client client = clientService.getClientById(id);
             ClientDto clientDto = new ClientDto();
+            clientDto.setFirstName(client.getFirstName());
+            clientDto.setLastName(client.getLastName());
             clientDto.setClientName(client.getClientName());
             clientDto.setId(client.getId());
             clientDto.setEmail(client.getEmail());
+            clientDto.setAddress(client.getAddress());
+            clientDto.setRoles(client.getRoles());
+            clientDto.setReserves(client.getReserves());
             clientDto.setCel(client.getCel());
 
             return ResponseEntity.ok().body(clientDto);
@@ -99,16 +113,27 @@ public class ClientController {
 
     @GetMapping("/search")
     public ResponseEntity<?> getPersonByUsername( @RequestParam("username") String username ) {
-        Optional<Client> user = clientService.getClientByClientName(username);
+        Optional<Client> client = clientService.getClientByClientName(username);
 
 
-        if (user.isPresent()) {
+        if (client.isPresent()) {
             // Clonar el objeto Person y eliminar el campo 'password'
-            Client userWithoutPassword = user.get();
-            userWithoutPassword.setPassword(null);
+            //Client userWithoutPassword = user.get();
+            //userWithoutPassword.setPassword(null);
+
+            ClientDto clientDto = new ClientDto();
+            clientDto.setFirstName(client.get().getFirstName());
+            clientDto.setLastName(client.get().getLastName());
+            clientDto.setClientName(client.get().getClientName());
+            clientDto.setId(client.get().getId());
+            clientDto.setEmail(client.get().getEmail());
+            clientDto.setAddress(client.get().getAddress());
+            clientDto.setRoles(client.get().getRoles());
+            clientDto.setReserves(client.get().getReserves());
+            clientDto.setCel(client.get().getCel());
 
             // Devolver la respuesta con el objeto modificado
-            return ResponseEntity.ok().body(userWithoutPassword);
+            return ResponseEntity.ok().body(clientDto);
         } else {
             // Manejar el caso en que el usuario no existe
             return ResponseEntity.notFound().build();
