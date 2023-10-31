@@ -96,24 +96,33 @@ public class ClientService implements IClientService {
     }
 
     @Override
-    public Client update( Client client ) throws Exception {
+    public Client update(Client client) throws Exception {
         try {
             Client existingUser = clientRepository.findById(client.getId()).orElse(null);
 
             if (existingUser != null) {
+                // Update the user's roles
+                existingUser.setFirstName(client.getFirstName());
+                existingUser.setLastName(client.getLastName());
+                existingUser.setClientName(client.getClientName());
+                existingUser.setPassword(client.getPassword());
+                existingUser.setRoles(client.getRoles());
+                existingUser.setEmail(client.getEmail());
+                existingUser.setCel(client.getCel());
+                existingUser.setAddress(client.getAddress());
+                existingUser.setReserves(client.getReserves());
+
+                // Save the updated user to the repository
                 Client updatedUser = clientRepository.save(existingUser);
                 return updatedUser;
             } else {
                 throw new RuntimeException("El usuario no se encontró para la actualización");
             }
-
-            // Actualiza el producto en la base de datos
-
-
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
     }
+
 
 
 }

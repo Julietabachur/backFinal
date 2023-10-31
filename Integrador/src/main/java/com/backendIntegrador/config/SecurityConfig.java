@@ -16,11 +16,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
-import static com.backendIntegrador.model.Permission.*;
-import static com.backendIntegrador.model.Role.ADMIN;
-import static com.backendIntegrador.model.Role.USER;
-import static org.springframework.http.HttpMethod.*;
-
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -48,7 +43,7 @@ public class SecurityConfig {
                 .authenticationProvider(authProvider)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         http.cors();
-        return   http.build();
+        return http.build();
 
 
     }

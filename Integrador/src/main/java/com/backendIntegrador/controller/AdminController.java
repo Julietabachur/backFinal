@@ -2,6 +2,7 @@ package com.backendIntegrador.controller;
 
 import com.backendIntegrador.DTO.ClientDto;
 import com.backendIntegrador.model.Client;
+import com.backendIntegrador.model.Role;
 import com.backendIntegrador.service.impl.ClientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -27,28 +29,45 @@ public class AdminController {
 
 
     @PutMapping("/clients/{id}")
-    public ResponseEntity<?> update( @PathVariable String id, @RequestBody Client updatedClient ) {
+    public ResponseEntity<?> toggleAdminRole(@PathVariable String id) {
         try {
-            // Verifica si el producto con el ID existe
-            Client existingUser = clientService.getClientById(id);
-
-            if (existingUser == null) {
-                // Producto no encontrado, devuelve un error 404
+            // Verifica si el cliente con el ID existe
+            Client existingClient = clientService.getClientById(id);
+            System.out.println(existingClient);
+            if (existingClient == null) {
+                // Cliente no encontrado, devuelve un error 404
                 return ResponseEntity.notFound().build();
             }
 
-            // Actualiza los campos relevantes del producto con los datos proporcionados
-            existingUser.setRoles(updatedClient.getRoles());
+            // Get the current roles of the client
+            Set<Role> roles = existingClient.getRoles();
+
+            // Check if the "admin" role is in the client's roles
+            boolean hasAdminRole = roles.contains(Role.ADMIN);
+            System.out.println(hasAdminRole);
+            boolean hasAdminRoleString = roles.contains("USER");
+
+            // Toggle the "admin" role
+            if (hasAdminRole) {
+                roles.remove(Role.ADMIN); // Remove the "admin" role
+                System.out.println("Removed admin role");
+            } else {
+                roles.add(Role.ADMIN); // Add the "admin" role
+                System.out.println("Added admin role");
+            }
 
             // Llama al servicio para realizar la actualización
-            Client updated = clientService.update(existingUser);
-
+            // Note: Other fields are not updated here, so they remain unchanged
+            Client updated = clientService.update(existingClient);
+            System.out.println("Updated client: " + updated);
             return ResponseEntity.ok(updated);
         } catch (Exception e) {
             // Maneja cualquier excepción que pueda ocurrir
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error en la actualización");
         }
     }
+
+
 
     @GetMapping("/clients")
     public ResponseEntity<?> findAll( @RequestParam Map<String, Object> params, Model model ) throws Exception {
