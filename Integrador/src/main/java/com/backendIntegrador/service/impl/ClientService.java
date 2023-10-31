@@ -1,9 +1,12 @@
 package com.backendIntegrador.service.impl;
 
 import com.backendIntegrador.model.Client;
+import com.backendIntegrador.model.Product;
 import com.backendIntegrador.repository.ClientRepository;
 import com.backendIntegrador.service.IClientService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,9 +40,9 @@ public class ClientService implements IClientService {
 
     @Override
     @Transactional
-    public List<Client> clientList() throws Exception {
+    public Page<Client> clientList( Pageable pageable ) throws Exception {
         try {
-            return clientRepository.findAll();
+            return clientRepository.findAll(pageable);
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
@@ -90,6 +93,26 @@ public class ClientService implements IClientService {
     @Override
     public Client getClientByEmail( String email ) {
         return clientRepository.findByEmail(email);
+    }
+
+    @Override
+    public Client update( Client client ) throws Exception {
+        try {
+            Client existingUser = clientRepository.findById(client.getId()).orElse(null);
+
+            if (existingUser != null) {
+                Client updatedUser = clientRepository.save(existingUser);
+                return updatedUser;
+            } else {
+                throw new RuntimeException("El usuario no se encontró para la actualización");
+            }
+
+            // Actualiza el producto en la base de datos
+
+
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
     }
 
 

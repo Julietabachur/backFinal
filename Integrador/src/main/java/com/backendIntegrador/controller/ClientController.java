@@ -3,18 +3,24 @@ package com.backendIntegrador.controller;
 
 import com.backendIntegrador.DTO.ClientDto;
 import com.backendIntegrador.model.Client;
+import com.backendIntegrador.model.Product;
 import com.backendIntegrador.model.Role;
 import com.backendIntegrador.service.impl.ClientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @RestController
 @RequestMapping("api/v1/private/clients")
@@ -62,33 +68,8 @@ public class ClientController {
     }
 
 
-    @GetMapping("")
-    public ResponseEntity<?> findAll() {
-        try {
-            List<Client> clientList = clientService.clientList();
-            List<ClientDto> clientDtoList = new ArrayList<>();
-
-            for (Client client : clientList) {
-                ClientDto clientDto = new ClientDto();
-                clientDto.setFirstName(client.getFirstName());
-                clientDto.setLastName(client.getLastName());
-                clientDto.setClientName(client.getClientName());
-                clientDto.setId(client.getId());
-                clientDto.setEmail(client.getEmail());
-                clientDto.setAddress(client.getAddress());
-                clientDto.setRoles(client.getRoles());
-                clientDto.setReserves(client.getReserves());
-                clientDto.setCel(client.getCel());
-                clientDtoList.add(clientDto);
-            }
 
 
-            return ResponseEntity.ok().body(clientDtoList);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error. en Findall");
-        }
-
-    }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getClientById( @PathVariable("id") String id ) {
@@ -144,6 +125,37 @@ public class ClientController {
     public ResponseEntity<?> delete( @PathVariable("id") String id ) throws Exception {
         clientService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> update( @PathVariable String id, @RequestBody Client updatedClient ) {
+        try {
+            // Verifica si el producto con el ID existe
+            Client existingUser = clientService.getClientById(id);
+
+            if (existingUser == null) {
+                // Producto no encontrado, devuelve un error 404
+                return ResponseEntity.notFound().build();
+            }
+
+            // Actualiza los campos relevantes del producto con los datos proporcionados
+            existingUser.setClientName(updatedClient.getClientName());
+            existingUser.setFirstName(updatedClient.getFirstName());
+            existingUser.setLastName(updatedClient.getLastName());
+            existingUser.setEmail(updatedClient.getEmail());
+            existingUser.setCel(updatedClient.getCel());
+            existingUser.setReserves(updatedClient.getReserves());
+            existingUser.setAddress(updatedClient.getAddress());
+            existingUser.setPassword(updatedClient.getPassword());
+
+            // Llama al servicio para realizar la actualización
+            Client updated = clientService.update(existingUser);
+
+            return ResponseEntity.ok(updated);
+        } catch (Exception e) {
+            // Maneja cualquier excepción que pueda ocurrir
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error en la actualización");
+        }
     }
 
 
