@@ -119,24 +119,7 @@ public class ProductService implements IProductService {
         return productRepository.findAll(pageable);
     }
 
-    /*
-    @Override
-    public Page<Product> getAll( Pageable pageable ) {
-        AggregationOperation sampleOperation = Aggregation.sample(pageable.getPageSize());
-        Aggregation randomAggregation = Aggregation.newAggregation(
-                sampleOperation
-        );
 
-        AggregationResults<Product> aggregationResults = mongoTemplate.aggregate(randomAggregation, "product", Product.class);
-
-        // Reemplaza null con un criterio apropiado para contar documentos, por ejemplo, un filtro vacío.
-        long count = mongoTemplate.count(new Query(), Product.class);
-
-        return PageableExecutionUtils.getPage(aggregationResults.getMappedResults(), pageable, () -> count);
-    }
-
-
-     */
 
     @Override
     public Product checkProductName( String productName ) {

@@ -58,13 +58,6 @@ public class JwtService {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    /*
-    // Método para obtener el nombre de usuario desde un token JWT
-    public String getUsernameFromToken(String token) {
-        return getClaim(token, Claims::getSubject);
-    }
-    \
-     */
 
     public String getEmailFromToken( String token ) {
         return getClaim(token, Claims::getSubject);
@@ -99,40 +92,5 @@ public class JwtService {
     private boolean isTokenExpired( String token ) {
         return getExpiration(token).isBefore(LocalDateTime.now(ZoneId.of("UTC")));
     }
-    /*
-    // Método para verificar si un token es válido para un UserDetails dado
-    public boolean isTokenValid(String token, UserDetails userDetails) {
 
-        final String username = getUsernameFromToken(token);
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
-    }
-
-    // Método para obtener todos los claims (datos) contenidos en un token
-    public Claims getAllClaims( String token ) {
-        return Jwts.parserBuilder()
-                .setSigningKey(getKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
-    }
-
-    // Método genérico para obtener un claim específico de un token
-    public <T> T getClaim(String token, Function<Claims, T> claimsResolver) {
-        final Claims claims = getAllClaims(token);
-        return claimsResolver.apply(claims);
-    }
-
-    // Método para obtener la fecha y hora de expiración de un token
-    private LocalDateTime getExpiration(String token) {
-        Date expirationDate = getClaim(token, Claims::getExpiration);
-        Instant instant = expirationDate.toInstant();
-        return instant.atZone(ZoneId.systemDefault()).toLocalDateTime();
-    }
-
-    // Método para verificar si un token ha expirado
-    private boolean isTokenExpired(String token) {
-        return getExpiration(token).isBefore(LocalDateTime.now(ZoneId.of("UTC")));
-    }
-
-     */
 }
