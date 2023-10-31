@@ -4,6 +4,7 @@ import com.backendIntegrador.jwt.JwtService;
 import com.backendIntegrador.model.Client;
 import com.backendIntegrador.model.Role;
 import com.backendIntegrador.repository.ClientRepository;
+import com.backendIntegrador.service.impl.EmailResend;
 import com.backendIntegrador.service.impl.EmailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,6 +24,7 @@ public class AuthService {
     private final AuthenticationManager authenticationManager; // Gestor de autenticación - libreria
 
     private final EmailService emailService; // Servicio para envio de mails
+    private final EmailResend emailResend; // Servicio Resend para envio de mails.
 
     // Método para iniciar sesión
     public AuthResponse login( LoginRequest request ) {
@@ -64,14 +66,16 @@ public class AuthService {
         return AuthResponse.builder()
                 .token(jwtService.getToken(client))
                 .build();
+
     }
     private void sendNotificationEmail(String userEmail) {
 
         // Prepara el mensaje y el asunto
         String subject = "Bienvenido a Riskko";
-        String message = "Gracias por registrarte en nuestra web. ¡Bienvenido!";
+        String message = "Sus datos de registro:";
 
         // Envía el correo
         emailService.sendEmail(userEmail, subject, message);
+        //emailResend.sendEmail(userEmail, subject, message);
     }
 }
