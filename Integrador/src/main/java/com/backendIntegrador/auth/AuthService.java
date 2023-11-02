@@ -64,12 +64,14 @@ public class AuthService {
             throw new Exception("Usuario ya existe");
         }
 
+        /*
         // Enviar e.mail al usuario notificando el registro exitoso
         try{
-            sendNotificationEmail(client.getEmail());
+            sendNotificationEmail(client);
         }catch (Exception e){
             System.out.println(e.getMessage());
         }
+        */
 
         // Generar un token JWT para el nuevo usuario y devolverlo como respuesta de registro
         return AuthResponse.builder()
@@ -77,14 +79,22 @@ public class AuthService {
                 .build();
     }
 
-    private void sendNotificationEmail( String userEmail ) {
+    /*
+    private void sendNotificationEmail( Client client ) {
 
         // Prepara el mensaje y el asunto
+        String server_url = "http://www.riskko.com/  MODIFICAR";  // modificar ruta de acceso a dinamica.
         String subject = "Bienvenido a Riskko";
-        String message = "Sus datos de registro:";
+        String message = "Sus datos de registro:\n" +
+                "Nombre de usuario: " + client.getClientName() + "\n" +
+                "E-mail: " + client.getEmail() + "\n" +
+                "Otro contenido del mensaje...\n\n" +
+                "Para ingresar al sitio, visite: " + server_url + "\n";
 
         // Envía el correo
-        emailService.sendEmail(userEmail, subject, message);
+        emailService.sendEmail(client.getEmail(), subject, message);
         //emailResend.sendEmail(userEmail, subject, message);
     }
+    */
+
 }
