@@ -9,6 +9,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
+import java.util.Set;
 
 @Data //getters y setters
 @Builder
@@ -29,5 +30,7 @@ public class Product {
     private String collection;
     private String customCollection;
     private String Detail;
+    private Set<Characteristic> features;
+    private Category category;
 
 }

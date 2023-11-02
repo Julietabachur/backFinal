@@ -25,6 +25,7 @@ public class ProductController {
     @Autowired
     private final ProductService productService;
 
+
     @GetMapping("/productName")
     public boolean checkProductName( @RequestParam String productName ) {
         Product product = productService.checkProductName(productName);
@@ -47,6 +48,7 @@ public class ProductController {
 
     }
 
+
     @GetMapping("")
     public ResponseEntity<?> findAll( @RequestParam Map<String, Object> params, Model model ) {
         int page = params.get("page") != null ? (Integer.parseInt(params.get("page").toString()) - 1) : 0;
@@ -60,7 +62,7 @@ public class ProductController {
             List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
             model.addAttribute("pages", pages);
         }
-        if(page > totalPage){
+        if (page > totalPage) {
             return ResponseEntity.status((HttpStatus.NOT_FOUND)).body("{\"error\":\"Error. No existe esa pagina\"}");
         }
 

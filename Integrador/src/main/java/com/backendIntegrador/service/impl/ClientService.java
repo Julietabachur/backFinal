@@ -1,7 +1,6 @@
 package com.backendIntegrador.service.impl;
 
 import com.backendIntegrador.model.Client;
-import com.backendIntegrador.model.Product;
 import com.backendIntegrador.repository.ClientRepository;
 import com.backendIntegrador.service.IClientService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +10,6 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -96,7 +94,7 @@ public class ClientService implements IClientService {
     }
 
     @Override
-    public Client update(Client client) throws Exception {
+    public Client update( Client client ) throws Exception {
         try {
             Client existingUser = clientRepository.findById(client.getId()).orElse(null);
 
@@ -123,7 +121,6 @@ public class ClientService implements IClientService {
             throw new Exception(e.getMessage());
         }
     }
-
 
 
 }
