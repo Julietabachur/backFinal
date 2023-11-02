@@ -49,7 +49,7 @@ public class AuthController {
 
     @GetMapping("/email")
     public boolean checkEmail(@RequestParam String email){
-        Client user = clientService.checkClientName(email);
+        Client user = clientService.checkEmail(email);
         return user == null;
 
     }

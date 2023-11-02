@@ -33,8 +33,8 @@ public class AdminController {
 
     @Autowired
     private final CharacteristicService characteristicService;
-    @Autowired
-    private final CategoryService categoryService;
+   //Autowired
+  //private final CategoryService categoryService;
 
 
     @PutMapping("/clients/{id}")
@@ -120,7 +120,7 @@ public class AdminController {
         return ResponseEntity.ok().body(model);
     }
 
-    @PostMapping("/category")
+   /*PostMapping("/category")
     public ResponseEntity<?> saveCategory( @RequestBody Category category ) {
 
         try {
@@ -134,14 +134,11 @@ public class AdminController {
 
     @PostMapping("/char")
     public ResponseEntity<?> saveChar( @RequestBody Characteristic characteristic ) {
-
         try {
             return ResponseEntity.ok().body(characteristicService.save(characteristic));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\"Error. En save\"}");
         }
-
-
     }
 
     @DeleteMapping("/category/{id}")
@@ -149,5 +146,6 @@ public class AdminController {
         categoryService.delete(id);
         return ResponseEntity.noContent().build();
     }
+    */
 
 }
