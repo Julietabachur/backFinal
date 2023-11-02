@@ -58,6 +58,8 @@ public class ClientController {
             Map<String, Object> response = new HashMap<>();
             response.put("username", client.getClientName());
             response.put("roles", roles);
+            response.put("isVerified", client.getIsVerified()); // envia el booleano de verificado o no.
+            response.put("id",client.getId()); // envia el ID.
 
             // Add other user data as needed
 
@@ -83,6 +85,7 @@ public class ClientController {
             clientDto.setEmail(client.getEmail());
             clientDto.setAddress(client.getAddress());
             clientDto.setRoles(client.getRoles());
+            clientDto.setIsVerified(client.getIsVerified()); // agregado booleano de usuario verificado.
             clientDto.setReserves(client.getReserves());
             clientDto.setCel(client.getCel());
 
@@ -110,6 +113,7 @@ public class ClientController {
             clientDto.setEmail(client.get().getEmail());
             clientDto.setAddress(client.get().getAddress());
             clientDto.setRoles(client.get().getRoles());
+            clientDto.setIsVerified(client.get().getIsVerified());  // agregado booleano de usuario verificado.
             clientDto.setReserves(client.get().getReserves());
             clientDto.setCel(client.get().getCel());
 
@@ -143,6 +147,7 @@ public class ClientController {
             existingUser.setFirstName(updatedClient.getFirstName());
             existingUser.setLastName(updatedClient.getLastName());
             existingUser.setEmail(updatedClient.getEmail());
+            existingUser.setIsVerified(updatedClient.getIsVerified());
             existingUser.setCel(updatedClient.getCel());
             existingUser.setReserves(updatedClient.getReserves());
             existingUser.setAddress(updatedClient.getAddress());
@@ -158,5 +163,29 @@ public class ClientController {
         }
     }
 
+    @PutMapping("/chk/{id}")   // modifica el booleano isVerified en el objeto cliente. Evita pasar todos los datos del usuario.
+    public ResponseEntity<?> update( @PathVariable String id ) {
+        try {
+            // Verifica si el producto con el ID existe
+            Client existingUser = clientService.getClientById(id);
+
+            if (existingUser == null) {
+                // Producto no encontrado, devuelve un error 404
+                return ResponseEntity.notFound().build();
+            }
+
+            // Actualiza los campos relevantes del producto con los datos proporcionados
+            existingUser.setIsVerified(true);
+
+            // Llama al servicio para realizar la actualización
+            Client updated = clientService.update(existingUser);
+
+            return ResponseEntity.ok(updated);
+
+        } catch (Exception e) {
+            // Maneja cualquier excepción que pueda ocurrir
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error en la actualización");
+        }
+    }
 
 }

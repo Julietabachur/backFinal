@@ -51,6 +51,7 @@ public class AuthService {
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
                 .email(request.getEmail())
+                .isVerified(false)
                 .password(passwordEncoder.encode(request.getPassword())) // Encriptar la contraseña
                 .roles(Collections.singleton(Role.USER))// Asignar un rol al usuario (en este caso, USER)
                 .build();
@@ -63,12 +64,13 @@ public class AuthService {
             throw new Exception("Usuario ya existe");
         }
 
-        /*try{ // Enviar e.mail al usuario notificando el registro exitoso
+        // Enviar e.mail al usuario notificando el registro exitoso
+        try{
             sendNotificationEmail(client.getEmail());
         }catch (Exception e){
             System.out.println(e.getMessage());
         }
-         */
+
         // Generar un token JWT para el nuevo usuario y devolverlo como respuesta de registro
         return AuthResponse.builder()
                 .token(jwtService.getToken(client))
