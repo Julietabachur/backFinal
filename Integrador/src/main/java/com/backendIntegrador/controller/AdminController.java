@@ -1,8 +1,12 @@
 package com.backendIntegrador.controller;
 
 import com.backendIntegrador.DTO.ClientDto;
+import com.backendIntegrador.model.Category;
+import com.backendIntegrador.model.Characteristic;
 import com.backendIntegrador.model.Client;
 import com.backendIntegrador.model.Role;
+import com.backendIntegrador.service.impl.CategoryService;
+import com.backendIntegrador.service.impl.CharacteristicService;
 import com.backendIntegrador.service.impl.ClientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,9 +31,14 @@ public class AdminController {
     @Autowired
     private final ClientService clientService;
 
+    @Autowired
+    private final CharacteristicService characteristicService;
+    @Autowired
+    private final CategoryService categoryService;
+
 
     @PutMapping("/clients/{id}")
-    public ResponseEntity<?> toggleAdminRole(@PathVariable String id) {
+    public ResponseEntity<?> toggleAdminRole( @PathVariable String id ) {
         try {
             // Verifica si el cliente con el ID existe
             Client existingClient = clientService.getClientById(id);
@@ -68,7 +77,6 @@ public class AdminController {
     }
 
 
-
     @GetMapping("/clients")
     public ResponseEntity<?> findAll( @RequestParam Map<String, Object> params, Model model ) throws Exception {
         int page = params.get("page") != null ? (Integer.parseInt(params.get("page").toString()) - 1) : 0;
@@ -82,7 +90,7 @@ public class AdminController {
             List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
             model.addAttribute("pages", pages);
         }
-        if(page > totalPage){
+        if (page > totalPage) {
             return ResponseEntity.status((HttpStatus.NOT_FOUND)).body("{\"error\":\"Error. No existe esa pagina\"}");
         }
 
@@ -104,7 +112,6 @@ public class AdminController {
         }
 
 
-
         model.addAttribute("content", clientDtoList);
         model.addAttribute("current", page + 1);
         model.addAttribute("next", page + 2);
@@ -112,4 +119,35 @@ public class AdminController {
         model.addAttribute("last", totalPage);
         return ResponseEntity.ok().body(model);
     }
+
+    @PostMapping("/category")
+    public ResponseEntity<?> saveCategory( @RequestBody Category category ) {
+
+        try {
+            return ResponseEntity.ok().body(categoryService.save(category));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\"Error. En save\"}");
+        }
+
+    }
+
+
+    @PostMapping("/char")
+    public ResponseEntity<?> saveChar( @RequestBody Characteristic characteristic ) {
+
+        try {
+            return ResponseEntity.ok().body(characteristicService.save(characteristic));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\"Error. En save\"}");
+        }
+
+
+    }
+
+    @DeleteMapping("/category/{id}")
+    public ResponseEntity<?> delete( @PathVariable("id") String id ) throws Exception {
+        categoryService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
 }

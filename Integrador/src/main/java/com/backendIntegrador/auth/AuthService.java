@@ -6,7 +6,6 @@ import com.backendIntegrador.model.Role;
 import com.backendIntegrador.repository.ClientRepository;
 import com.backendIntegrador.service.impl.ClientService;
 import com.backendIntegrador.service.impl.EmailService;
-import com.backendIntegrador.service.impl.EmailService2;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -62,25 +61,11 @@ public class AuthService {
             throw new Exception("Usuario ya existe");
         }
 
-        /*try{ // Enviar e.mail al usuario notificando el registro exitoso
-            sendNotificationEmail(client.getEmail());
-        }catch (Exception e){
-            System.out.println(e.getMessage());
-        }
-         */
+
         // Generar un token JWT para el nuevo usuario y devolverlo como respuesta de registro
         return AuthResponse.builder()
                 .token(jwtService.getToken(client))
                 .build();
     }
 
-    private void sendNotificationEmail( String userEmail ) {
-
-        // Prepara el mensaje y el asunto
-        String subject = "Bienvenido a Riskko";
-        String message = "Gracias por registrarte en nuestra web. ¡Bienvenido!";
-
-        // Envía el correo
-        emailService.sendEmail(userEmail, subject, message);
-    }
 }
