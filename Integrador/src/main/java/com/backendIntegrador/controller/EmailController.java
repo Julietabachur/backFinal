@@ -22,22 +22,19 @@ public class EmailController {
     private final ClientService clientService;
 
 
-    @PostMapping("/")   // Recibe id en el body y reenvia el mail de confirmación.
-    public ResponseEntity<?> update(@RequestBody String id, String server_url) {
-
+    @PostMapping("/server")   // Recibe id en el body y reenvia el mail de confirmación.
+    public ResponseEntity<?> update(@RequestBody Client client,@RequestParam String server) {
 
         try {
             // Verifica si el usuario con el ID existe
-            Client existingUser = clientService.getClientById(id);
-
+            Client existingUser = clientService.getClientById(client.getId());
             if (existingUser == null) {
                 // Usuario no encontrado, devuelve un error 404
                 return ResponseEntity.notFound().build();
             }
-
             // Llama al servicio de envio de mails para reenviarlo
             try{
-                reSendNotificationEmail(existingUser, server_url);
+                reSendNotificationEmail(existingUser, server);
             }catch (Exception e){
                 System.out.println(e.getMessage());
             }
