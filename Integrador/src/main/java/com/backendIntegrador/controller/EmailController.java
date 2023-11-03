@@ -91,7 +91,7 @@ public class EmailController {
                 "Sus datos de registro:\n" +
                 "Nombre de usuario: " + existingUser.getClientName() + "\n" +
                 "E-mail: " + existingUser.getEmail() + "\n" +
-                "Otro contenido del mensaje...\n\n" +
+                "\n\n" +
                 "Para ingresar al sitio, visite: " + login_url + "\n";
 
         // Envía el correo
