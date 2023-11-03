@@ -1,5 +1,6 @@
 package com.backendIntegrador.repository;
 
+import com.backendIntegrador.model.Category;
 import com.backendIntegrador.model.Product;
 import com.backendIntegrador.model.Type;
 import org.springframework.data.domain.Page;
@@ -14,4 +15,7 @@ public interface ProductRepository extends MongoRepository<Product, String> {
     Product checkProductName( String productName );
 
     Page<Product> findByType( Pageable pageable, Type type );
+    Page<Product> findByCategoryIn( Pageable pageable, List<String> categories );
+
+    Page<Product> findByCategoriesIn( List<Category> categories, Pageable pageable );
 }

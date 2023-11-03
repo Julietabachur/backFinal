@@ -1,8 +1,10 @@
 package com.backendIntegrador.controller;
 
 
+import com.backendIntegrador.model.Category;
 import com.backendIntegrador.model.Product;
 import com.backendIntegrador.model.Type;
+import com.backendIntegrador.service.impl.CategoryService;
 import com.backendIntegrador.service.impl.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -24,6 +28,8 @@ import java.util.stream.IntStream;
 public class PublicProductController {
     @Autowired
     private final ProductService productService;
+    //@Autowired
+   // private CategoryService categoryService;
 
     @GetMapping("")
     public ResponseEntity<?> findAll( @RequestParam Map<String, Object> params, Model model ) {
@@ -38,7 +44,7 @@ public class PublicProductController {
             List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
             model.addAttribute("pages", pages);
         }
-        if(page > totalPage){
+        if (page > totalPage) {
             return ResponseEntity.status((HttpStatus.NOT_FOUND)).body("{\"error\":\"Error. No existe esa pagina\"}");
         }
 
@@ -80,7 +86,7 @@ public class PublicProductController {
             model.addAttribute("pages", pages);
         }
 
-        if(page > totalPage){
+        if (page > totalPage) {
             return ResponseEntity.status((HttpStatus.NOT_FOUND)).body("{\"error\":\"Error. No existe esa pagina\"}");
         }
 
@@ -92,6 +98,31 @@ public class PublicProductController {
         return ResponseEntity.ok().body(model);
 
     }
+
+    @GetMapping("/category")
+    public ResponseEntity<?> findAllByCategories(@RequestParam List<String> categories, @RequestParam(defaultValue = "0") int page) {
+        int pageSize = 10;
+        PageRequest pageRequest = PageRequest.of(page, pageSize);
+
+        Page<Product> pageProduct = productService.findByCategoryIn(pageRequest, categories);
+        System.out.println(pageProduct.getTotalPages());
+        if (page >= pageProduct.getTotalPages()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error. No existe esa página.");
+        }
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("content", pageProduct.getContent());
+        response.put("current", page + 1);
+        response.put("next", page + 2);
+        response.put("prev", page);
+        response.put("last", pageProduct.getTotalPages());
+
+        return ResponseEntity.ok(response);
+    }
+
+
+
+
 
 
 }

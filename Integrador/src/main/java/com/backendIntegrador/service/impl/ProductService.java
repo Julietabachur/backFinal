@@ -1,26 +1,27 @@
 package com.backendIntegrador.service.impl;
 
+import com.backendIntegrador.model.Category;
 import com.backendIntegrador.model.Product;
 import com.backendIntegrador.model.Type;
+import com.backendIntegrador.repository.CategoryRepository;
 import com.backendIntegrador.repository.ProductRepository;
 import com.backendIntegrador.service.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.aggregation.Aggregation;
-import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
-import org.springframework.data.mongodb.core.aggregation.AggregationResults;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class ProductService implements IProductService {
 
     @Autowired
     private final ProductRepository productRepository;
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     @Autowired
     private final ProductIdService productIdService = null;
@@ -89,6 +90,12 @@ public class ProductService implements IProductService {
     }
 
     @Override
+    public Page<Product> findByCategoryIn( Pageable pageable, List<String> categories ) {
+        return productRepository.findByCategoryIn(pageable,categories);
+    }
+
+
+    @Override
     public Product getProductById( String id ) throws Exception {
         try {
             return productRepository.findById(id).orElse(null);
@@ -126,6 +133,15 @@ public class ProductService implements IProductService {
         return productRepository.checkProductName(productName);
     }
 
+
+    @Override
+    public Page<Product> filterProductsByCategoryNames( List<String> categoryNames, Pageable pageable) {
+        // Crea una lista de categorías con los nombres proporcionados
+        List<Category> categories = categoryRepository.findByCategoryNameIn(categoryNames);
+
+        // Realiza la consulta paginada
+        return productRepository.findByCategoriesIn(categories, pageable);
+    }
 
 
 }

@@ -120,7 +120,7 @@ public class AdminController {
         return ResponseEntity.ok().body(model);
     }
 
-    @PostMapping("/category" )
+    @PostMapping("/category")
     public ResponseEntity<?> saveCategory( @RequestBody Category category ) {
 
         try {
@@ -132,7 +132,7 @@ public class AdminController {
     }
 
     @DeleteMapping("/category/{id}")
-    public ResponseEntity<?> delete( @PathVariable("id") String id ) throws Exception {
+    public ResponseEntity<?> deleteCategory( @PathVariable("id") String id ) throws Exception {
         categoryService.delete(id);
         return ResponseEntity.noContent().build();
     }
@@ -186,6 +186,12 @@ public class AdminController {
             // Maneja cualquier excepción que pueda ocurrir
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error en la actualización");
         }
+    }
+
+    @DeleteMapping("/char/{id}")
+    public ResponseEntity<?> deleteChar( @PathVariable("id") String id ) throws Exception {
+        characteristicService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 
 }
