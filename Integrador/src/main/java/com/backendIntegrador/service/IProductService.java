@@ -24,4 +24,7 @@ public interface IProductService {
     Page<Product> getProductsByType( Pageable pageable , Type type ) throws Exception;
 
     Product update( Product existingProduct ) throws Exception;
+
+    Page<Product> findByCategoryIn( Pageable pageable, List<String> categories );
+
 }

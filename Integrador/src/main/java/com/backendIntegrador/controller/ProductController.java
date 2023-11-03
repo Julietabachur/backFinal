@@ -1,12 +1,15 @@
 package com.backendIntegrador.controller;
 
 
+import com.backendIntegrador.model.Category;
 import com.backendIntegrador.model.Product;
+import com.backendIntegrador.service.impl.CategoryService;
 import com.backendIntegrador.service.impl.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
@@ -25,6 +28,9 @@ public class ProductController {
     @Autowired
     private final ProductService productService;
 
+    @Autowired
+    private final CategoryService categoryService;
+
 
     @GetMapping("/productName")
     public boolean checkProductName( @RequestParam String productName ) {
@@ -36,7 +42,11 @@ public class ProductController {
     @PostMapping("")
     public ResponseEntity<?> save( @RequestBody Product product ) {
         Product checkedProduct = productService.checkProductName(product.getProductName());
-        if (checkedProduct == null) {
+
+        Category category = categoryService.getCategoryByCategoryName(product.getCategory());
+        System.out.println(checkedProduct);
+        System.out.println(category);
+        if (checkedProduct == null && category != null) {
             try {
                 return ResponseEntity.ok().body(productService.save(product));
             } catch (Exception e) {
@@ -98,6 +108,8 @@ public class ProductController {
             existingProduct.setType(updatedProduct.getType());
             existingProduct.setThumbnail(updatedProduct.getThumbnail());
             existingProduct.setGallery(updatedProduct.getGallery());
+            existingProduct.setFeatures(updatedProduct.getFeatures());
+            existingProduct.setCategory(updatedProduct.getCategory());
 
             // Llama al servicio para realizar la actualización
             Product updated = productService.update(existingProduct);

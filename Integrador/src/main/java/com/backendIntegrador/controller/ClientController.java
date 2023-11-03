@@ -3,24 +3,20 @@ package com.backendIntegrador.controller;
 
 import com.backendIntegrador.DTO.ClientDto;
 import com.backendIntegrador.model.Client;
-import com.backendIntegrador.model.Product;
-import com.backendIntegrador.model.Role;
 import com.backendIntegrador.service.impl.ClientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("api/v1/private/clients")
@@ -68,9 +64,6 @@ public class ClientController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error. en getme");
         }
     }
-
-
-
 
 
     @GetMapping("/{id}")

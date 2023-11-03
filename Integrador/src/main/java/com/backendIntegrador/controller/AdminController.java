@@ -33,8 +33,8 @@ public class AdminController {
 
     @Autowired
     private final CharacteristicService characteristicService;
-   //Autowired
-  //private final CategoryService categoryService;
+    @Autowired
+    private final CategoryService categoryService;
 
 
     @PutMapping("/clients/{id}")
@@ -120,17 +120,43 @@ public class AdminController {
         return ResponseEntity.ok().body(model);
     }
 
-   /*PostMapping("/category")
-    public ResponseEntity<?> saveCategory( @RequestBody Category category ) {
-
+    @PostMapping("/category")
+    public ResponseEntity<?> saveCategory(@RequestBody Category category) {
         try {
-            return ResponseEntity.ok().body(categoryService.save(category));
+            Category savedCategory = categoryService.save(category);
+            return ResponseEntity.ok().body(savedCategory);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\"Error. En save\"}");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\"" + e.getMessage() + "\"}");
         }
-
     }
 
+
+    @DeleteMapping("/category/{id}")
+    public ResponseEntity<?> deleteCategory( @PathVariable("id") String id ) throws Exception {
+        categoryService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/category/{id}")
+    public ResponseEntity<?> update( @PathVariable String id, @RequestBody Category updatedCategory ) {
+        try {
+            Category existingCategory = categoryService.getCategoryById(id);
+
+            if (existingCategory == null) {
+                return ResponseEntity.notFound().build();
+            }
+            existingCategory.setCategoryName(updatedCategory.getCategoryName());
+            existingCategory.setDescription(updatedCategory.getDescription());
+            existingCategory.setImageUrl(updatedCategory.getImageUrl());
+            // Llama al servicio para realizar la actualización
+            Category updated = categoryService.update(existingCategory);
+
+            return ResponseEntity.ok(updated);
+        } catch (Exception e) {
+            // Maneja cualquier excepción que pueda ocurrir
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error en la actualización");
+        }
+    }
 
     @PostMapping("/char")
     public ResponseEntity<?> saveChar( @RequestBody Characteristic characteristic ) {
@@ -141,11 +167,31 @@ public class AdminController {
         }
     }
 
-    @DeleteMapping("/category/{id}")
-    public ResponseEntity<?> delete( @PathVariable("id") String id ) throws Exception {
-        categoryService.delete(id);
+    @PutMapping("/char/{id}")
+    public ResponseEntity<?> update( @PathVariable String id, @RequestBody Characteristic updatedCharacteristic ) {
+        try {
+            Characteristic existingCharacteristic = characteristicService.getCharById(id);
+
+            if (existingCharacteristic == null) {
+                return ResponseEntity.notFound().build();
+            }
+            existingCharacteristic.setCharName(updatedCharacteristic.getCharName());
+            existingCharacteristic.setCharValue(updatedCharacteristic.getCharValue());
+            existingCharacteristic.setCharIcon(updatedCharacteristic.getCharIcon());
+            // Llama al servicio para realizar la actualización
+            Characteristic updated = characteristicService.update(existingCharacteristic);
+
+            return ResponseEntity.ok(updated);
+        } catch (Exception e) {
+            // Maneja cualquier excepción que pueda ocurrir
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error en la actualización");
+        }
+    }
+
+    @DeleteMapping("/char/{id}")
+    public ResponseEntity<?> deleteChar( @PathVariable("id") String id ) throws Exception {
+        characteristicService.delete(id);
         return ResponseEntity.noContent().build();
     }
-    */
 
 }

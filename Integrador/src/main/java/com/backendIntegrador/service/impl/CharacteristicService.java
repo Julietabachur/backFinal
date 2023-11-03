@@ -1,7 +1,6 @@
 package com.backendIntegrador.service.impl;
 
 import com.backendIntegrador.model.Characteristic;
-import com.backendIntegrador.model.Client;
 import com.backendIntegrador.repository.CharacteristicRepository;
 import com.backendIntegrador.service.ICharacteristicService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +24,7 @@ public class CharacteristicService implements ICharacteristicService {
                 characteristicRepository.save(characteristic);
                 return characteristic;
             } else {
-                return null;
+                throw new Exception("Ya existe esa caracteristica");
             }
 
         } catch (Exception e) {
@@ -82,12 +81,10 @@ public class CharacteristicService implements ICharacteristicService {
             Characteristic existingChar = characteristicRepository.findById(characteristic.getId()).orElse(null);
 
             if (existingChar != null) {
-                // Update the user's roles
                 existingChar.setCharName(characteristic.getCharName());
                 existingChar.setCharValue(characteristic.getCharValue());
                 existingChar.setCharIcon(characteristic.getCharIcon());
 
-                // Save the updated user to the repository
                 return characteristicRepository.save(existingChar);
             } else {
                 throw new RuntimeException("La caracteristica no se encontró para la actualización");
