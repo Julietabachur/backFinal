@@ -49,6 +49,7 @@ public class AuthService {
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
                 .email(request.getEmail())
+                .isVerified(false)
                 .password(passwordEncoder.encode(request.getPassword())) // Encriptar la contraseña
                 .roles(Collections.singleton(Role.USER))// Asignar un rol al usuario (en este caso, USER)
                 .build();
