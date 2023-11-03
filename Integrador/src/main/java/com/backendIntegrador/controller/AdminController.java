@@ -121,15 +121,15 @@ public class AdminController {
     }
 
     @PostMapping("/category")
-    public ResponseEntity<?> saveCategory( @RequestBody Category category ) {
-
+    public ResponseEntity<?> saveCategory(@RequestBody Category category) {
         try {
-            return ResponseEntity.ok().body(categoryService.save(category));
+            Category savedCategory = categoryService.save(category);
+            return ResponseEntity.ok().body(savedCategory);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\"Error. En save\"}");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\"" + e.getMessage() + "\"}");
         }
-
     }
+
 
     @DeleteMapping("/category/{id}")
     public ResponseEntity<?> deleteCategory( @PathVariable("id") String id ) throws Exception {
