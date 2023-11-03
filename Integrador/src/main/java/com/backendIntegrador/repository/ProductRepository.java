@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ProductRepository extends MongoRepository<Product, String> {
     @Query(value = "{'productName' : ?0 }")
@@ -16,6 +17,4 @@ public interface ProductRepository extends MongoRepository<Product, String> {
 
     Page<Product> findByType( Pageable pageable, Type type );
     Page<Product> findByCategoryIn( Pageable pageable, List<String> categories );
-
-    Page<Product> findByCategoriesIn( List<Category> categories, Pageable pageable );
 }

@@ -30,6 +30,6 @@ public class Product {
     private String customCollection;
     private String Detail;
     private List<Characteristic> features;
-    private Category category;
+    private String category;
 
 }

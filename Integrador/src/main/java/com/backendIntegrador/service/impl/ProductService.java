@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,6 +34,7 @@ public class ProductService implements IProductService {
 
     @Autowired
     private MongoTemplate mongoTemplate;
+
 
     @Override
     @Transactional
@@ -86,14 +88,12 @@ public class ProductService implements IProductService {
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
-
     }
 
     @Override
     public Page<Product> findByCategoryIn( Pageable pageable, List<String> categories ) {
         return productRepository.findByCategoryIn(pageable,categories);
     }
-
 
     @Override
     public Product getProductById( String id ) throws Exception {
@@ -116,8 +116,6 @@ public class ProductService implements IProductService {
             throw new Exception(e.getMessage());
         }
         return false;
-
-
     }
 
     @Override
@@ -126,22 +124,11 @@ public class ProductService implements IProductService {
         return productRepository.findAll(pageable);
     }
 
-
-
     @Override
     public Product checkProductName( String productName ) {
         return productRepository.checkProductName(productName);
     }
 
-
-    @Override
-    public Page<Product> filterProductsByCategoryNames( List<String> categoryNames, Pageable pageable) {
-        // Crea una lista de categorías con los nombres proporcionados
-        List<Category> categories = categoryRepository.findByCategoryNameIn(categoryNames);
-
-        // Realiza la consulta paginada
-        return productRepository.findByCategoriesIn(categories, pageable);
-    }
 
 
 }

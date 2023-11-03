@@ -1,7 +1,6 @@
 package com.backendIntegrador.controller;
 
 
-import com.backendIntegrador.model.Category;
 import com.backendIntegrador.model.Product;
 import com.backendIntegrador.model.Type;
 import com.backendIntegrador.service.impl.CategoryService;
@@ -10,12 +9,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,8 +27,8 @@ import java.util.stream.IntStream;
 public class PublicProductController {
     @Autowired
     private final ProductService productService;
-    //@Autowired
-   // private CategoryService categoryService;
+    @Autowired
+    private CategoryService categoryService;
 
     @GetMapping("")
     public ResponseEntity<?> findAll( @RequestParam Map<String, Object> params, Model model ) {
@@ -100,7 +99,7 @@ public class PublicProductController {
     }
 
     @GetMapping("/category")
-    public ResponseEntity<?> findAllByCategories(@RequestParam List<String> categories, @RequestParam(defaultValue = "0") int page) {
+    public ResponseEntity<?> findAllByCategories( @RequestParam List<String> categories, @RequestParam(defaultValue = "0") int page ) {
         int pageSize = 10;
         PageRequest pageRequest = PageRequest.of(page, pageSize);
 
@@ -116,12 +115,10 @@ public class PublicProductController {
         response.put("next", page + 2);
         response.put("prev", page);
         response.put("last", pageProduct.getTotalPages());
+        response.put("totalItems", pageProduct.getTotalElements());
 
         return ResponseEntity.ok(response);
     }
-
-
-
 
 
 

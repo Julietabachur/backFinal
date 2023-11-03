@@ -20,14 +20,13 @@ public class CategoryService implements ICategoryService {
             Category existingCategory = categoryRepository.findByCategoryName(category.getCategoryName());
             if (existingCategory == null) {
                 categoryRepository.save(category);
-                return category;
-            } else {
-                return null;
+
             }
 
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
+        return category;
     }
 
     @Override
