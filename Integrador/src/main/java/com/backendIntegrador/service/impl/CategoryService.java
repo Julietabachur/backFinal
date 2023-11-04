@@ -51,7 +51,7 @@ public class CategoryService implements ICategoryService {
 
     @Override
     public Page<Category> findAll( Pageable pageable ) throws Exception {
-        return null;
+        return categoryRepository.findAll(pageable);
     }
 
     @Override
