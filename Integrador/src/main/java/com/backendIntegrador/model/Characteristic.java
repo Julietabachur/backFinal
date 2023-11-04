@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.List;
+
 @Data //getters y setters
 @Builder
 @NoArgsConstructor //constructor vacio
@@ -19,6 +21,6 @@ public class Characteristic {
     @Id
     private String id;
     private String charName;
-    private String charValue;
+    private List<String> charValue;
     private String charIcon;
 }
