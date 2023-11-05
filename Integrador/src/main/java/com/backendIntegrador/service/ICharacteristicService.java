@@ -5,10 +5,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 public interface ICharacteristicService {
     Characteristic save( Characteristic characteristic ) throws Exception;
 
     Page<Characteristic> findAll( Pageable pageable ) throws Exception;
+
+    List<Characteristic> findAllChars() throws Exception;
 
     Characteristic getCharById( String id ) throws Exception;
 

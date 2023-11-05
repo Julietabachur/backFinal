@@ -56,6 +56,16 @@ public class PublicController {
         return ResponseEntity.ok().body(model);
     }
 
+    @GetMapping("/category/all")
+    public ResponseEntity<?> findAllPagesCategory( ) throws Exception {
+
+        List<Category> categories = categoryService.findAllCategories();
+
+
+
+        return ResponseEntity.ok().body(categories);
+    }
+
     @GetMapping("/category/{id}")
     public ResponseEntity<?> getCategoryById( @PathVariable("id") String id ) {
         try {
@@ -69,7 +79,7 @@ public class PublicController {
 
 
     @GetMapping("/char")
-    public ResponseEntity<?> findAllChars( @RequestParam Map<String, Object> params, Model model ) throws Exception {
+    public ResponseEntity<?> findAllPagesChars( @RequestParam Map<String, Object> params, Model model ) throws Exception {
         int page = params.get("page") != null ? (Integer.parseInt(params.get("page").toString()) - 1) : 0;
 
         PageRequest pageRequest = PageRequest.of(page, 10);
@@ -94,6 +104,16 @@ public class PublicController {
         model.addAttribute("prev", page);
         model.addAttribute("last", totalPage);
         return ResponseEntity.ok().body(model);
+    }
+
+    @GetMapping("/char/all")
+    public ResponseEntity<?> findAllChars( ) throws Exception {
+
+        List<Characteristic> characteristic = characteristicService.findAllChars();
+
+
+
+        return ResponseEntity.ok().body(characteristic);
     }
 
     @GetMapping("/char/{id}")

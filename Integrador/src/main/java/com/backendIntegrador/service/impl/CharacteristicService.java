@@ -9,6 +9,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 public class CharacteristicService implements ICharacteristicService {
 
@@ -39,6 +41,11 @@ public class CharacteristicService implements ICharacteristicService {
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
+    }
+
+    @Override
+    public List<Characteristic> findAllChars() throws Exception {
+        return characteristicRepository.findAll();
     }
 
     @Override

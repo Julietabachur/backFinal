@@ -20,4 +20,5 @@ public interface ClientRepository extends MongoRepository<Client, String> {
 
     @Query(value = "{'email' : ?0 }")
     Client findByEmail( String email );
+
 }
