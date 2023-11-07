@@ -54,7 +54,7 @@ public class ClientController {
             Map<String, Object> response = new HashMap<>();
             response.put("username", client.getClientName());
             response.put("roles", roles);
-            response.put("isVerified", client.getIsVerified()); // envia el booleano de verificado o no.
+            response.put("isVerified", client.isVerified()); // envia el booleano de verificado o no.
             response.put("id",client.getId()); // envia el ID.
 
             // Add other user data as needed
@@ -78,7 +78,7 @@ public class ClientController {
             clientDto.setEmail(client.getEmail());
             clientDto.setAddress(client.getAddress());
             clientDto.setRoles(client.getRoles());
-            clientDto.setIsVerified(client.getIsVerified()); // agregado booleano de usuario verificado.
+            clientDto.setVerified(client.isVerified()); // agregado booleano de usuario verificado.
             clientDto.setReserves(client.getReserves());
             clientDto.setCel(client.getCel());
 
@@ -106,7 +106,7 @@ public class ClientController {
             clientDto.setEmail(client.get().getEmail());
             clientDto.setAddress(client.get().getAddress());
             clientDto.setRoles(client.get().getRoles());
-            clientDto.setIsVerified(client.get().getIsVerified());  // agregado booleano de usuario verificado.
+            clientDto.setVerified(client.get().isVerified());  // agregado booleano de usuario verificado.
             clientDto.setReserves(client.get().getReserves());
             clientDto.setCel(client.get().getCel());
 
@@ -140,7 +140,7 @@ public class ClientController {
             existingUser.setFirstName(updatedClient.getFirstName());
             existingUser.setLastName(updatedClient.getLastName());
             existingUser.setEmail(updatedClient.getEmail());
-            existingUser.setIsVerified(updatedClient.getIsVerified());
+            existingUser.setVerified(updatedClient.isVerified());
             existingUser.setCel(updatedClient.getCel());
             existingUser.setReserves(updatedClient.getReserves());
             existingUser.setAddress(updatedClient.getAddress());
@@ -168,7 +168,7 @@ public class ClientController {
             }
 
             // Actualiza los campos relevantes del producto con los datos proporcionados
-            existingUser.setIsVerified(true);
+            existingUser.setVerified(true);
 
             // Llama al servicio para realizar la actualización
             Client updated = clientService.update(existingUser);

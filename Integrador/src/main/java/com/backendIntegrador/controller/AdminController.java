@@ -108,7 +108,9 @@ public class AdminController {
             clientDto.setRoles(client.getRoles());
             clientDto.setReserves(client.getReserves());
             clientDto.setCel(client.getCel());
+            clientDto.setVerified(client.isVerified());
             clientDtoList.add(clientDto);
+
         }
 
 

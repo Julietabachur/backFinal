@@ -105,7 +105,7 @@ public class ClientService implements IClientService {
                 existingUser.setClientName(client.getClientName());
                 existingUser.setPassword(client.getPassword());
                 existingUser.setRoles(client.getRoles());
-                existingUser.setIsVerified(client.getIsVerified());  // agregado para actualizar boolean isVerified
+                existingUser.setVerified(client.isVerified());  // agregado para actualizar boolean isVerified
                 existingUser.setEmail(client.getEmail());
                 existingUser.setCel(client.getCel());
                 existingUser.setAddress(client.getAddress());

@@ -44,8 +44,7 @@ public class ProductController {
         Product checkedProduct = productService.checkProductName(product.getProductName());
 
         Category category = categoryService.getCategoryByCategoryName(product.getCategory());
-        System.out.println(checkedProduct);
-        System.out.println(category);
+
         if (checkedProduct == null && category != null) {
             try {
                 return ResponseEntity.ok().body(productService.save(product));
@@ -104,7 +103,6 @@ public class ProductController {
             existingProduct.setCollection(updatedProduct.getCollection());
             existingProduct.setCustomCollection(updatedProduct.getCustomCollection());
             existingProduct.setDetail(updatedProduct.getDetail());
-            existingProduct.setProductSize(updatedProduct.getProductSize());
             existingProduct.setType(updatedProduct.getType());
             existingProduct.setThumbnail(updatedProduct.getThumbnail());
             existingProduct.setGallery(updatedProduct.getGallery());

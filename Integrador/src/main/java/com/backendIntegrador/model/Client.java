@@ -33,7 +33,7 @@ public class Client implements UserDetails {
     private String clientName;
     private String password;
     private Set<Role> roles;
-    private Boolean isVerified;
+    private boolean isVerified = false;
     private String email;
     private String cel;
     private Address address;
@@ -63,8 +63,7 @@ public class Client implements UserDetails {
     public String getEmail() {
         return email;
     }
-
-    public Boolean getIsVerified() {return isVerified;}  // No requiere @Override ?
+// No requiere @Override ?
 
     @Override
     public boolean isAccountNonExpired() {
