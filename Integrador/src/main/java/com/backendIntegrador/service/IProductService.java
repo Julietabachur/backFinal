@@ -1,7 +1,6 @@
 package com.backendIntegrador.service;
 
 import com.backendIntegrador.model.Product;
-import com.backendIntegrador.model.Type;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -16,12 +15,10 @@ public interface IProductService {
 
     boolean delete( String id ) throws Exception;
 
-
-    Page<Product> getAll(Pageable pageable);
+    Page<Product> getAll( Pageable pageable );
 
     Product checkProductName( String productName );
 
-    Page<Product> getProductsByType( Pageable pageable , Type type ) throws Exception;
 
     Product update( Product existingProduct ) throws Exception;
 

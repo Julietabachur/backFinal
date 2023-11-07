@@ -31,31 +31,25 @@ public class PublicProductController {
     private CategoryService categoryService;
 
     @GetMapping("")
-    public ResponseEntity<?> findAll( @RequestParam Map<String, Object> params, Model model ) {
-        int page = params.get("page") != null ? (Integer.parseInt(params.get("page").toString()) - 1) : 0;
+    public ResponseEntity<?> findAll( @RequestParam(defaultValue = "0") int page ) {
 
-        PageRequest pageRequest = PageRequest.of(page, 10);
+        int pageSize = 10;
+        PageRequest pageRequest = PageRequest.of(page, pageSize);
 
         Page<Product> pageProduct = productService.getAll(pageRequest);
 
-        int totalPage = pageProduct.getTotalPages();
-        if (totalPage > 0) {
-            List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
-            model.addAttribute("pages", pages);
+        if (page >= pageProduct.getTotalPages()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error. No existe esa página.");
         }
-        if (page > totalPage) {
-            return ResponseEntity.status((HttpStatus.NOT_FOUND)).body("{\"error\":\"Error. No existe esa pagina\"}");
-        }
-
-        List<Product> shuffledList = pageProduct.getContent();
-
-
-        model.addAttribute("content", shuffledList);
-        model.addAttribute("current", page + 1);
-        model.addAttribute("next", page + 2);
-        model.addAttribute("prev", page);
-        model.addAttribute("last", totalPage);
-        return ResponseEntity.ok().body(model);
+        
+        Map<String, Object> response = new HashMap<>();
+        response.put("content", pageProduct.getContent());
+        response.put("current", page + 1);
+        response.put("next", page + 2);
+        response.put("prev", page);
+        response.put("last", pageProduct.getTotalPages());
+        response.put("totalItems", pageProduct.getTotalElements());
+        return ResponseEntity.ok().body(response);
     }
 
 
@@ -70,41 +64,20 @@ public class PublicProductController {
         }
     }
 
-    @GetMapping("/byType")
-    public ResponseEntity<?> findAllByType( @RequestParam Map<String, Object> params, Type type, Model model ) throws Exception {
-
-        int page = params.get("page") != null ? (Integer.parseInt(params.get("page").toString()) - 1) : 0;
-
-        PageRequest pageRequest = PageRequest.of(page, 10);
-
-        Page<Product> pageProduct = productService.getProductsByType(pageRequest, type);
-
-        int totalPage = pageProduct.getTotalPages();
-        if (totalPage > 0) {
-            List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
-            model.addAttribute("pages", pages);
-        }
-
-        if (page > totalPage) {
-            return ResponseEntity.status((HttpStatus.NOT_FOUND)).body("{\"error\":\"Error. No existe esa pagina\"}");
-        }
-
-        model.addAttribute("content", pageProduct.getContent());
-        model.addAttribute("current", page + 1);
-        model.addAttribute("next", page + 2);
-        model.addAttribute("prev", page);
-        model.addAttribute("last", totalPage);
-        return ResponseEntity.ok().body(model);
-
-    }
-
     @GetMapping("/category")
-    public ResponseEntity<?> findAllByCategories( @RequestParam List<String> categories, @RequestParam(defaultValue = "0") int page ) {
+    public ResponseEntity<?> findAllByCategories(
+            @RequestParam List<String> categories,
+            @RequestParam(defaultValue = "0") int page
+    ) {
         int pageSize = 10;
         PageRequest pageRequest = PageRequest.of(page, pageSize);
+        if (categories.isEmpty()) {
+            // Handle empty categories, return an error response or a meaningful message.
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Categories cannot be empty.");
+        }
 
         Page<Product> pageProduct = productService.findByCategoryIn(pageRequest, categories);
-        System.out.println(pageProduct.getTotalPages());
+
         if (page >= pageProduct.getTotalPages()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error. No existe esa página.");
         }
@@ -119,6 +92,7 @@ public class PublicProductController {
 
         return ResponseEntity.ok(response);
     }
+
 
 
 

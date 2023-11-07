@@ -1,8 +1,6 @@
 package com.backendIntegrador.service.impl;
 
-import com.backendIntegrador.model.Category;
 import com.backendIntegrador.model.Product;
-import com.backendIntegrador.model.Type;
 import com.backendIntegrador.repository.CategoryRepository;
 import com.backendIntegrador.repository.ProductRepository;
 import com.backendIntegrador.service.IProductService;
@@ -10,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,7 +47,6 @@ public class ProductService implements IProductService {
     }
 
 
-
     @Override
     public Page<Product> productList( Pageable pageable ) throws Exception {
         try {
@@ -60,15 +56,6 @@ public class ProductService implements IProductService {
         }
     }
 
-
-    public Page<Product> getProductsByType( Pageable pageable, Type type ) throws Exception {
-        try {
-            return productRepository.findByType(pageable, type);
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
-        }
-
-    }
 
     @Override
     public Product update( Product product ) throws Exception {
@@ -92,7 +79,7 @@ public class ProductService implements IProductService {
 
     @Override
     public Page<Product> findByCategoryIn( Pageable pageable, List<String> categories ) {
-        return productRepository.findByCategoryIn(pageable,categories);
+        return productRepository.findByCategoryIn(pageable, categories);
     }
 
     @Override
@@ -119,7 +106,7 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public Page<Product> getAll(Pageable pageable){
+    public Page<Product> getAll( Pageable pageable ) {
 
         return productRepository.findAll(pageable);
     }
@@ -128,7 +115,6 @@ public class ProductService implements IProductService {
     public Product checkProductName( String productName ) {
         return productRepository.checkProductName(productName);
     }
-
 
 
 }
