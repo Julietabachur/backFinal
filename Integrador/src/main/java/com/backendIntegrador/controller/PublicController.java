@@ -47,7 +47,6 @@ public class PublicController {
 
         List<Category> categories = pageCategories.getContent();
 
-
         model.addAttribute("content", categories);
         model.addAttribute("current", page + 1);
         model.addAttribute("next", page + 2);
@@ -57,10 +56,9 @@ public class PublicController {
     }
 
     @GetMapping("/category/all")
-    public ResponseEntity<?> findAllPagesCategory( ) throws Exception {
+    public ResponseEntity<?> findAllPagesCategory() throws Exception {
 
         List<Category> categories = categoryService.findAllCategories();
-
 
 
         return ResponseEntity.ok().body(categories);
@@ -107,10 +105,9 @@ public class PublicController {
     }
 
     @GetMapping("/char/all")
-    public ResponseEntity<?> findAllChars( ) throws Exception {
+    public ResponseEntity<?> findAllChars() throws Exception {
 
         List<Characteristic> characteristic = characteristicService.findAllChars();
-
 
 
         return ResponseEntity.ok().body(characteristic);

@@ -45,14 +45,16 @@ public class PublicProductController {
             return ResponseEntity.status((HttpStatus.NOT_FOUND)).body("{\"error\":\"Error. No existe esa pagina\"}");
         }
 
-        List<Product> shuffledList = pageProduct.getContent();
+        List<Product> productList = pageProduct.getContent();
+        Long totalElements = pageProduct.getTotalElements();
 
 
-        model.addAttribute("content", shuffledList);
+        model.addAttribute("content", productList);
         model.addAttribute("current", page + 1);
         model.addAttribute("next", page + 2);
         model.addAttribute("prev", page);
         model.addAttribute("last", totalPage);
+        model.addAttribute("totalElements", totalElements);
         return ResponseEntity.ok().body(model);
     }
 
@@ -86,6 +88,7 @@ public class PublicProductController {
         }
 
         List<Product> productList = pageProduct.getContent();
+        Long totalElements = pageProduct.getTotalElements();
 
 
         model.addAttribute("content", productList);
@@ -93,6 +96,7 @@ public class PublicProductController {
         model.addAttribute("next", page + 2);
         model.addAttribute("prev", page);
         model.addAttribute("last", totalPage);
+        model.addAttribute("totalElements", totalElements);
         return ResponseEntity.ok().body(model);
 
     }
