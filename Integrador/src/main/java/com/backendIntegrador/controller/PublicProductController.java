@@ -94,7 +94,7 @@ public class PublicProductController {
         model.addAttribute("prev", page);
         model.addAttribute("last", totalPage);
         return ResponseEntity.ok().body(model);
-   
+
     }
 
 

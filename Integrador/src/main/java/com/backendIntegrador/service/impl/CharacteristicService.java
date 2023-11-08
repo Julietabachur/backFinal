@@ -3,6 +3,8 @@ package com.backendIntegrador.service.impl;
 import com.backendIntegrador.model.Characteristic;
 import com.backendIntegrador.repository.CharacteristicRepository;
 import com.backendIntegrador.service.ICharacteristicService;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,17 +12,32 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class CharacteristicService implements ICharacteristicService {
 
     @Autowired
     private CharacteristicRepository characteristicRepository;
+    @Autowired
+    private Validator validator;
+
 
     @Override
     @Transactional
     public Characteristic save( Characteristic characteristic ) throws Exception {
         try {
+
+            Set<ConstraintViolation<Characteristic>> violations = validator.validate(characteristic);
+
+            if (!violations.isEmpty()) {
+                // Handle validation errors
+                StringBuilder errorMessage = new StringBuilder("Validation errors: ");
+                for (ConstraintViolation<Characteristic> violation : violations) {
+                    errorMessage.append(violation.getMessage()).append(", ");
+                }
+                throw new Exception(errorMessage.toString());
+            }
             Characteristic existingChar = characteristicRepository.findByCharName(characteristic.getCharName());
             if (existingChar == null) {
                 characteristicRepository.save(characteristic);

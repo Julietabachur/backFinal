@@ -1,6 +1,8 @@
 package com.backendIntegrador.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,6 +20,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Category {
    @Id
    private String id;
+   
+   @NotBlank(message = "El nombre de categoria no puede estar en blanco.")
+   @Size(min = 3, max = 30, message = "El nombre de categoria debe tener entre 3 y 30 caracteres.")
    private String categoryName;
    private String description;
    private String imageUrl;

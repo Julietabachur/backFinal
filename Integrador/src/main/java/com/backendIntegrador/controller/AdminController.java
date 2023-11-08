@@ -165,7 +165,7 @@ public class AdminController {
         try {
             return ResponseEntity.ok().body(characteristicService.save(characteristic));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\"Error. En save\"}");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\"" + e.getMessage() + "\"}");
         }
     }
 

@@ -2,6 +2,8 @@ package com.backendIntegrador.model;
 
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,6 +22,9 @@ import java.util.List;
 public class Characteristic {
     @Id
     private String id;
+
+    @NotBlank(message = "El nombre de caracteristica no puede estar en blanco.")
+    @Size(min = 3, max = 30, message = "El nombre de caracteristica debe tener entre 3 y 30 caracteres.")
     private String charName;
     private List<String> charValue;
     private String charIcon;

@@ -3,6 +3,8 @@ package com.backendIntegrador.service.impl;
 import com.backendIntegrador.model.Category;
 import com.backendIntegrador.repository.CategoryRepository;
 import com.backendIntegrador.service.ICategoryService;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,16 +12,31 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class CategoryService implements ICategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
 
+    @Autowired
+    private Validator validator;
+
     @Override
     @Transactional
-    public Category save(Category category) throws Exception {
+    public Category save( Category category ) throws Exception {
         try {
+            Set<ConstraintViolation<Category>> violations = validator.validate(category);
+
+            if (!violations.isEmpty()) {
+                // Handle validation errors
+                StringBuilder errorMessage = new StringBuilder("Validation errors: ");
+                for (ConstraintViolation<Category> violation : violations) {
+                    errorMessage.append(violation.getMessage()).append(", ");
+                }
+                throw new Exception(errorMessage.toString());
+            }
+
             Category existingCategory = categoryRepository.findByCategoryName(category.getCategoryName());
             if (existingCategory != null) {
                 // La categoría ya existe, puedes manejarlo según tus necesidades, como lanzar una excepción o actualizar la categoría existente.
