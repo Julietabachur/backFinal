@@ -115,15 +115,19 @@ public class CharacteristicService implements ICharacteristicService {
             }
             Characteristic existingChar = characteristicRepository.findById(characteristic.getId()).orElse(null);
             Characteristic existingCharByName = characteristicRepository.findByCharName(characteristic.getCharName());
+            if (existingCharByName != null && existingChar != null) {
+                if (!(existingCharByName.getId().equals(existingChar.getId()))) {
+                    throw new RuntimeException("Ya existe una caracteristica con ese nombre");
+                }
+            }
 
-            if (existingChar != null && existingCharByName == null) {
+
+            if (existingChar != null) {
                 existingChar.setCharName(characteristic.getCharName());
                 existingChar.setCharValue(characteristic.getCharValue());
                 existingChar.setCharIcon(characteristic.getCharIcon());
 
                 return characteristicRepository.save(existingChar);
-            } else if (existingCharByName != null) {
-                throw new RuntimeException("Ya existe una caracteristica con ese nombre");
             } else {
                 throw new RuntimeException("La caracteristica no se encontró para la actualización");
             }
