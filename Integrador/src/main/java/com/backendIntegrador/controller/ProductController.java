@@ -99,11 +99,7 @@ public class ProductController {
 
             // Actualiza los campos relevantes del producto con los datos proporcionados
             existingProduct.setProductName(updatedProduct.getProductName());
-            existingProduct.setProductionTime(updatedProduct.getProductionTime());
-            existingProduct.setCollection(updatedProduct.getCollection());
-            existingProduct.setCustomCollection(updatedProduct.getCustomCollection());
             existingProduct.setDetail(updatedProduct.getDetail());
-            existingProduct.setType(updatedProduct.getType());
             existingProduct.setThumbnail(updatedProduct.getThumbnail());
             existingProduct.setGallery(updatedProduct.getGallery());
             existingProduct.setFeatures(updatedProduct.getFeatures());

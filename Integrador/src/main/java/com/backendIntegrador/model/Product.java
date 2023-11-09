@@ -21,13 +21,8 @@ public class Product {
     private String id;
     private Long productId;
     private String productName;
-    private Size productSize;
-    private Type type;
-    private int productionTime;
     private String thumbnail;
     private List<String> gallery;
-    private String collection;
-    private String customCollection;
     private String Detail;
     private List<Characteristic> features;
     private String category;
