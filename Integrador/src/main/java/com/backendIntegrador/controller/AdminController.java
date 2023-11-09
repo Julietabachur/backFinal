@@ -156,7 +156,7 @@ public class AdminController {
             return ResponseEntity.ok(updated);
         } catch (Exception e) {
             // Maneja cualquier excepción que pueda ocurrir
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error en la actualización");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"error\":\"" + e.getMessage() + "\"}");
         }
     }
 
@@ -186,7 +186,7 @@ public class AdminController {
             return ResponseEntity.ok(updated);
         } catch (Exception e) {
             // Maneja cualquier excepción que pueda ocurrir
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error en la actualización");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"error\":\"" + e.getMessage() + "\"}");
         }
     }
 

@@ -46,12 +46,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             if (jwtService.isTokenValid(token, userDetails)) {
                 Claims claims = jwtService.getAllClaims(token);
-                String clientName = claims.get("clientName", String.class);
+               /* String clientName = claims.get("clientName", String.class);
                 String role = claims.get("ROLE_", String.class);
                 if(claims.containsKey("isVerified")) {
                     boolean isVerified = claims.get("isVerified", boolean.class);
 
                 }
+
+                */
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails, // Detalles del usuario
                         null,

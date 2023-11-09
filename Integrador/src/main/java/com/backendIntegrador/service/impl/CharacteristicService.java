@@ -102,14 +102,28 @@ public class CharacteristicService implements ICharacteristicService {
     @Override
     public Characteristic update( Characteristic characteristic ) throws Exception {
         try {
-            Characteristic existingChar = characteristicRepository.findById(characteristic.getId()).orElse(null);
 
-            if (existingChar != null) {
+            Set<ConstraintViolation<Characteristic>> violations = validator.validate(characteristic);
+
+            if (!violations.isEmpty()) {
+                // Handle validation errors
+                StringBuilder errorMessage = new StringBuilder("Validation errors: ");
+                for (ConstraintViolation<Characteristic> violation : violations) {
+                    errorMessage.append(violation.getMessage()).append(", ");
+                }
+                throw new Exception(errorMessage.toString());
+            }
+            Characteristic existingChar = characteristicRepository.findById(characteristic.getId()).orElse(null);
+            Characteristic existingCharByName = characteristicRepository.findByCharName(characteristic.getCharName());
+
+            if (existingChar != null && existingCharByName == null) {
                 existingChar.setCharName(characteristic.getCharName());
                 existingChar.setCharValue(characteristic.getCharValue());
                 existingChar.setCharIcon(characteristic.getCharIcon());
 
                 return characteristicRepository.save(existingChar);
+            } else if (existingCharByName != null) {
+                throw new RuntimeException("Ya existe una caracteristica con ese nombre");
             } else {
                 throw new RuntimeException("La caracteristica no se encontró para la actualización");
             }

@@ -97,14 +97,28 @@ public class CategoryService implements ICategoryService {
     @Override
     public Category update( Category category ) throws Exception {
         try {
-            Category existingCategory = categoryRepository.findById(category.getId()).orElse(null);
 
-            if (existingCategory != null) {
-                existingCategory.setCategoryName(category.getCategoryName());
-                existingCategory.setDescription(category.getDescription());
-                existingCategory.setImageUrl(category.getImageUrl());
+            Set<ConstraintViolation<Category>> violations = validator.validate(category);
 
-                return categoryRepository.save(existingCategory);
+            if (!violations.isEmpty()) {
+                // Handle validation errors
+                StringBuilder errorMessage = new StringBuilder("Validation errors: ");
+                for (ConstraintViolation<Category> violation : violations) {
+                    errorMessage.append(violation.getMessage()).append(", ");
+                }
+                throw new Exception(errorMessage.toString());
+            }
+            Category existingCategoryById = categoryRepository.findById(category.getId()).orElse(null);
+            Category existingCategoryByName = categoryRepository.findByCategoryName(category.getCategoryName());
+
+            if (existingCategoryById != null && existingCategoryByName == null) {
+                existingCategoryById.setCategoryName(category.getCategoryName());
+                existingCategoryById.setDescription(category.getDescription());
+                existingCategoryById.setImageUrl(category.getImageUrl());
+
+                return categoryRepository.save(existingCategoryById);
+            }else if(existingCategoryByName != null){
+                throw new RuntimeException("Ya existe ese nombre en otra categoria");
             } else {
                 throw new RuntimeException("La categoria no se encontró para la actualización");
             }
