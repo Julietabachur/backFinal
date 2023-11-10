@@ -115,7 +115,7 @@ public class CategoryService implements ICategoryService {
                     throw new RuntimeException("Ya existe una categoria con ese nombre");
                 }
             }
-            
+
 
             if (existingCategoryById != null && existingCategoryByName == null) {
                 existingCategoryById.setCategoryName(category.getCategoryName());

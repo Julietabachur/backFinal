@@ -53,7 +53,7 @@ public class ClientController {
             // Return the user data as a JSON response
             Map<String, Object> response = new HashMap<>();
             response.put("username", client.getClientName());
-            response.put("roles", roles);
+            response.put("roles", client.getRoles());
             response.put("isVerified", client.isVerified()); // envia el booleano de verificado o no.
             response.put("id",client.getId()); // envia el ID.
 
