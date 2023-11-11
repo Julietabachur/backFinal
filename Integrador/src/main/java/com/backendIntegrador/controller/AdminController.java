@@ -144,10 +144,11 @@ public class AdminController {
         try {
             Category existingCategory = categoryService.getCategoryById(id);
             Category existingName = categoryService.getCategoryByCategoryName(updatedCategory.getCategoryName());
-
+            updatedCategory.setId(id);
             if (existingCategory == null) {
                 return ResponseEntity.notFound().build();
             } else if (existingName != null && existingName.getId().equals(existingCategory.getId())) {
+
                 Category updated = categoryService.update(updatedCategory);
                 return ResponseEntity.ok(updated);
             } else if (existingName == null) {
