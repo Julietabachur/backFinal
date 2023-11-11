@@ -79,7 +79,7 @@ public class ClientController {
             clientDto.setAddress(client.getAddress());
             clientDto.setRoles(client.getRoles());
             clientDto.setVerified(client.isVerified()); // agregado booleano de usuario verificado.
-            clientDto.setReserves(client.getReserves());
+            clientDto.setReserveIds(client.getReserveIds());
             clientDto.setCel(client.getCel());
 
             return ResponseEntity.ok().body(clientDto);
@@ -107,7 +107,7 @@ public class ClientController {
             clientDto.setAddress(client.get().getAddress());
             clientDto.setRoles(client.get().getRoles());
             clientDto.setVerified(client.get().isVerified());  // agregado booleano de usuario verificado.
-            clientDto.setReserves(client.get().getReserves());
+            clientDto.setReserveIds(client.get().getReserveIds());
             clientDto.setCel(client.get().getCel());
 
             // Devolver la respuesta con el objeto modificado
@@ -142,7 +142,7 @@ public class ClientController {
             existingUser.setEmail(updatedClient.getEmail());
             existingUser.setVerified(updatedClient.isVerified());
             existingUser.setCel(updatedClient.getCel());
-            existingUser.setReserves(updatedClient.getReserves());
+            existingUser.setReserveIds(updatedClient.getReserveIds());
             existingUser.setAddress(updatedClient.getAddress());
             existingUser.setPassword(updatedClient.getPassword());
 

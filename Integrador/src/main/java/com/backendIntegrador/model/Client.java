@@ -12,10 +12,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Data //getters y setters
@@ -37,11 +34,23 @@ public class Client implements UserDetails {
     private String email;
     private String cel;
     private Address address;
-    private List<Reserve> reserves;
+    private List<String> reserveIds;
 
     public Client( String email, String username ) {
         this.email = email;
         this.clientName = username;
+    }
+
+
+    public List<String> getReserveIds() {
+        if (reserveIds == null) {
+            reserveIds = new ArrayList<>();
+        }
+        return reserveIds;
+    }
+
+    public void setReserveIds(List<String> reserveIds) {
+        this.reserveIds = reserveIds;
     }
 
 

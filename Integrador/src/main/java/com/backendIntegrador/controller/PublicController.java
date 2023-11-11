@@ -2,17 +2,21 @@ package com.backendIntegrador.controller;
 
 import com.backendIntegrador.model.Category;
 import com.backendIntegrador.model.Characteristic;
+import com.backendIntegrador.model.Product;
 import com.backendIntegrador.service.impl.CategoryService;
 import com.backendIntegrador.service.impl.CharacteristicService;
+import com.backendIntegrador.service.impl.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -26,7 +30,26 @@ public class PublicController {
     private CharacteristicService characteristicService;
     @Autowired
     private CategoryService categoryService;
+    @Autowired
+    private ProductService productService;
 
+
+    @GetMapping("/products/search")
+    public ResponseEntity<Page<Product>> searchProducts(
+            @RequestParam(required = false) String productName,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        try {
+            PageRequest pageable = PageRequest.of(page, size);
+            Page<Product> results = productService.searchProductsByProductNameAndDateRange(productName, startDate, endDate, pageable);
+            return ResponseEntity.ok(results);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 
     @GetMapping("/category")
     public ResponseEntity<?> findAllCategories( @RequestParam Map<String, Object> params, Model model ) throws Exception {

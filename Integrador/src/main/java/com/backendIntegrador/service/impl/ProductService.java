@@ -6,11 +6,13 @@ import com.backendIntegrador.repository.ProductRepository;
 import com.backendIntegrador.service.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -81,6 +83,12 @@ public class ProductService implements IProductService {
     public Page<Product> findByCategoryIn( Pageable pageable, List<String> categories ) {
         return productRepository.findByCategoryIn(pageable, categories);
     }
+
+    @Override
+    public Page<Product> searchProductsByProductNameAndDateRange( String productName, LocalDate startDate, LocalDate endDate, PageRequest pageable ) {
+        return productRepository.searchAvailableProductsByProductNameAndDateRange(productName, startDate, endDate, pageable);
+    }
+
 
     @Override
     public Product getProductById( String id ) throws Exception {

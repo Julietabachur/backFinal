@@ -24,7 +24,7 @@ public class ReserveController {
         try {
             return ResponseEntity.ok().body(reserveService.save(reserve));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\"Error. En save\"}");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\"" + e.getMessage() + "\"}");
         }
     }
 

@@ -27,6 +27,6 @@ public class ClientDto {
     private String email;
     private String cel;
     private Address address;
-    private List<Reserve> reserves;
+    private List<String> reserveIds;
 
 }

@@ -8,6 +8,7 @@ import com.backendIntegrador.model.Role;
 import com.backendIntegrador.service.impl.CategoryService;
 import com.backendIntegrador.service.impl.CharacteristicService;
 import com.backendIntegrador.service.impl.ClientService;
+import com.backendIntegrador.service.impl.ReserveService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -35,6 +36,7 @@ public class AdminController {
     private final CharacteristicService characteristicService;
     @Autowired
     private final CategoryService categoryService;
+
 
 
     @PutMapping("/clients/{id}")
@@ -106,7 +108,7 @@ public class AdminController {
             clientDto.setEmail(client.getEmail());
             clientDto.setAddress(client.getAddress());
             clientDto.setRoles(client.getRoles());
-            clientDto.setReserves(client.getReserves());
+            clientDto.setReserveIds(client.getReserveIds());
             clientDto.setCel(client.getCel());
             clientDto.setVerified(client.isVerified());
             clientDtoList.add(clientDto);
@@ -123,7 +125,7 @@ public class AdminController {
     }
 
     @PostMapping("/category")
-    public ResponseEntity<?> saveCategory(@RequestBody Category category) {
+    public ResponseEntity<?> saveCategory( @RequestBody Category category ) {
         try {
             Category savedCategory = categoryService.save(category);
             return ResponseEntity.ok().body(savedCategory);

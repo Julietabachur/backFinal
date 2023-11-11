@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data //getters y setters
@@ -26,5 +27,17 @@ public class Product {
     private String Detail;
     private List<Characteristic> features;
     private String category;
+    private List<String> reserveIds;
+
+    public List<String> getReserveIds() {
+        if (reserveIds == null) {
+            reserveIds = new ArrayList<>();
+        }
+        return reserveIds;
+    }
+
+    public void setReserveIds(List<String> reserveIds) {
+        this.reserveIds = reserveIds;
+    }
 
 }

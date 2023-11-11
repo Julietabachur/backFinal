@@ -109,7 +109,7 @@ public class ClientService implements IClientService {
                 existingUser.setEmail(client.getEmail());
                 existingUser.setCel(client.getCel());
                 existingUser.setAddress(client.getAddress());
-                existingUser.setReserves(client.getReserves());
+                existingUser.setReserveIds(client.getReserveIds());
 
                 // Save the updated user to the repository
                 Client updatedUser = clientRepository.save(existingUser);
