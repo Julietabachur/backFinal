@@ -8,7 +8,6 @@ import com.backendIntegrador.model.Role;
 import com.backendIntegrador.service.impl.CategoryService;
 import com.backendIntegrador.service.impl.CharacteristicService;
 import com.backendIntegrador.service.impl.ClientService;
-import com.backendIntegrador.service.impl.ReserveService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -36,7 +35,6 @@ public class AdminController {
     private final CharacteristicService characteristicService;
     @Autowired
     private final CategoryService categoryService;
-
 
 
     @PutMapping("/clients/{id}")
@@ -145,17 +143,22 @@ public class AdminController {
     public ResponseEntity<?> update( @PathVariable String id, @RequestBody Category updatedCategory ) {
         try {
             Category existingCategory = categoryService.getCategoryById(id);
+            Category existingName = categoryService.getCategoryByCategoryName(updatedCategory.getCategoryName());
 
             if (existingCategory == null) {
                 return ResponseEntity.notFound().build();
-            }
-            existingCategory.setCategoryName(updatedCategory.getCategoryName());
-            existingCategory.setDescription(updatedCategory.getDescription());
-            existingCategory.setImageUrl(updatedCategory.getImageUrl());
-            // Llama al servicio para realizar la actualización
-            Category updated = categoryService.update(existingCategory);
+            } else if (existingName != null && existingName.getId().equals(existingCategory.getId())) {
+                Category updated = categoryService.update(updatedCategory);
+                return ResponseEntity.ok(updated);
+            } else if (existingName == null) {
+                Category updated = categoryService.update(updatedCategory);
+                return ResponseEntity.ok(updated);
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"error\":\"" + "Hubo un error" + "\"}");
 
-            return ResponseEntity.ok(updated);
+            }
+
+
         } catch (Exception e) {
             // Maneja cualquier excepción que pueda ocurrir
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"error\":\"" + e.getMessage() + "\"}");

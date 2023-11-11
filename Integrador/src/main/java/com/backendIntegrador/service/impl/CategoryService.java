@@ -108,23 +108,15 @@ public class CategoryService implements ICategoryService {
                 }
                 throw new Exception(errorMessage.toString());
             }
-            Category existingCategoryById = categoryRepository.findById(category.getId()).orElse(null);
-            Category existingCategoryByName = categoryRepository.findByCategoryName(category.getCategoryName());
-            if (existingCategoryByName != null && existingCategoryById != null) {
-                if (!(existingCategoryByName.getId().equals(existingCategoryById.getId()))) {
-                    throw new RuntimeException("Ya existe una categoria con ese nombre");
-                }
-            }
+            Category existingCategory = categoryRepository.findById(category.getId()).orElse(null);
 
 
-            if (existingCategoryById != null && existingCategoryByName == null) {
-                existingCategoryById.setCategoryName(category.getCategoryName());
-                existingCategoryById.setDescription(category.getDescription());
-                existingCategoryById.setImageUrl(category.getImageUrl());
+            if (existingCategory != null) {
+                existingCategory.setCategoryName(category.getCategoryName());
+                existingCategory.setDescription(category.getDescription());
+                existingCategory.setImageUrl(category.getImageUrl());
 
-                return categoryRepository.save(existingCategoryById);
-            }else if(existingCategoryByName != null){
-                throw new RuntimeException("Ya existe ese nombre en otra categoria");
+                return categoryRepository.save(existingCategory);
             } else {
                 throw new RuntimeException("La categoria no se encontró para la actualización");
             }
