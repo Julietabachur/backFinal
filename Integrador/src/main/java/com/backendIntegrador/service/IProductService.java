@@ -13,6 +13,8 @@ public interface IProductService {
 
     Page<Product> productList( Pageable pageable ) throws Exception;
 
+    Page<Product> findByIdIn(List<String> productId, Pageable pageable);
+
     Product getProductById( String id ) throws Exception;
 
     boolean delete( String id ) throws Exception;

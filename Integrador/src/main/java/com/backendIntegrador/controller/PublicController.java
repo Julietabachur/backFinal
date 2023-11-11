@@ -43,10 +43,19 @@ public class PublicController {
             @RequestParam(defaultValue = "10") int size
     ) {
         try {
+
+            // Establecer valores predeterminados si no se proporcionan fechas
+            if (startDate == null) {
+                startDate = LocalDate.now(); // Fecha actual como valor predeterminado
+            }
+            if (endDate == null) {
+                endDate = LocalDate.of(2024, 12, 1);
+            }
             PageRequest pageable = PageRequest.of(page, size);
             Page<Product> results = productService.searchProductsByProductNameAndDateRange(productName, startDate, endDate, pageable);
             return ResponseEntity.ok(results);
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }

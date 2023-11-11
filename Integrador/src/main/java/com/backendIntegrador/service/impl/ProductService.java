@@ -1,8 +1,10 @@
 package com.backendIntegrador.service.impl;
 
 import com.backendIntegrador.model.Product;
+import com.backendIntegrador.model.Reserve;
 import com.backendIntegrador.repository.CategoryRepository;
 import com.backendIntegrador.repository.ProductRepository;
+import com.backendIntegrador.repository.ReserveRepository;
 import com.backendIntegrador.service.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -22,6 +25,8 @@ public class ProductService implements IProductService {
     private final ProductRepository productRepository;
     @Autowired
     private CategoryRepository categoryRepository;
+    @Autowired
+    private ReserveRepository reserveRepository;
 
     @Autowired
     private final ProductIdService productIdService = null;
@@ -58,6 +63,11 @@ public class ProductService implements IProductService {
         }
     }
 
+    @Override
+    public Page<Product> findByIdIn( List<String> productId,Pageable pageable ) {
+        return productRepository.findByIdIn(productId, pageable);
+    }
+
 
     @Override
     public Product update( Product product ) throws Exception {
@@ -85,9 +95,67 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public Page<Product> searchProductsByProductNameAndDateRange( String productName, LocalDate startDate, LocalDate endDate, PageRequest pageable ) {
-        return productRepository.searchAvailableProductsByProductNameAndDateRange(productName, startDate, endDate, pageable);
+    public Page<Product> searchProductsByProductNameAndDateRange(
+            String productName, LocalDate startDate, LocalDate endDate, PageRequest pageable) {
+        try {
+            List<String> availableProductIds = new ArrayList<>();
+
+            // Obtener productos por nombre
+            List<Product> products = productRepository.findByProductNameRegexIgnoreCase(productName, pageable);
+
+            // Verificar superposición de fechas
+            for (Product product : products) {
+
+                boolean isAvailable = isProductAvailable(product.getId(),startDate,endDate);
+
+                // Obtener reservas asociadas al producto
+                List<Reserve> reservations = reserveRepository.findByIdIn(product.getReserveIds());
+
+                // Verificar superposición de fechas con cada reserva
+                /*for (Reserve reservation : reservations) {
+                    if (isDateRangeOverlap(reservation.getStartDate(), reservation.getEndDate(), startDate, endDate)) {
+                        isAvailable = false;
+                        break; // No es necesario verificar más reservas si ya hay superposición
+                    }
+                }
+
+                 */
+
+                // Si no hay superposición, agregar el producto a la lista de disponibles
+                if (isAvailable) {
+                    System.out.println(product.getProductName() + " " + isAvailable);
+                    availableProductIds.add(product.getId());
+                }
+            }
+
+            // Obtener los productos disponibles paginados
+            return productRepository.findByIdIn(availableProductIds,pageable);
+        } catch (Exception e) {
+            // Manejar excepciones según tus necesidades
+            throw new RuntimeException("Error al buscar productos disponibles: " + e.getMessage());
+        }
     }
+
+    // Método para verificar si el producto está disponible en la fecha proporcionada
+    private boolean isProductAvailable(String productId, LocalDate startDate, LocalDate endDate) {
+        // Consultar las reservas existentes para el producto
+        List<Reserve> existingReservations = reserveRepository.findByProductId(productId);
+
+        // Verificar si la fecha inicial está dentro del rango de fechas de alguna reserva
+        for (Reserve existingReserve : existingReservations) {
+            LocalDate reserveStartDate = existingReserve.getStartDate();
+
+            // Si la fecha inicial está dentro del rango de fechas de la reserva, el producto no está disponible
+            if (!startDate.isBefore(reserveStartDate)) {
+                return false;
+            }
+
+        }
+
+        return true; // El producto está disponible
+    }
+
+
 
 
     @Override
