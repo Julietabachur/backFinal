@@ -159,15 +159,15 @@ public class ClientController {
     @PutMapping("/chk/{id}")   // modifica el booleano isVerified en el objeto cliente. Evita pasar todos los datos del usuario.
     public ResponseEntity<?> update( @PathVariable String id ) {
         try {
-            // Verifica si el producto con el ID existe
+            // Verifica si el usuario con el ID existe
             Client existingUser = clientService.getClientById(id);
 
             if (existingUser == null) {
-                // Producto no encontrado, devuelve un error 404
+                // Usuario no encontrado, devuelve un error 404
                 return ResponseEntity.notFound().build();
             }
 
-            // Actualiza los campos relevantes del producto con los datos proporcionados
+            // Actualiza los campos relevantes del usuario con los datos proporcionados
             existingUser.setVerified(true);
 
             // Llama al servicio para realizar la actualización

@@ -65,7 +65,7 @@ public class EmailController {
                     System.out.println(e.getMessage());
                     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error en el envío de mail.");
                 }
-                return ResponseEntity.ok().build();
+                return ResponseEntity.ok().body(existingUser.getEmail());
 
             } catch (Exception e) {
                 // Maneja cualquier excepción que pueda ocurrir
