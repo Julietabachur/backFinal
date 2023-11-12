@@ -101,7 +101,7 @@ public class ProductService implements IProductService {
             List<String> availableProductIds = new ArrayList<>();
 
             // Obtener productos por nombre
-            List<Product> products = productRepository.findByProductNameRegexIgnoreCase(productName, pageable);
+            List<Product> products = productRepository.findByProductNameRegexIgnoreCase(productName);
 
             // Verificar superposición de fechas
             for (Product product : products) {
@@ -123,7 +123,6 @@ public class ProductService implements IProductService {
 
                 // Si no hay superposición, agregar el producto a la lista de disponibles
                 if (isAvailable) {
-                    System.out.println(product.getProductName() + " " + isAvailable);
                     availableProductIds.add(product.getId());
                 }
             }

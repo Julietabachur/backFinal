@@ -22,7 +22,7 @@ public interface ProductRepository extends MongoRepository<Product, String> {
     Page<Product> searchAvailableProductsByProductNameAndDateRange(
             String productName, List<String> reservedIds, Pageable pageable);
 
-    List<Product> findByProductNameRegexIgnoreCase(String productName, Pageable pageable);
+    List<Product> findByProductNameRegexIgnoreCase(String productName);
 
     Page<Product> findByIdIn( List<String> productId, Pageable pageable);
 }
