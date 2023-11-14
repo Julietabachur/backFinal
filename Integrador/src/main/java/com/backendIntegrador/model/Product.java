@@ -24,7 +24,7 @@ public class Product {
     private String productName;
     private String thumbnail;
     private List<String> gallery;
-    private String Detail;
+    private String detail;
     private List<Characteristic> features;
     private String category;
     private List<String> reserveIds;

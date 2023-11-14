@@ -9,4 +9,6 @@ public interface ReserveRepository extends MongoRepository<Reserve, String> {
     List<Reserve> findByProductId( String productId );
 
     List<Reserve> findByIdIn( List<String> reserveIds );
+
+    List<Reserve> findByProductIdIn( List<String> idList );
 }

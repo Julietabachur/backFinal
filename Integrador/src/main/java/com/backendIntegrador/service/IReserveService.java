@@ -12,4 +12,6 @@ public interface IReserveService {
     Reserve getReserveById( String id ) throws Exception;
 
     boolean delete( String id ) throws Exception;
+
+    List<Reserve> getReserveByIdIn( List<String> idList );
 }

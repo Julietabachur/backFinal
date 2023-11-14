@@ -116,4 +116,9 @@ public class ReserveService implements IReserveService {
         return false;
 
     }
+
+    @Override
+    public List<Reserve> getReserveByIdIn( List<String> idList ) {
+        return reserveRepository.findByProductIdIn(idList);
+    }
 }
