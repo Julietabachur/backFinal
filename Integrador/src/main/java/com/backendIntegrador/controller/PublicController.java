@@ -35,15 +35,15 @@ public class PublicController {
 
 
     @GetMapping("/products/search")
-    public ResponseEntity<Page<Product>> searchProducts(
+    public ResponseEntity<?> searchProducts(
             @RequestParam(required = false) String productName,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
+            @RequestParam Map<String, Object> params,
+            Model model
     ) {
         try {
-
+            int page = params.get("page") != null ? (Integer.parseInt(params.get("page").toString()) - 1) : 0;
             // Establecer valores predeterminados si no se proporcionan fechas
             if (startDate == null) {
                 startDate = LocalDate.now(); // Fecha actual como valor predeterminado
@@ -51,14 +51,36 @@ public class PublicController {
             if (endDate == null) {
                 endDate = LocalDate.of(2024, 12, 1);
             }
-            PageRequest pageable = PageRequest.of(page, size);
+
+            PageRequest pageable = PageRequest.of(page, 10);
             Page<Product> results = productService.searchProductsByProductNameAndDateRange(productName, startDate, endDate, pageable);
-            return ResponseEntity.ok(results);
+
+            int totalPage = results.getTotalPages();
+            if (totalPage > 0) {
+                List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
+                model.addAttribute("pages", pages);
+            }
+            if (page > totalPage) {
+                return ResponseEntity.status((HttpStatus.NOT_FOUND)).body("{\"error\":\"Error. No existe esa pagina\"}");
+            }
+
+            List<Product> productList = results.getContent();
+            Long totalElements = results.getTotalElements();
+
+            model.addAttribute("content", productList);
+            model.addAttribute("current", page + 1);
+            model.addAttribute("next", page + 2);
+            model.addAttribute("prev", page);
+            model.addAttribute("last", totalPage);
+            model.addAttribute("totalElements", totalElements);
+
+            return ResponseEntity.ok().body(model);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
 
     @GetMapping("/category")
     public ResponseEntity<?> findAllCategories( @RequestParam Map<String, Object> params, Model model ) throws Exception {
