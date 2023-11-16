@@ -3,9 +3,11 @@ package com.backendIntegrador.controller;
 import com.backendIntegrador.model.Category;
 import com.backendIntegrador.model.Characteristic;
 import com.backendIntegrador.model.Product;
+import com.backendIntegrador.model.Reserve;
 import com.backendIntegrador.service.impl.CategoryService;
 import com.backendIntegrador.service.impl.CharacteristicService;
 import com.backendIntegrador.service.impl.ProductService;
+import com.backendIntegrador.service.impl.ReserveService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -32,6 +34,8 @@ public class PublicController {
     private CategoryService categoryService;
     @Autowired
     private ProductService productService;
+    @Autowired
+    private ReserveService reserveService;
 
 
     @GetMapping("/products/search")
@@ -175,6 +179,17 @@ public class PublicController {
             return ResponseEntity.ok().body(characteristic);
         } catch (Exception e) {
             return ResponseEntity.status((HttpStatus.NOT_FOUND)).body("{\"error\":\"Error. En getCharById\"}");
+        }
+    }
+
+    @GetMapping("/reserves/search/byProductId")
+    public ResponseEntity<?> getReserveByProductId( @RequestParam("productId") String productId ) {
+        try {
+            List<Reserve> reserve = reserveService.getReserveByProductId(productId);
+
+            return ResponseEntity.ok().body(reserve);
+        } catch (Exception e) {
+            return (ResponseEntity.status((HttpStatus.NOT_FOUND)).body("{\"error\":\"Error. En getReserveById\"}"));
         }
     }
 

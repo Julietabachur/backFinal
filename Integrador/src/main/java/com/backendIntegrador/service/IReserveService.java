@@ -13,5 +13,6 @@ public interface IReserveService {
 
     boolean delete( String id ) throws Exception;
 
-    List<Reserve> getReserveByIdIn( List<String> idList );
+
+    List<Reserve> getReserveByProductId( String productId );
 }

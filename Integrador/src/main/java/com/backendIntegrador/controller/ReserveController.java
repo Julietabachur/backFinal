@@ -52,16 +52,7 @@ public class ReserveController {
         }
     }
 
-    @GetMapping("/search")
-    public ResponseEntity<?> getReserveByIds( @RequestParam("idList") List<String> idList ) {
-        try {
-            List<Reserve> reserve = reserveService.getReserveByIdIn(idList);
 
-            return ResponseEntity.ok().body(reserve);
-        } catch (Exception e) {
-            return (ResponseEntity.status((HttpStatus.NOT_FOUND)).body("{\"error\":\"Error. En getReserveById\"}"));
-        }
-    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete( @PathVariable("id") String id ) throws Exception {

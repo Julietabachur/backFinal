@@ -41,7 +41,7 @@ public class ReserveService implements IReserveService {
             if (!isProductAvailable(reserve.getProductId(), reserve.getStartDate(), reserve.getEndDate())) {
                 throw new Exception("El producto no está disponible en la fecha proporcionada.");
             }
-
+            System.out.println(reserve.getStartDate());
             // Guarda la reserva y obtiene el ID generado
             Reserve reserveMade = reserveRepository.save(reserve);
 
@@ -118,7 +118,9 @@ public class ReserveService implements IReserveService {
     }
 
     @Override
-    public List<Reserve> getReserveByIdIn( List<String> idList ) {
-        return reserveRepository.findByProductIdIn(idList);
+    public List<Reserve> getReserveByProductId( String productId ) {
+        return reserveRepository.findByProductId(productId);
     }
+
+
 }
