@@ -25,4 +25,5 @@ public interface ProductRepository extends MongoRepository<Product, String> {
     List<Product> findByProductNameRegexIgnoreCase(String productName);
 
     Page<Product> findByIdIn( List<String> productId, Pageable pageable);
+
 }

@@ -28,5 +28,6 @@ public class ClientDto {
     private String cel;
     private Address address;
     private List<String> reserveIds;
+    private List<String> favorites;
 
 }

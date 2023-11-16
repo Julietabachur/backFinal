@@ -4,6 +4,7 @@ import com.backendIntegrador.model.Client;
 import com.backendIntegrador.repository.ClientRepository;
 import com.backendIntegrador.service.IClientService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -94,33 +95,27 @@ public class ClientService implements IClientService {
     }
 
     @Override
-    public Client update( Client client ) throws Exception {
-        try {
-            Client existingUser = clientRepository.findById(client.getId()).orElse(null);
+    public Client update(Client client) throws ChangeSetPersister.NotFoundException {
+        Client existingUser = clientRepository.findById(client.getId())
+                .orElseThrow(ChangeSetPersister.NotFoundException::new);
 
-            if (existingUser != null) {
-                // Update the user's roles
-                existingUser.setFirstName(client.getFirstName());
-                existingUser.setLastName(client.getLastName());
-                existingUser.setClientName(client.getClientName());
-                existingUser.setPassword(client.getPassword());
-                existingUser.setRoles(client.getRoles());
-                existingUser.setVerified(client.isVerified());  // agregado para actualizar boolean isVerified
-                existingUser.setEmail(client.getEmail());
-                existingUser.setCel(client.getCel());
-                existingUser.setAddress(client.getAddress());
-                existingUser.setReserveIds(client.getReserveIds());
+        // Actualiza los campos relevantes del usuario con los datos proporcionados
+        existingUser.setFirstName(client.getFirstName());
+        existingUser.setLastName(client.getLastName());
+        existingUser.setClientName(client.getClientName());
+        existingUser.setPassword(client.getPassword());
+        existingUser.setRoles(client.getRoles());
+        existingUser.setVerified(client.isVerified());
+        existingUser.setEmail(client.getEmail());
+        existingUser.setCel(client.getCel());
+        existingUser.setAddress(client.getAddress());
+        existingUser.setReserveIds(client.getReserveIds());
+        existingUser.setFavorites(client.getFavorites());
 
-                // Save the updated user to the repository
-                Client updatedUser = clientRepository.save(existingUser);
-                return updatedUser;
-            } else {
-                throw new RuntimeException("El usuario no se encontró para la actualización");
-            }
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
-        }
+        // Guarda el usuario actualizado en el repositorio
+        return clientRepository.save(existingUser);
     }
+
 
 
 }

@@ -6,6 +6,7 @@ import com.backendIntegrador.model.Client;
 import com.backendIntegrador.service.impl.ClientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
@@ -125,36 +126,19 @@ public class ClientController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update( @PathVariable String id, @RequestBody Client updatedClient ) {
+    public ResponseEntity<?> update(@PathVariable String id, @RequestBody Client updatedClient) {
         try {
-            // Verifica si el producto con el ID existe
-            Client existingUser = clientService.getClientById(id);
-
-            if (existingUser == null) {
-                // Producto no encontrado, devuelve un error 404
-                return ResponseEntity.notFound().build();
-            }
-
-            // Actualiza los campos relevantes del producto con los datos proporcionados
-            existingUser.setClientName(updatedClient.getClientName());
-            existingUser.setFirstName(updatedClient.getFirstName());
-            existingUser.setLastName(updatedClient.getLastName());
-            existingUser.setEmail(updatedClient.getEmail());
-            existingUser.setVerified(updatedClient.isVerified());
-            existingUser.setCel(updatedClient.getCel());
-            existingUser.setReserveIds(updatedClient.getReserveIds());
-            existingUser.setAddress(updatedClient.getAddress());
-            existingUser.setPassword(updatedClient.getPassword());
-
             // Llama al servicio para realizar la actualización
-            Client updated = clientService.update(existingUser);
+            Client updated = clientService.update(updatedClient);
 
             return ResponseEntity.ok(updated);
+        } catch (ChangeSetPersister.NotFoundException e) {
+            return ResponseEntity.notFound().build();
         } catch (Exception e) {
-            // Maneja cualquier excepción que pueda ocurrir
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error en la actualización");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
+
 
     @PutMapping("/chk/{id}")   // modifica el booleano isVerified en el objeto cliente. Evita pasar todos los datos del usuario.
     public ResponseEntity<?> update( @PathVariable String id ) {

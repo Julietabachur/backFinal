@@ -35,6 +35,7 @@ public class Client implements UserDetails {
     private String cel;
     private Address address;
     private List<String> reserveIds;
+    private List<String> favorites;
 
     public Client( String email, String username ) {
         this.email = email;
@@ -53,7 +54,16 @@ public class Client implements UserDetails {
         this.reserveIds = reserveIds;
     }
 
+    public List<String> getFavorites() {
+        if (favorites == null) {
+            favorites = new ArrayList<>();
+        }
+        return favorites;
+    }
 
+    public void setFavorites(List<String> favorites) {
+        this.favorites = favorites;
+    }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<SimpleGrantedAuthority> authorities = Arrays.stream(Role.values())

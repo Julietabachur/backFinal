@@ -101,5 +101,36 @@ public class PublicProductController {
 
     }
 
+    @GetMapping("/favorites")
+    public ResponseEntity<?> GetFavorites( @RequestParam List<String> productIds,@RequestParam Map<String, Object> params, Model model ) {
+        int page = params.get("page") != null ? (Integer.parseInt(params.get("page").toString()) - 1) : 0;
+
+        PageRequest pageRequest = PageRequest.of(page, 10);
+
+        Page<Product> pageProduct = productService.findByIdIn(productIds, pageRequest);
+
+        int totalPage = pageProduct.getTotalPages();
+        if (totalPage > 0) {
+            List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
+            model.addAttribute("pages", pages);
+        }
+        if (page > totalPage) {
+            return ResponseEntity.status((HttpStatus.NOT_FOUND)).body("{\"error\":\"Error. No existe esa pagina\"}");
+        }
+
+        List<Product> productList = pageProduct.getContent();
+        Long totalElements = pageProduct.getTotalElements();
+
+
+        model.addAttribute("content", productList);
+        model.addAttribute("current", page + 1);
+        model.addAttribute("next", page + 2);
+        model.addAttribute("prev", page);
+        model.addAttribute("last", totalPage);
+        model.addAttribute("totalElements", totalElements);
+        return ResponseEntity.ok().body(model);
+
+    }
+
 
 }
