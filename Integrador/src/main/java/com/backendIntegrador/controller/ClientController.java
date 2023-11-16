@@ -128,7 +128,14 @@ public class ClientController {
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable String id, @RequestBody Client updatedClient) {
         try {
+
             // Llama al servicio para realizar la actualización
+            Client existingUser = clientService.getClientById(id);
+            if (existingUser == null) {
+                // Usuario no encontrado, devuelve un error 404
+                return ResponseEntity.notFound().build();
+            }
+            updatedClient.setId(id);
             Client updated = clientService.update(updatedClient);
 
             return ResponseEntity.ok(updated);

@@ -98,7 +98,6 @@ public class ClientService implements IClientService {
     public Client update(Client client) throws ChangeSetPersister.NotFoundException {
         Client existingUser = clientRepository.findById(client.getId())
                 .orElseThrow(ChangeSetPersister.NotFoundException::new);
-
         // Actualiza los campos relevantes del usuario con los datos proporcionados
         existingUser.setFirstName(client.getFirstName());
         existingUser.setLastName(client.getLastName());
