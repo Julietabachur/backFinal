@@ -126,23 +126,35 @@ public class ClientController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable String id, @RequestBody Client updatedClient) {
+    public ResponseEntity<?> update( @PathVariable String id, @RequestBody Client updatedClient ) {
         try {
-
-            // Llama al servicio para realizar la actualización
+            // Verifica si el producto con el ID existe
             Client existingUser = clientService.getClientById(id);
+
             if (existingUser == null) {
-                // Usuario no encontrado, devuelve un error 404
+                // Producto no encontrado, devuelve un error 404
                 return ResponseEntity.notFound().build();
             }
-            updatedClient.setId(id);
-            Client updated = clientService.update(updatedClient);
+
+            // Actualiza los campos relevantes del producto con los datos proporcionados
+            existingUser.setClientName(updatedClient.getClientName());
+            existingUser.setFirstName(updatedClient.getFirstName());
+            existingUser.setLastName(updatedClient.getLastName());
+            existingUser.setEmail(updatedClient.getEmail());
+            existingUser.setVerified(updatedClient.isVerified());
+            existingUser.setCel(updatedClient.getCel());
+            existingUser.setReserveIds(updatedClient.getReserveIds());
+            existingUser.setAddress(updatedClient.getAddress());
+            existingUser.setPassword(updatedClient.getPassword());
+            existingUser.setFavorites(updatedClient.getFavorites());
+
+            // Llama al servicio para realizar la actualización
+            Client updated = clientService.update(existingUser);
 
             return ResponseEntity.ok(updated);
-        } catch (ChangeSetPersister.NotFoundException e) {
-            return ResponseEntity.notFound().build();
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            // Maneja cualquier excepción que pueda ocurrir
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error en la actualización");
         }
     }
 
