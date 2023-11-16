@@ -6,7 +6,6 @@ import com.backendIntegrador.model.Client;
 import com.backendIntegrador.service.impl.ClientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
@@ -14,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -56,7 +56,7 @@ public class ClientController {
             response.put("username", client.getClientName());
             response.put("roles", client.getRoles());
             response.put("isVerified", client.isVerified()); // envia el booleano de verificado o no.
-            response.put("id",client.getId()); // envia el ID.
+            response.put("id", client.getId()); // envia el ID.
 
             // Add other user data as needed
 
@@ -95,10 +95,6 @@ public class ClientController {
 
 
         if (client.isPresent()) {
-            // Clonar el objeto Person y eliminar el campo 'password'
-            //Client userWithoutPassword = user.get();
-            //userWithoutPassword.setPassword(null);
-
             ClientDto clientDto = new ClientDto();
             clientDto.setFirstName(client.get().getFirstName());
             clientDto.setLastName(client.get().getLastName());
@@ -126,30 +122,46 @@ public class ClientController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update( @PathVariable String id, @RequestBody Client updatedClient ) {
+    public ResponseEntity<?> update(@PathVariable String id, @RequestBody Client updatedClient) {
         try {
-            // Verifica si el producto con el ID existe
-            Client existingUser = clientService.getClientById(id);
+            // Verifica si el cliente con el ID existe
+            Client existingClient = clientService.getClientById(id);
 
-            if (existingUser == null) {
-                // Producto no encontrado, devuelve un error 404
+            if (existingClient == null) {
+                // Cliente no encontrado, devuelve un error 404
                 return ResponseEntity.notFound().build();
             }
 
-            // Actualiza los campos relevantes del producto con los datos proporcionados
-            existingUser.setClientName(updatedClient.getClientName());
-            existingUser.setFirstName(updatedClient.getFirstName());
-            existingUser.setLastName(updatedClient.getLastName());
-            existingUser.setEmail(updatedClient.getEmail());
-            existingUser.setVerified(updatedClient.isVerified());
-            existingUser.setCel(updatedClient.getCel());
-            existingUser.setReserveIds(updatedClient.getReserveIds());
-            existingUser.setAddress(updatedClient.getAddress());
-            existingUser.setPassword(updatedClient.getPassword());
-            existingUser.setFavorites(updatedClient.getFavorites());
+            // Obtén la clase del objeto Cliente
+            Class<?> clientClass = Client.class;
+
+            // Obtén todos los campos de la clase
+            Field[] fields = clientClass.getDeclaredFields();
+
+            // Itera sobre los campos
+            for (Field field : fields) {
+                // Hace accesible el campo para poder establecer su valor
+                field.setAccessible(true);
+
+                // Obtiene el valor actual del campo en existingClient
+                Object existingValue = field.get(existingClient);
+
+                // Obtiene el valor actualizado de updatedClient
+                Object updatedValue = field.get(updatedClient);
+
+                // Si el valor actualizado no es nulo, actualiza el campo en existingClient
+                if (updatedValue != null) {
+                    field.set(existingClient, updatedValue);
+                } else {
+                    // Si el valor actualizado es nulo, pero el valor actual en existingClient no lo es, mantén el valor actual
+                    if (existingValue != null) {
+                        field.set(existingClient, existingValue);
+                    }
+                }
+            }
 
             // Llama al servicio para realizar la actualización
-            Client updated = clientService.update(existingUser);
+            Client updated = clientService.update(existingClient);
 
             return ResponseEntity.ok(updated);
         } catch (Exception e) {
@@ -159,7 +171,8 @@ public class ClientController {
     }
 
 
-    @PutMapping("/chk/{id}")   // modifica el booleano isVerified en el objeto cliente. Evita pasar todos los datos del usuario.
+    @PutMapping("/chk/{id}")
+    //Modifica el booleano isVerified en el objeto cliente. Evita pasar todos los datos del usuario.
     public ResponseEntity<?> update( @PathVariable String id ) {
         try {
             // Verifica si el usuario con el ID existe
