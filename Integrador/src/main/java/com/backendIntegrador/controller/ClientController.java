@@ -55,6 +55,7 @@ public class ClientController {
             Map<String, Object> response = new HashMap<>();
             response.put("username", client.getClientName());
             response.put("roles", client.getRoles());
+            response.put("favorites",client.getFavorites());
             response.put("isVerified", client.isVerified()); // envia el booleano de verificado o no.
             response.put("id", client.getId()); // envia el ID.
 
