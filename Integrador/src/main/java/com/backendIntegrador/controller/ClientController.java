@@ -122,6 +122,8 @@ public class ClientController {
         return ResponseEntity.noContent().build();
     }
 
+    //método para actualizar en el cliente solo con los datos que quiero cambiar y mantiene los otros,
+    // sirve lo mismo para favoritos o para cualquier otro filds que quiera modificar
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable String id, @RequestBody Client updatedClient) {
         try {
