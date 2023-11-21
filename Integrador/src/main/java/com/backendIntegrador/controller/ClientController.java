@@ -174,7 +174,7 @@ public class ClientController {
         }
     }
 
-
+    /*
     @PutMapping("/chk/{id}")
     //Modifica el booleano isVerified en el objeto cliente. Evita pasar todos los datos del usuario.
     public ResponseEntity<?> update( @PathVariable String id ) {
@@ -204,5 +204,7 @@ public class ClientController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error en la actualización");
         }
     }
+
+     */
 
 }
