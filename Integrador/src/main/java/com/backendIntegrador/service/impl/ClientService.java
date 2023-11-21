@@ -110,7 +110,7 @@ public class ClientService implements IClientService {
         existingUser.setAddress(client.getAddress());
         existingUser.setReserveIds(client.getReserveIds());
         existingUser.setFavorites(client.getFavorites());
-
+        System.out.println("del update" + existingUser.isVerified());
         // Guarda el usuario actualizado en el repositorio
         return clientRepository.save(existingUser);
     }
