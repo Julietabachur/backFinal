@@ -1,13 +1,7 @@
 package com.backendIntegrador.controller;
 
-import com.backendIntegrador.model.Category;
-import com.backendIntegrador.model.Characteristic;
-import com.backendIntegrador.model.Product;
-import com.backendIntegrador.model.Reserve;
-import com.backendIntegrador.service.impl.CategoryService;
-import com.backendIntegrador.service.impl.CharacteristicService;
-import com.backendIntegrador.service.impl.ProductService;
-import com.backendIntegrador.service.impl.ReserveService;
+import com.backendIntegrador.model.*;
+import com.backendIntegrador.service.impl.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -34,6 +28,9 @@ public class PublicController {
     private CategoryService categoryService;
     @Autowired
     private ProductService productService;
+
+    @Autowired
+    private PolicyService policyService;
     @Autowired
     private ReserveService reserveService;
 
@@ -177,6 +174,24 @@ public class PublicController {
             Characteristic characteristic = characteristicService.getCharById(id);
 
             return ResponseEntity.ok().body(characteristic);
+        } catch (Exception e) {
+            return ResponseEntity.status((HttpStatus.NOT_FOUND)).body("{\"error\":\"Error. En getCharById\"}");
+        }
+    }
+
+    @GetMapping("/policy/all")
+    public ResponseEntity<?> findAllPolicies () throws Exception {
+
+        List<Policy> policy = policyService.findAllPolicies();
+
+        return ResponseEntity.ok().body(policy);
+    }
+
+    @GetMapping("/policy/{id}")
+    public ResponseEntity<?> getPolicyById( @PathVariable("id") String id ) {
+        try {
+            Policy policy = policyService.getPolicyById(id);
+            return ResponseEntity.ok().body(policy);
         } catch (Exception e) {
             return ResponseEntity.status((HttpStatus.NOT_FOUND)).body("{\"error\":\"Error. En getCharById\"}");
         }
