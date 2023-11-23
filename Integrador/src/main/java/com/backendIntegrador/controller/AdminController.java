@@ -1,13 +1,11 @@
 package com.backendIntegrador.controller;
 
 import com.backendIntegrador.DTO.ClientDto;
-import com.backendIntegrador.model.Category;
-import com.backendIntegrador.model.Characteristic;
-import com.backendIntegrador.model.Client;
-import com.backendIntegrador.model.Role;
+import com.backendIntegrador.model.*;
 import com.backendIntegrador.service.impl.CategoryService;
 import com.backendIntegrador.service.impl.CharacteristicService;
 import com.backendIntegrador.service.impl.ClientService;
+import com.backendIntegrador.service.impl.PolicyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -35,6 +33,9 @@ public class AdminController {
     private final CharacteristicService characteristicService;
     @Autowired
     private final CategoryService categoryService;
+
+    @Autowired
+    private final PolicyService policyService;
 
 
     @PutMapping("/clients/{id}")
@@ -199,6 +200,46 @@ public class AdminController {
     @DeleteMapping("/char/{id}")
     public ResponseEntity<?> deleteChar( @PathVariable("id") String id ) throws Exception {
         characteristicService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
+
+    @PostMapping("/policy")
+    public ResponseEntity<?> savePolicy(@RequestBody Policy policy ) {
+        try {
+            return ResponseEntity.ok().body(policyService.save(policy));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\"" + e.getMessage() + "\"}");
+        }
+    }
+
+    @PutMapping("/policy/{id}")
+    public ResponseEntity<?> update( @PathVariable String id, @RequestBody Policy updatePolicy ) {
+        try {
+            Policy existingPolicy = policyService.getPolicyById(id);
+            Policy existingPolicyName = policyService.getPolicyByPolicyName(updatePolicy.getPolicyName());
+            updatePolicy.setId(id);
+            if (existingPolicy == null) {
+                return ResponseEntity.notFound().build();
+            } else if (existingPolicyName != null && existingPolicyName.getId().equals(existingPolicy.getId())) {
+
+                Policy updated = policyService.update(updatePolicy);
+                return ResponseEntity.ok(updated);
+            } else if (existingPolicyName == null) {
+                Policy updated = policyService.update(updatePolicy);
+                return ResponseEntity.ok(updated);
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"error\":\"" + "Hubo un error" + "\"}");
+            }
+        } catch (Exception e) {
+            // Maneja cualquier excepción que pueda ocurrir
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"error\":\"" + e.getMessage() + "\"}");
+        }
+    }
+
+    @DeleteMapping("/policy/{id}")
+    public ResponseEntity<?> deletePolicy( @PathVariable("id") String id ) throws Exception {
+        policyService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
