@@ -6,6 +6,8 @@ import com.backendIntegrador.service.IPolicyService;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,15 +19,17 @@ public class PolicyService implements IPolicyService {
 
     @Autowired
     private PolicyRepository policyRepository;
-
     @Autowired
     private Validator validator;
+
 
     @Override
     @Transactional
     public Policy save(Policy policy) throws Exception {
         try {
+
             Set<ConstraintViolation<Policy>> violations = validator.validate(policy);
+
             if (!violations.isEmpty()) {
                 // Handle validation errors
                 StringBuilder errorMessage = new StringBuilder("Validation errors: ");
@@ -35,32 +39,25 @@ public class PolicyService implements IPolicyService {
                 throw new Exception(errorMessage.toString());
             }
             Policy existingPolicy = policyRepository.findByPolicyName(policy.getPolicyName());
-            if (existingPolicy != null) {
-                // La politica ya existe, puedes manejarlo según tus necesidades, como lanzar una excepción o actualizar la politica existente.
-                // Por ejemplo, para lanzar una excepción, puedes hacer lo siguiente:
-                throw new Exception("La politica ya existe en la base de datos.");
-            } else {
-                // La politica no existe, puedes guardarla y retornarla.
+            if (existingPolicy == null) {
                 policyRepository.save(policy);
                 return policy;
+            } else {
+                throw new Exception("Ya existe esa politica");
             }
+
         } catch (Exception e) {
-            // Maneja la excepción de manera apropiada, por ejemplo, registrándola o lanzando una excepción personalizada.
-            throw new Exception("Error al guardar la politica: " + e.getMessage());
+            throw new Exception(e.getMessage());
         }
     }
 
     @Override
-    public boolean delete(String id) throws Exception {
+    public Page<Policy> findAll(Pageable pageable) throws Exception {
         try {
-            if (policyRepository.existsById(id)) {
-                policyRepository.deleteById(id);
-                return true;
-            }
+            return policyRepository.findAll(pageable);
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
-        return false;
     }
 
     @Override
@@ -69,7 +66,7 @@ public class PolicyService implements IPolicyService {
     }
 
     @Override
-    public Policy getPolicyById(String id) throws Exception {
+    public Policy getPolicyById (String id) throws Exception {
         try {
             return policyRepository.findById(id).orElse(null);
         } catch (Exception e) {
@@ -83,6 +80,21 @@ public class PolicyService implements IPolicyService {
     }
 
     @Override
+    public boolean delete(String id) throws Exception {
+        try {
+            if (policyRepository.existsById(id)) {
+                policyRepository.deleteById(id);
+                return true;
+            }
+
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+        return false;
+    }
+
+
+    @Override
     public boolean checkPolicyName(String policyName) {
         Policy existingPolicy = policyRepository.findByPolicyName(policyName);
         return existingPolicy == null;
@@ -91,7 +103,9 @@ public class PolicyService implements IPolicyService {
     @Override
     public Policy update(Policy policy) throws Exception {
         try {
+
             Set<ConstraintViolation<Policy>> violations = validator.validate(policy);
+
             if (!violations.isEmpty()) {
                 // Handle validation errors
                 StringBuilder errorMessage = new StringBuilder("Validation errors: ");
@@ -100,16 +114,19 @@ public class PolicyService implements IPolicyService {
                 }
                 throw new Exception(errorMessage.toString());
             }
-            Policy existingPolicyByName = policyRepository.findByPolicyName(policy.getPolicyName());
             Policy existingPolicy = policyRepository.findById(policy.getId()).orElse(null);
-            if (existingPolicy != null && existingPolicyByName != null) {
-                if(!(existingPolicyByName.getId().equals(existingPolicy.getId()))){
+            Policy existingPolicyByName = policyRepository.findByPolicyName(policy.getPolicyName());
+            if (existingPolicyByName != null && existingPolicy != null) {
+                if (!(existingPolicyByName.getId().equals(existingPolicy.getId()))) {
                     throw new RuntimeException("Ya existe una politica con ese nombre");
                 }
             }
+
+
             if (existingPolicy != null) {
                 existingPolicy.setPolicyName(policy.getPolicyName());
                 existingPolicy.setDescription(policy.getDescription());
+
                 return policyRepository.save(existingPolicy);
             } else {
                 throw new RuntimeException("La politica no se encontró para la actualización");

@@ -179,12 +179,40 @@ public class PublicController {
         }
     }
 
+    @GetMapping("/policy")
+    public ResponseEntity<?> findAllPolicies( @RequestParam Map<String, Object> params, Model model ) throws Exception {
+        int page = params.get("page") != null ? (Integer.parseInt(params.get("page").toString()) - 1) : 0;
+
+        PageRequest pageRequest = PageRequest.of(page, 10);
+
+        Page<Policy> pagePolicies = policyService.findAll(pageRequest);
+
+        int totalPage = pagePolicies.getTotalPages();
+        if (totalPage > 0) {
+            List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
+            model.addAttribute("pages", pages);
+        }
+        if (page > totalPage) {
+            return ResponseEntity.status((HttpStatus.NOT_FOUND)).body("{\"error\":\"Error. No existe esa pagina\"}");
+        }
+
+        List<Policy> policies = pagePolicies.getContent();
+
+
+        model.addAttribute("content", policies);
+        model.addAttribute("current", page + 1);
+        model.addAttribute("next", page + 2);
+        model.addAttribute("prev", page);
+        model.addAttribute("last", totalPage);
+        return ResponseEntity.ok().body(model);
+    }
+
     @GetMapping("/policy/all")
     public ResponseEntity<?> findAllPolicies () throws Exception {
 
-        List<Policy> policy = policyService.findAllPolicies();
+        List<Policy> policies = policyService.findAllPolicies();
 
-        return ResponseEntity.ok().body(policy);
+        return ResponseEntity.ok().body(policies);
     }
 
     @GetMapping("/policy/{id}")

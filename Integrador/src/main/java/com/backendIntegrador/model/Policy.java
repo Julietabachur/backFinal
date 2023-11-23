@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.List;
+
 @Data //getters y setters
 @Builder
 @NoArgsConstructor //constructor vacio
@@ -25,5 +27,4 @@ public class Policy {
     @Size(min = 3, max = 30, message = "El nombre de politica debe tener entre 3 y 30 caracteres.")
     private String policyName;
     private String description;
-
 }
