@@ -1,5 +1,6 @@
 package com.backendIntegrador.service;
 
+
 import com.backendIntegrador.model.Policy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,4 +26,5 @@ public interface IPolicyService {
     boolean checkPolicyName( String policyName );
 
     Policy update( Policy policy ) throws Exception;
+
 }

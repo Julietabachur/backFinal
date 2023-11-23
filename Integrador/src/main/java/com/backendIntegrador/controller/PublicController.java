@@ -1,13 +1,7 @@
 package com.backendIntegrador.controller;
 
-import com.backendIntegrador.model.Category;
-import com.backendIntegrador.model.Characteristic;
-import com.backendIntegrador.model.Product;
-import com.backendIntegrador.model.Reserve;
-import com.backendIntegrador.service.impl.CategoryService;
-import com.backendIntegrador.service.impl.CharacteristicService;
-import com.backendIntegrador.service.impl.ProductService;
-import com.backendIntegrador.service.impl.ReserveService;
+import com.backendIntegrador.model.*;
+import com.backendIntegrador.service.impl.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -34,6 +28,9 @@ public class PublicController {
     private CategoryService categoryService;
     @Autowired
     private ProductService productService;
+
+    @Autowired
+    private PolicyService policyService;
     @Autowired
     private ReserveService reserveService;
 
@@ -177,6 +174,52 @@ public class PublicController {
             Characteristic characteristic = characteristicService.getCharById(id);
 
             return ResponseEntity.ok().body(characteristic);
+        } catch (Exception e) {
+            return ResponseEntity.status((HttpStatus.NOT_FOUND)).body("{\"error\":\"Error. En getCharById\"}");
+        }
+    }
+
+    @GetMapping("/policy")
+    public ResponseEntity<?> findAllPolicies( @RequestParam Map<String, Object> params, Model model ) throws Exception {
+        int page = params.get("page") != null ? (Integer.parseInt(params.get("page").toString()) - 1) : 0;
+
+        PageRequest pageRequest = PageRequest.of(page, 10);
+
+        Page<Policy> pagePolicies = policyService.findAll(pageRequest);
+
+        int totalPage = pagePolicies.getTotalPages();
+        if (totalPage > 0) {
+            List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
+            model.addAttribute("pages", pages);
+        }
+        if (page > totalPage) {
+            return ResponseEntity.status((HttpStatus.NOT_FOUND)).body("{\"error\":\"Error. No existe esa pagina\"}");
+        }
+
+        List<Policy> policies = pagePolicies.getContent();
+
+
+        model.addAttribute("content", policies);
+        model.addAttribute("current", page + 1);
+        model.addAttribute("next", page + 2);
+        model.addAttribute("prev", page);
+        model.addAttribute("last", totalPage);
+        return ResponseEntity.ok().body(model);
+    }
+
+    @GetMapping("/policy/all")
+    public ResponseEntity<?> findAllPolicies () throws Exception {
+
+        List<Policy> policies = policyService.findAllPolicies();
+
+        return ResponseEntity.ok().body(policies);
+    }
+
+    @GetMapping("/policy/{id}")
+    public ResponseEntity<?> getPolicyById( @PathVariable("id") String id ) {
+        try {
+            Policy policy = policyService.getPolicyById(id);
+            return ResponseEntity.ok().body(policy);
         } catch (Exception e) {
             return ResponseEntity.status((HttpStatus.NOT_FOUND)).body("{\"error\":\"Error. En getCharById\"}");
         }

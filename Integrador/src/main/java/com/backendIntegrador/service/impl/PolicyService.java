@@ -1,9 +1,6 @@
 package com.backendIntegrador.service.impl;
 
-import com.backendIntegrador.model.Category;
-import com.backendIntegrador.model.Characteristic;
 import com.backendIntegrador.model.Policy;
-import com.backendIntegrador.repository.CategoryRepository;
 import com.backendIntegrador.repository.PolicyRepository;
 import com.backendIntegrador.service.IPolicyService;
 import jakarta.validation.ConstraintViolation;
@@ -23,14 +20,17 @@ public class PolicyService implements IPolicyService {
     @Autowired
     private PolicyRepository policyRepository;
 
+
     @Autowired
     private Validator validator;
 
     @Override
     @Transactional
-    public Policy save(Policy policy) throws Exception {
+    public Policy save( Policy policy ) throws Exception {
         try {
+
             Set<ConstraintViolation<Policy>> violations = validator.validate(policy);
+
             if (!violations.isEmpty()) {
                 // Handle validation errors
                 StringBuilder errorMessage = new StringBuilder("Validation errors: ");
@@ -56,7 +56,7 @@ public class PolicyService implements IPolicyService {
     }
 
     @Override
-    public boolean delete(String id) throws Exception {
+    public boolean delete( String id ) throws Exception {
         try {
             if (policyRepository.existsById(id)) {
                 policyRepository.deleteById(id);
@@ -66,10 +66,11 @@ public class PolicyService implements IPolicyService {
             throw new Exception(e.getMessage());
         }
         return false;
+
     }
 
     @Override
-    public Page<Policy> findAll(Pageable pageable) throws Exception {
+    public Page<Policy> findAll( Pageable pageable ) throws Exception {
         try {
             return policyRepository.findAll(pageable);
         } catch (Exception e) {
@@ -83,7 +84,8 @@ public class PolicyService implements IPolicyService {
     }
 
     @Override
-    public Policy getPolicyById(String id) throws Exception {
+
+    public Policy getPolicyById( String id ) throws Exception {
         try {
             return policyRepository.findById(id).orElse(null);
         } catch (Exception e) {
@@ -92,18 +94,18 @@ public class PolicyService implements IPolicyService {
     }
 
     @Override
-    public Policy getPolicyByPolicyName(String policyName) {
+    public Policy getPolicyByPolicyName( String policyName ) {
         return policyRepository.findByPolicyName(policyName);
     }
 
     @Override
-    public boolean checkPolicyName(String policyName) {
+    public boolean checkPolicyName( String policyName ) {
         Policy existingPolicy = policyRepository.findByPolicyName(policyName);
         return existingPolicy == null;
     }
 
     @Override
-    public Policy update(Policy policy) throws Exception {
+    public Policy update( Policy policy ) throws Exception {
         try {
             Set<ConstraintViolation<Policy>> violations = validator.validate(policy);
             if (!violations.isEmpty()) {
@@ -114,16 +116,18 @@ public class PolicyService implements IPolicyService {
                 }
                 throw new Exception(errorMessage.toString());
             }
+
             Policy existingPolicyByName = policyRepository.findByPolicyName(policy.getPolicyName());
             Policy existingPolicy = policyRepository.findById(policy.getId()).orElse(null);
             if (existingPolicy != null && existingPolicyByName != null) {
-                if(!(existingPolicyByName.getId().equals(existingPolicy.getId()))){
+                if (!(existingPolicyByName.getId().equals(existingPolicy.getId()))) {
                     throw new RuntimeException("Ya existe una politica con ese nombre");
                 }
             }
             if (existingPolicy != null) {
                 existingPolicy.setPolicyName(policy.getPolicyName());
                 existingPolicy.setDescription(policy.getDescription());
+
                 return policyRepository.save(existingPolicy);
             } else {
                 throw new RuntimeException("La politica no se encontró para la actualización");

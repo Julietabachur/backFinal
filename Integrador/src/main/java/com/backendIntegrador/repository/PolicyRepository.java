@@ -7,7 +7,6 @@ import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
 
 
-
 @Repository
 public interface PolicyRepository extends MongoRepository<Policy, String> {
     @Query(value = "{'policyName' : ?0 }")
