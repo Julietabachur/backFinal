@@ -54,9 +54,12 @@ public class ClientController {
             // Return the user data as a JSON response
             Map<String, Object> response = new HashMap<>();
             response.put("username", client.getClientName());
+            response.put("email", client.getEmail());
             response.put("roles", client.getRoles());
+
             response.put("favorites",client.getFavorites());
-            response.put("isVerified", client.getIsVerified()); // envia el booleano de verificado o no.
+            response.put("isVerified", client.getIsVerified()); // envia el String de verificado o no.
+
             response.put("id", client.getId()); // envia el ID.
 
             // Add other user data as needed
@@ -125,7 +128,7 @@ public class ClientController {
     //método para actualizar en el cliente solo con los datos que quiero cambiar y mantiene los otros,
     // sirve lo mismo para favoritos o para cualquier otro filds que quiera modificar
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable String id, @RequestBody Client updatedClient) {
+    public ResponseEntity<?> update( @PathVariable String id, @RequestBody Client updatedClient ) {
         try {
             // Verifica si el cliente con el ID existe
             Client existingClient = clientService.getClientById(id);
@@ -185,14 +188,18 @@ public class ClientController {
                 // Usuario no encontrado, devuelve un error 404
                 return ResponseEntity.notFound().build();
             }
-
+            System.out.println(existingUser.isVerified());
             // Actualiza los campos relevantes del usuario con los datos proporcionados
-            existingUser.setVerified(true);
+            if (!existingUser.isVerified()) {
+                existingUser.setVerified(true);
+                Client updated = clientService.update(existingUser);
 
+                return ResponseEntity.ok(updated);
+            }else{
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error el usuario ya esta verificado");
+            }
             // Llama al servicio para realizar la actualización
-            Client updated = clientService.update(existingUser);
 
-            return ResponseEntity.ok(updated);
 
         } catch (Exception e) {
             // Maneja cualquier excepción que pueda ocurrir

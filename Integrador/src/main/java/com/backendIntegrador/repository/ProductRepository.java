@@ -2,12 +2,10 @@ package com.backendIntegrador.repository;
 
 import com.backendIntegrador.model.Product;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 
-import java.time.LocalDate;
 import java.util.List;
 
 public interface ProductRepository extends MongoRepository<Product, String> {
@@ -20,10 +18,10 @@ public interface ProductRepository extends MongoRepository<Product, String> {
     @Query(value = "{ 'productName': { $regex: ?0, $options: 'i' }, " +
             "'reserveIds': { $not: { $in: ?1 } } } }")
     Page<Product> searchAvailableProductsByProductNameAndDateRange(
-            String productName, List<String> reservedIds, Pageable pageable);
+            String productName, List<String> reservedIds, Pageable pageable );
 
-    List<Product> findByProductNameRegexIgnoreCase(String productName);
+    List<Product> findByProductNameRegexIgnoreCase( String productName );
 
-    Page<Product> findByIdIn( List<String> productId, Pageable pageable);
+    Page<Product> findByIdIn( List<String> productId, Pageable pageable );
 
 }
