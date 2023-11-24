@@ -42,7 +42,7 @@ public class JwtService {
 
         extraClaims.put("role", user.getAuthorities());
         extraClaims.put("clientName", user.getClientName());
-        extraClaims.put("isVerified", user.isVerified());
+        //extraClaims.put("isVerified", user.getIsVerified());
 
         return Jwts.builder()
                 .setClaims(extraClaims)  // Agregar claims adicionales (si los hay)

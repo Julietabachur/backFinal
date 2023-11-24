@@ -13,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -32,11 +33,15 @@ public class AuthService {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
         // Obtener detalles del usuario desde el repositorio
         Client user = clientRepository.findByEmail(request.getEmail());
+        Set<Role> roles = user.getRoles();
+        String isVerified = user.getIsVerified();
         // Generar un token JWT para el usuario autenticado
         String token = jwtService.getToken(user);
         // Devolver una respuesta de autenticación que incluye el token
         return AuthResponse.builder()
                 .token(token)
+                .isVerified(isVerified)
+                .roles(roles)
                 .build();
     }
 
@@ -49,7 +54,7 @@ public class AuthService {
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
                 .email(request.getEmail())
-                .isVerified(false)
+                .isVerified("false")
                 .password(passwordEncoder.encode(request.getPassword())) // Encriptar la contraseña
                 .roles(Collections.singleton(Role.USER))// Asignar un rol al usuario (en este caso, USER)
                 .build();

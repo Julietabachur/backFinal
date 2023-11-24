@@ -30,7 +30,7 @@ public class Client implements UserDetails {
     private String clientName;
     private String password;
     private Set<Role> roles;
-    private boolean isVerified = false;
+    private String isVerified; // estaba private y asignaba el valor false
     private String email;
     private String cel;
     private Address address;

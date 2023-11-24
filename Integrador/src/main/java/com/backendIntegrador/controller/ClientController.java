@@ -56,7 +56,7 @@ public class ClientController {
             response.put("username", client.getClientName());
             response.put("roles", client.getRoles());
             response.put("favorites",client.getFavorites());
-            response.put("isVerified", client.isVerified()); // envia el booleano de verificado o no.
+            response.put("isVerified", client.getIsVerified()); // envia el booleano de verificado o no.
             response.put("id", client.getId()); // envia el ID.
 
             // Add other user data as needed
@@ -80,7 +80,7 @@ public class ClientController {
             clientDto.setEmail(client.getEmail());
             clientDto.setAddress(client.getAddress());
             clientDto.setRoles(client.getRoles());
-            clientDto.setVerified(client.isVerified()); // agregado booleano de usuario verificado.
+            clientDto.setIsVerified(client.getIsVerified()); // agregado string de usuario verificado.
             clientDto.setReserveIds(client.getReserveIds());
             clientDto.setCel(client.getCel());
 
@@ -104,7 +104,7 @@ public class ClientController {
             clientDto.setEmail(client.get().getEmail());
             clientDto.setAddress(client.get().getAddress());
             clientDto.setRoles(client.get().getRoles());
-            clientDto.setVerified(client.get().isVerified());  // agregado booleano de usuario verificado.
+            clientDto.setIsVerified(client.get().getIsVerified());  // agregado booleano de usuario verificado.
             clientDto.setReserveIds(client.get().getReserveIds());
             clientDto.setCel(client.get().getCel());
 

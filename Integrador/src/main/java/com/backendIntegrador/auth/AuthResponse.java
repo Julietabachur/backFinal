@@ -1,9 +1,12 @@
 package com.backendIntegrador.auth;
 
+import com.backendIntegrador.model.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.Set;
 
 @Data
 @Builder
@@ -11,4 +14,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class AuthResponse {
     String token;
+    String isVerified;
+    Set<Role> roles;
 }

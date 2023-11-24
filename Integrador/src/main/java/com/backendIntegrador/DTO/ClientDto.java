@@ -23,7 +23,7 @@ public class ClientDto {
     private String lastName;
     private String clientName;
     private Set<Role> roles;
-    private boolean isVerified;
+    private String isVerified;
     private String email;
     private String cel;
     private Address address;
