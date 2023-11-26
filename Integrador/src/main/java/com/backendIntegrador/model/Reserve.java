@@ -21,8 +21,11 @@ public class Reserve {
     @Id
     private String id;
     private String productId;
+    private String productName;
     private String clientId;
     private LocalDate startDate;
     private LocalDate endDate;
+    private String reserveImg;
+
 
 }
