@@ -30,10 +30,13 @@ public class ReserveController {
     public ResponseEntity<?> save( @RequestBody Reserve reserve ) {
         try {
 
-            sendReserveEmail(reserve);
+            Reserve reserveCompleted = reserveService.save(reserve);
+            if (reserveCompleted.getId() != null) {
+                sendReserveEmail(reserve);
+            }
             System.out.println("Mail de Reserva Enviado!");
 
-            return ResponseEntity.ok().body(reserveService.save(reserve));
+            return ResponseEntity.ok().body(reserveCompleted);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\"" + e.getMessage() + "\"}");
         }
