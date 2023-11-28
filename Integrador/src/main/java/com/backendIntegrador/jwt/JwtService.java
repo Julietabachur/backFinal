@@ -60,6 +60,16 @@ public class JwtService {
     }
 
 
+    public String getVerifyToken (Client user) {
+
+        return Jwts.builder()
+                .setSubject(user.getEmail())  // Establecer el email de usuario como el "subject" del token
+                .signWith(getKey(), SignatureAlgorithm.HS256)  // Firmar el token utilizando una clave
+                .compact();
+
+    }
+
+
     public String getEmailFromToken( String token ) {
         return getClaim(token, Claims::getSubject);
     }
@@ -93,5 +103,6 @@ public class JwtService {
     private boolean isTokenExpired( String token ) {
         return getExpiration(token).isBefore(LocalDateTime.now(ZoneId.of("UTC")));
     }
+
 
 }

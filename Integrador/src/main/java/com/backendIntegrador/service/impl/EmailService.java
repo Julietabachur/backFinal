@@ -1,10 +1,11 @@
 package com.backendIntegrador.service.impl;
 import com.backendIntegrador.service.IEmailService;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
-import org.springframework.mail.MailSender;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,17 +22,21 @@ public class EmailService implements IEmailService {
     public void sendEmail(String to, String subject, String message) throws MailException {
 
         try {
-            SimpleMailMessage mailMessage = new SimpleMailMessage();
-            mailMessage.setFrom("Riskko <maildvrsend@gmail.com>");
-            mailMessage.setTo(to);
-            mailMessage.setSubject(subject);
-            mailMessage.setText(message);
+            MimeMessage mimeMessage = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
 
-            mailSender.send(mailMessage);
-        } catch (MailException e) {
-            throw e;
+            helper.setFrom("Riskko <maildvrsend@gmail.com>");
+            helper.setTo(to);
+            helper.setSubject(subject);
+            helper.setText(message, true); // El segundo parámetro indica que el texto es HTML
+
+            mailSender.send(mimeMessage);
+
+        } catch (MailException | MessagingException e) {
+            throw new RuntimeException(e);
         }
-
     }
+
+
 }
 
