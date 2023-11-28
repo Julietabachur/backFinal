@@ -37,9 +37,11 @@ public class AuthService {
         String isVerified = user.getIsVerified();
         // Generar un token JWT para el usuario autenticado
         String token = jwtService.getToken(user);
+        String verifyToken = jwtService.getVerifyToken(user);
         // Devolver una respuesta de autenticación que incluye el token
         return AuthResponse.builder()
                 .token(token)
+                .verifyToken(verifyToken)
                 .isVerified(isVerified)
                 .roles(roles)
                 .build();
@@ -71,6 +73,7 @@ public class AuthService {
         // Generar un token JWT para el nuevo usuario y devolverlo como respuesta de registro
         return AuthResponse.builder()
                 .token(jwtService.getToken(client))
+                .verifyToken(jwtService.getVerifyToken(client))
                 .build();
     }
 

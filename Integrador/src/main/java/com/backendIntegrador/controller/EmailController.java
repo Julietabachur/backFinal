@@ -1,6 +1,5 @@
 package com.backendIntegrador.controller;
 
-
 import com.backendIntegrador.model.Client;
 import com.backendIntegrador.service.impl.ClientService;
 import com.backendIntegrador.service.impl.EmailService;
@@ -11,9 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.io.IOException;
-import java.sql.SQLOutput;
 import java.util.Map;
 
 
@@ -33,6 +30,7 @@ public class EmailController {
 
         String id;
         String login_url;
+        String verify_url;
 
         try {
             ObjectMapper objectMapper = new ObjectMapper();
@@ -43,6 +41,7 @@ public class EmailController {
             // Accede a los elementos del objeto JSON según sea necesario
             id = (String) jsonMap.get("id");
             login_url = (String) jsonMap.get("login_url");
+            verify_url = (String) jsonMap.get("verify_url");
 
             System.out.println("DATOS RECIBIDOS");
             System.out.println(id);
@@ -59,7 +58,7 @@ public class EmailController {
 
                 // Llama al servicio de envio de mails para reenviarlo
                 try {
-                    reSendNotificationEmail(existingUser, login_url);
+                    reSendNotificationEmail(existingUser, login_url, verify_url);
 
                 } catch (Exception e) {
                     System.out.println(e.getMessage());
@@ -81,21 +80,23 @@ public class EmailController {
     }
 
 
-
-
-    private void reSendNotificationEmail(Client existingUser, String login_url) {
+    private void reSendNotificationEmail(Client existingUser, String login_url, String verify_url) {
 
         // Prepara el mensaje y el asunto
         String subject = "Bienvenido a Riskko";
-        String message = "Hola " + existingUser.getFirstName() + ",\n\n" +
-                "Sus datos de registro:\n" +
-                "Nombre de usuario: " + existingUser.getClientName() + "\n" +
-                "E-mail: " + existingUser.getEmail() + "\n" +
-                "\n\n" +
-                "Para ingresar al sitio, visite: " + login_url + "\n";
+
+        // Cuerpo del mensaje en formato HTML
+        String htmlMessage = "<html><body>" +
+                "<p>Hola " + existingUser.getFirstName() + ",</p>" +
+                "<p>Sus datos de registro:</p>" +
+                "<p>Nombre de usuario: " + existingUser.getClientName() + "</p>" +
+                "<p>E-mail: " + existingUser.getEmail() + "</p>" +
+                "<p>Para ingresar al sitio, visite: <a href='" + login_url + "'>" + login_url + "</a></p>" +
+                "<p>Para verificar su mail: <a href='" +login_url + verify_url + "'> Haga Click Aquí </a></p>" +
+                "</body></html>";
 
         // Envía el correo
-        emailService.sendEmail(existingUser.getEmail(), subject, message);
-        //emailResend.sendEmail(userEmail, subject, message);
+        emailService.sendEmail(existingUser.getEmail(), subject, htmlMessage);
+
     }
 }

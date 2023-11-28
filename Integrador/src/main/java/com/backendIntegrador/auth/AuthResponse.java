@@ -14,6 +14,7 @@ import java.util.Set;
 @AllArgsConstructor
 public class AuthResponse {
     String token;
+    String verifyToken;
     String isVerified;
     Set<Role> roles;
 }
