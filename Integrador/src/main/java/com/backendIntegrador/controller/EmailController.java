@@ -29,7 +29,7 @@ public class EmailController {
     public ResponseEntity<?> update(@RequestBody String datosMailer) {
 
         String id;
-        String login_url;
+        String front_url;
         String verify_url;
 
         try {
@@ -40,12 +40,12 @@ public class EmailController {
 
             // Accede a los elementos del objeto JSON según sea necesario
             id = (String) jsonMap.get("id");
-            login_url = (String) jsonMap.get("login_url");
+            front_url = (String) jsonMap.get("front_url");
             verify_url = (String) jsonMap.get("verify_url");
 
             System.out.println("DATOS RECIBIDOS");
             System.out.println(id);
-            System.out.println(login_url);
+            System.out.println(front_url);
             System.out.println("********************");
 
             try {
@@ -58,7 +58,7 @@ public class EmailController {
 
                 // Llama al servicio de envio de mails para reenviarlo
                 try {
-                    reSendNotificationEmail(existingUser, login_url, verify_url);
+                    reSendNotificationEmail(existingUser, front_url, verify_url);
 
                 } catch (Exception e) {
                     System.out.println(e.getMessage());
@@ -80,7 +80,9 @@ public class EmailController {
     }
 
 
-    private void reSendNotificationEmail(Client existingUser, String login_url, String verify_url) {
+    private void reSendNotificationEmail(Client existingUser, String front_url, String verify_url) {
+
+        String login_url = front_url + "/login";
 
         // Prepara el mensaje y el asunto
         String subject = "Bienvenido a Riskko";
@@ -92,7 +94,7 @@ public class EmailController {
                 "<p>Nombre de usuario: " + existingUser.getClientName() + "</p>" +
                 "<p>E-mail: " + existingUser.getEmail() + "</p>" +
                 "<p>Para ingresar al sitio, visite: <a href='" + login_url + "'>" + login_url + "</a></p>" +
-                "<p>Para verificar su mail: <a href='" +login_url + verify_url + "'> Haga Click Aquí </a></p>" +
+                "<p>Para verificar su mail: <a href='" +front_url + verify_url + "'> Haga Click Aquí </a></p>" +
                 "</body></html>";
 
         // Envía el correo
