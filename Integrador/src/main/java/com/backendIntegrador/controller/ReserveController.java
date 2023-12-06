@@ -76,6 +76,8 @@ public class ReserveController {
 
     private void sendReserveEmail(Reserve reserve) throws Exception {
 
+        String serverUrl = "http://riskko.s3-website-us-east-1.amazonaws.com/";
+        String productDetailUrl = serverUrl + "detalle/";
         String clientId = reserve.getClientId();
         Client reserveUser = clientService.getClientById(clientId);
 
@@ -87,6 +89,7 @@ public class ReserveController {
                 "<p>Hola " + reserveUser.getFirstName() + ",</p>" +
                 "<p>Confirmamos tu reserva:</p>" +
                 "<p>Producto: " + reserve.getProductName() + "</p>" +
+                "<p><a href='" + productDetailUrl + reserve.getProductId() + "'>Clickea aquí</a> para ver el producto.</p>"+
                 "<p><img width='400' height='400' src="+reserve.getReserveImg() +" alt="+reserve.getProductName()+"/></p>" +
                 "<p>Fechas de tu reserva: "+ reserve.getStartDate()+ " - " + reserve.getEndDate()+" .</p>" +
                 "<p>Muchas gracias!</p>" +

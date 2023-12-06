@@ -43,10 +43,8 @@ public class EmailController {
             front_url = (String) jsonMap.get("front_url");
             verify_url = (String) jsonMap.get("verify_url");
 
-            System.out.println("DATOS RECIBIDOS");
-            System.out.println(id);
-            System.out.println(front_url);
-            System.out.println("********************");
+            System.out.println("DATOS EMAIL RECIBIDOS");
+
 
             try {
                 // Verifica si el usuario con el ID existe
@@ -82,7 +80,7 @@ public class EmailController {
 
     private void reSendNotificationEmail(Client existingUser, String front_url, String verify_url) {
 
-        String login_url = front_url + "/login";
+        String login_url = front_url ;
 
         // Prepara el mensaje y el asunto
         String subject = "Bienvenido a Riskko";
@@ -93,7 +91,7 @@ public class EmailController {
                 "<p>Sus datos de registro:</p>" +
                 "<p>Nombre de usuario: " + existingUser.getClientName() + "</p>" +
                 "<p>E-mail: " + existingUser.getEmail() + "</p>" +
-                "<p>Para ingresar al sitio, visite: <a href='" + login_url + "'>" + login_url + "</a></p>" +
+                "<p>Para ingresar al sitio, visite: <a href=' nuestro website.'>" + login_url + "</a></p>" +
                 "<p>Para verificar su mail: <a href='" +front_url + verify_url + "'> Haga Click Aquí </a></p>" +
                 "</body></html>";
 
