@@ -154,7 +154,27 @@ public class ProductService implements IProductService {
         return true; // El producto está disponible
     }
 
+    // Método para devolver todos los productos segun busqueda en searchbar
 
+    public Page<Product> getProductsByProductName(String productName, PageRequest pageable) {
+        try {
+            List<String> availableProductIds = new ArrayList<>();
+
+            // Obtener productos por nombre
+            List<Product> products = productRepository.findByProductNameRegexIgnoreCase(productName);
+
+            for (Product product : products) {
+                availableProductIds.add(product.getId());
+
+            }
+
+            // Obtener los productos disponibles paginados
+            return productRepository.findByIdIn(availableProductIds,pageable);
+        } catch (Exception e) {
+            // Manejar excepciones según tus necesidades
+            throw new RuntimeException("Error al buscar productos disponibles: " + e.getMessage());
+        }
+    }
 
 
     @Override

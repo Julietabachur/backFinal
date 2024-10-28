@@ -2,6 +2,7 @@ package com.backendIntegrador.repository;
 
 import com.backendIntegrador.model.Product;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
@@ -21,6 +22,7 @@ public interface ProductRepository extends MongoRepository<Product, String> {
             String productName, List<String> reservedIds, Pageable pageable );
 
     List<Product> findByProductNameRegexIgnoreCase( String productName );
+//    Page<Product> getProductsByProductName( String productName, PageRequest pageable );
 
     Page<Product> findByIdIn( List<String> productId, Pageable pageable );
 
