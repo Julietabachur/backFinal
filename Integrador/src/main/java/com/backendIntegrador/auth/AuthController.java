@@ -3,6 +3,7 @@ package com.backendIntegrador.auth;
 import com.backendIntegrador.jwt.JwtService;
 import com.backendIntegrador.model.Client;
 import com.backendIntegrador.service.impl.ClientService;
+import com.backendIntegrador.service.impl.EmailService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/auth")
@@ -23,12 +25,17 @@ public class AuthController {
 
     private final ClientService clientService;
 
+    private final EmailService emailService;
+
     private final JwtService jwtService;
 
     @PostMapping(value = "login")
     public ResponseEntity<?> login( @RequestBody LoginRequest request ) {
         try{
-            return ResponseEntity.ok(authService.login(request));
+            AuthResponse response = authService.login(request);
+            Client client = clientService.getClientByEmail(request.getEmail());
+            emailService.sendWithImageFromURLLogin("v4lkiria.soporte@gmail.com", request.getEmail(), "Successfully Login", Optional.ofNullable(client));
+            return ResponseEntity.ok(response);
         }catch (Exception e){
            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
@@ -38,7 +45,10 @@ public class AuthController {
     @PostMapping(value = "register")
     public ResponseEntity<?> register( @Valid @RequestBody RegisterRequest request ) {
         try{
-            return ResponseEntity.ok(authService.register(request));
+            AuthResponse response = authService.register(request);
+            Client client = clientService.getClientByEmail(request.getEmail());
+            emailService.sendWithImageFromURLRegister("v4lkiria.soporte@gmail.com", request.getEmail(), "Successfully Register", client);
+            return ResponseEntity.ok(response);
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }

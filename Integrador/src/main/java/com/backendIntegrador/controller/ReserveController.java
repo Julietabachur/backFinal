@@ -96,7 +96,7 @@ public class ReserveController {
                 "</body></html>";
 
         // Envía el correo
-        emailService.sendEmail(reserveUser.getEmail(), subject, htmlMessage);
+        // emailService.sendEmail(reserveUser.getEmail(), subject, htmlMessage);
 
     }
 
