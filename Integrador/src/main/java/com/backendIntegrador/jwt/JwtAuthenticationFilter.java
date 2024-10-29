@@ -44,8 +44,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
-            if (jwtService.isTokenValid(token, userDetails)) {
+            // Validar que userDetails no sea null antes de pasarla a isTokenValid
+            if (userDetails != null && jwtService.isTokenValid(token, userDetails)) {
                 Claims claims = jwtService.getAllClaims(token);
+
+                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                        userDetails, // Detalles del usuario
+                        null,
+                        userDetails.getAuthorities()
+                );
+            ////if (jwtService.isTokenValid(token, userDetails)) {
+                /////Claims claims = jwtService.getAllClaims(token);
                /* String clientName = claims.get("clientName", String.class);
                 String role = claims.get("ROLE_", String.class);
                 if(claims.containsKey("isVerified")) {
@@ -54,11 +63,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 }
 
                 */
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                        userDetails, // Detalles del usuario
-                        null,
-                        userDetails.getAuthorities()
-                );
+                ///UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                //        userDetails, // Detalles del usuario
+                //        null,
+                //        userDetails.getAuthorities()
+               // );
 
                 // Agregar la autoridad del rol
 
