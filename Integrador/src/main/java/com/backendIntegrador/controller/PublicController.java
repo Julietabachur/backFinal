@@ -1,8 +1,11 @@
 package com.backendIntegrador.controller;
 
 import com.backendIntegrador.model.*;
+import com.backendIntegrador.repository.ProductRepository;
 import com.backendIntegrador.service.impl.*;
 import lombok.RequiredArgsConstructor;
+
+import org.apache.tomcat.jni.Library;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,6 +20,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 @RequestMapping("/api/v1/public")
@@ -33,6 +39,9 @@ public class PublicController {
     private PolicyService policyService;
     @Autowired
     private ReserveService reserveService;
+
+    @Autowired
+    private ProductRepository productRepository;
 
 
     @GetMapping("/products/search")
@@ -81,6 +90,13 @@ public class PublicController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    @GetMapping("/products/all")
+    public List<Product> getAllProducts() {
+        List<Product> lista =productRepository.findAll();
+        return lista;
+    }
+    
 
 
     @GetMapping("/category")
