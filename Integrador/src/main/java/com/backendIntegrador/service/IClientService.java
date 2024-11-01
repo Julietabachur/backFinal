@@ -29,4 +29,6 @@ public interface IClientService {
     Client getClientByEmail( String email );
 
     Client update( Client client ) throws Exception;
+
+
 }

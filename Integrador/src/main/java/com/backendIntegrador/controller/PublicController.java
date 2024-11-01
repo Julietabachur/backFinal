@@ -43,6 +43,10 @@ public class PublicController {
     @Autowired
     private ProductRepository productRepository;
 
+    //////momentaneo para administrar usuarios para prueba de registros
+    @Autowired
+    private ClientService clientService;
+
 
     @GetMapping("/products/search")
     public ResponseEntity<?> searchProducts(
@@ -252,5 +256,18 @@ public class PublicController {
         }
     }
 
+    ///////Momentaneo para eliminar usuarios para probar registros
+    @DeleteMapping("/clients/{id}")
+    public ResponseEntity<?> delete( @PathVariable String id ) throws Exception {
+        clientService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/clients")
+    public ResponseEntity<List<Client>> findAllClients()  {
+        List<Client> clientes = clientService.getAllClients();
+
+        return ResponseEntity.ok().body(clientes);
+    }
 
 }
