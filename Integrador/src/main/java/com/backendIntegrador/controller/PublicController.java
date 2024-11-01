@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -270,4 +271,32 @@ public class PublicController {
         return ResponseEntity.ok().body(clientes);
     }
 
+    @PutMapping("/products/{id}")
+    public ResponseEntity<?> update( @PathVariable String id, @RequestBody Product updatedProduct ) {
+        try {
+            // Verifica si el producto con el ID existe
+            Product existingProduct = productService.getProductById(id);
+
+            if (existingProduct == null) {
+                // Producto no encontrado, devuelve un error 404
+                return ResponseEntity.notFound().build();
+            }
+
+            // Actualiza los campos relevantes del producto con los datos proporcionados
+            existingProduct.setProductName(updatedProduct.getProductName());
+            existingProduct.setDetail(updatedProduct.getDetail());
+            existingProduct.setThumbnail(updatedProduct.getThumbnail());
+            existingProduct.setGallery(updatedProduct.getGallery());
+            existingProduct.setFeatures(updatedProduct.getFeatures());
+            existingProduct.setCategory(updatedProduct.getCategory());
+
+            // Llama al servicio para realizar la actualización
+            Product updated = productService.update(existingProduct);
+
+            return ResponseEntity.ok(updated);
+        } catch (Exception e) {
+            // Maneja cualquier excepción que pueda ocurrir
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error en la actualización");
+        }
+    }
 }
