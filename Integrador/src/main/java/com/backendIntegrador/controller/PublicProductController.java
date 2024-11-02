@@ -30,7 +30,21 @@ public class PublicProductController {
 
     @GetMapping("")
     public ResponseEntity<?> findAll( @RequestParam Map<String, Object> params, Model model ) {
-        int page = params.get("page") != null ? (Integer.parseInt(params.get("page").toString()) - 1) : 0;
+        // int page = params.get("page") != null ? (Integer.parseInt(params.get("page").toString()) - 1) : 0;
+
+        int page = 0;
+        if (params.get("page") != null) {
+            try {
+                page = Integer.parseInt(params.get("page").toString()) - 1;
+                if (page < 0) {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                            .body("{\"error\":\"El parámetro de página no puede ser menor que 1\"}");
+                }
+            } catch (NumberFormatException e) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body("{\"error\":\"El parámetro de página debe ser un número válido\"}");
+            }
+        }
 
         PageRequest pageRequest = PageRequest.of(page, 10);
 
@@ -87,6 +101,8 @@ public class PublicProductController {
             return ResponseEntity.status((HttpStatus.NOT_FOUND)).body("{\"error\":\"Error. No existe esa pagina\"}");
         }
 
+        // comment
+
         List<Product> productList = pageProduct.getContent();
         Long totalElements = pageProduct.getTotalElements();
 
@@ -130,6 +146,60 @@ public class PublicProductController {
         model.addAttribute("totalElements", totalElements);
         return ResponseEntity.ok().body(model);
 
+    }
+
+
+    @GetMapping("/categories")
+    public ResponseEntity<?> getProductsByCategoryNames(
+            @RequestParam List<String> categoryNames,
+            @RequestParam Map<String, Object> params,
+            Model model) {
+
+        // Verifica si categoryNames está vacío
+        if (categoryNames == null || categoryNames.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("{\"error\":\"Debe proporcionar al menos una categoría.\"}");
+        }
+
+        int page = 0;
+        if (params.get("page") != null) {
+            try {
+                page = Integer.parseInt(params.get("page").toString()) - 1;
+                if (page < 0) {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                            .body("{\"error\":\"El parámetro de página no puede ser menor que 1\"}");
+                }
+            } catch (NumberFormatException e) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body("{\"error\":\"El parámetro de página debe ser un número válido\"}");
+            }
+        }
+
+        PageRequest pageRequest = PageRequest.of(page, 10);
+        Page<Product> pageProduct = productService.getProductsByCategoryNames(categoryNames, pageRequest);
+
+        int totalPage = pageProduct.getTotalPages();
+        if (page >= totalPage) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("{\"error\":\"Error. No existe esa página\"}");
+        }
+
+        if (totalPage > 0) {
+            List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
+            model.addAttribute("pages", pages);
+        }
+
+        List<Product> productList = pageProduct.getContent();
+        Long totalElements = pageProduct.getTotalElements();
+
+        model.addAttribute("content", productList);
+        model.addAttribute("current", page + 1);
+        model.addAttribute("next", page + 2);
+        model.addAttribute("prev", page);
+        model.addAttribute("last", totalPage);
+        model.addAttribute("totalElements", totalElements);
+
+        return ResponseEntity.ok().body(model);
     }
 
 

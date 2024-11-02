@@ -191,5 +191,8 @@ public class ProductService implements IProductService {
         return productRepository.checkProductName(productName);
     }
 
+    public Page<Product> getProductsByCategoryNames(List<String> categoryNames, Pageable pageable) {
+        return productRepository.findByCategoryNames(categoryNames, pageable);
+    }
 
 }
