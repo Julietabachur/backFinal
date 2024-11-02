@@ -88,6 +88,7 @@ public class CategoryService implements ICategoryService {
         return categoryRepository.findByCategoryName(categoryName);
     }
 
+
     @Override
     public boolean checkCategoryName( String categoryName ) {
         Category existingCategory = categoryRepository.findByCategoryName(categoryName);

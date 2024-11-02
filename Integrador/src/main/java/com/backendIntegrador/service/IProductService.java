@@ -30,4 +30,6 @@ public interface IProductService {
 
     Page<Product> searchProductsByProductNameAndDateRange(
             String productName, LocalDate startDate, LocalDate endDate, PageRequest pageable );
+
+
 }
