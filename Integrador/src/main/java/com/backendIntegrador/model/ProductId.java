@@ -1,6 +1,5 @@
 package com.backendIntegrador.model;
 
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,23 +8,16 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.time.LocalDate;
-
 @Data //getters y setters
 @Builder
 @NoArgsConstructor //constructor vacio
 @AllArgsConstructor //constructor con todos los atributos
-@Document(collection = "reserve") // nombre de la ubicacion de los datos en la BD
+@Document(collection = "productId")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Reserve {
+public class ProductId {
     @Id
     private String id;
-    private String productId;
-    private String productName;
-    private String clientId;
-    private LocalDate startDate;
-    private LocalDate endDate;
-    private String reserveImg;
-
+    private String product; // Nombre de la colección para la que se genera la secuencia
+    private Long sequence;
 
 }

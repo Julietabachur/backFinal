@@ -4,6 +4,9 @@ import com.backendIntegrador.model.Client;
 import com.backendIntegrador.repository.ClientRepository;
 import com.backendIntegrador.service.IClientService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,9 +40,9 @@ public class ClientService implements IClientService {
 
     @Override
     @Transactional
-    public List<Client> clientList() throws Exception {
+    public Page<Client> clientList( Pageable pageable ) throws Exception {
         try {
-            return clientRepository.findAll();
+            return clientRepository.findAll(pageable);
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
@@ -75,6 +78,7 @@ public class ClientService implements IClientService {
         return clientRepository.findByClientName(clientName);
     }
 
+
     @Override
     public Client checkEmail( String email ) {
         return clientRepository.checkEmail(email);
@@ -84,6 +88,36 @@ public class ClientService implements IClientService {
     public Client checkClientName( String clientName ) {
 
         return clientRepository.checkClientName(clientName);
+    }
+
+    @Override
+    public Client getClientByEmail( String email ) {
+        return clientRepository.findByEmail(email);
+    }
+
+    @Override
+    public Client update(Client client) throws ChangeSetPersister.NotFoundException {
+        Client existingUser = clientRepository.findById(client.getId())
+                .orElseThrow(ChangeSetPersister.NotFoundException::new);
+        // Actualiza los campos relevantes del usuario con los datos proporcionados
+        existingUser.setFirstName(client.getFirstName());
+        existingUser.setLastName(client.getLastName());
+        existingUser.setClientName(client.getClientName());
+        existingUser.setPassword(client.getPassword());
+        existingUser.setRoles(client.getRoles());
+        existingUser.setIsVerified(client.getIsVerified());
+        existingUser.setEmail(client.getEmail());
+        existingUser.setCel(client.getCel());
+        existingUser.setAddress(client.getAddress());
+        existingUser.setReserveIds(client.getReserveIds());
+        existingUser.setFavorites(client.getFavorites());
+        // Guarda el usuario actualizado en el repositorio
+        return clientRepository.save(existingUser);
+    }
+
+    ///////Momentaneo para eliminar usuarios para probar registros
+    public List<Client> getAllClients() {
+        return clientRepository.findAll();
     }
 
 

@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data //getters y setters
@@ -20,14 +20,24 @@ import java.util.List;
 public class Product {
     @Id
     private String id;
+    private Long productId;
     private String productName;
-    private Size productSize;
-    private Type type;
-    private LocalDate productionTime;
     private String thumbnail;
     private List<String> gallery;
-    private String set;
-    private String customSet;
-    private String Detail;
+    private String detail;
+    private List<Characteristic> features;
+    private String category;
+    private List<String> reserveIds;
+
+    public List<String> getReserveIds() {
+        if (reserveIds == null) {
+            reserveIds = new ArrayList<>();
+        }
+        return reserveIds;
+    }
+
+    public void setReserveIds(List<String> reserveIds) {
+        this.reserveIds = reserveIds;
+    }
 
 }
