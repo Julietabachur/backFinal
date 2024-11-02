@@ -252,45 +252,6 @@ public class PublicController {
         }
     }
 
-    @GetMapping("/products/searchByName")
-    public ResponseEntity<?> getProductsByProductName(
-                                                      @RequestParam(required = false) String productName,
-                                                      @RequestParam Map<String, Object> params,
-                                                      Model model
-    ) {
-        try {
-            int page = params.get("page") != null ? (Integer.parseInt(params.get("page").toString()) - 1) : 0;
-            PageRequest pageable = PageRequest.of(page, 10);
-
-            // Llama a un método de servicio para buscar productos solo por nombre
-            Page<Product> results = productService.getProductsByProductName(productName, pageable);
-
-            int totalPage = results.getTotalPages();
-            if (totalPage > 0) {
-                List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
-                model.addAttribute("pages", pages);
-            }
-            if (page > totalPage) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Error. No existe esa pagina\"}");
-            }
-
-            List<Product> productList = results.getContent();
-            Long totalElements = results.getTotalElements();
-
-            model.addAttribute("content", productList);
-            model.addAttribute("current", page + 1);
-            model.addAttribute("next", page + 2);
-            model.addAttribute("prev", page);
-            model.addAttribute("last", totalPage);
-            model.addAttribute("totalElements", totalElements);
-
-            return ResponseEntity.ok().body(model);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
-
 
 
 }
