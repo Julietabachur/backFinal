@@ -26,4 +26,8 @@ public interface ProductRepository extends MongoRepository<Product, String> {
 
     Page<Product> findByIdIn( List<String> productId, Pageable pageable );
 
+
+    @Query(value = "{'category' : { $in: ?0 }}")
+    Page<Product> findByCategoryNames(List<String> categoryNames, Pageable pageable);
+
 }
