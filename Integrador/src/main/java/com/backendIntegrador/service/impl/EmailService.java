@@ -69,7 +69,7 @@ public class EmailService {
                 "<b>• Email:</b> " + client.getEmail() + "</p>" +
                 "<p>Para confirmar que la información ingresada es correcta, por favor, haz clic en el siguiente enlace para iniciar sesión en tu cuenta recién creada:\n" +
                 "\n" +
-                "http://localhost:5173/login</p>" +
+                "http://localhost:5173</p>" +
                 "<p>Si tienes alguna pregunta o necesitas asistencia, no dudes en contactarnos.</p>" +
                 "<p>Saludos,<br>Valkiria</p>" +
                 "<br>" +
@@ -117,7 +117,7 @@ public class EmailService {
 //                    "<b>• Productos reservados:</b> <br>" + productosReservados.toString() + "</p>" +
 
 
-                    "<p>Apreciamos tu confianza en <b>Valkiria</b> y esperamos que disfrutes de tus instrumentos reservados. ¡Esperamos verte pronto en nuestra tienda http://localhost:5173/login! </p>" +
+                    "<p>Apreciamos tu confianza en <b>Valkiria</b> y esperamos que disfrutes de tus instrumentos reservados. ¡Esperamos verte pronto en nuestra tienda http://localhost:5173! </p>" +
 
                     "<p>Si tienes alguna pregunta o necesitas asistencia, no dudes en contactarnos.</p>" +
                     "<p>Saludos,<br>Valkiria</p>" +
