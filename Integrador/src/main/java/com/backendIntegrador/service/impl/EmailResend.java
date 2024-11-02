@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class EmailResend implements IEmailService {
 
-    private String RESEND_API_KEY = "re_FkvzR7pK_BPNpS3Pf5DDad81ZhBkS1tGp";
+    private String RESEND_API_KEY = "re_ETFujA7k_8HRf8M7CsuQX8mhxLcTJCj2L";
     private Resend resend;
 
     public EmailResend() {
@@ -19,10 +19,10 @@ public class EmailResend implements IEmailService {
 
     public void sendEmail(String to, String subject, String message) {
         SendEmailRequest sendEmailRequest = SendEmailRequest.builder()
-                .from("RISKKO <info@resend.dev>") // risko.com requiere dar de alta el dominio y verificar DNS
-                .to("pacho.baires@gmail.com")  // usar "to" sin "" para que el destinatario use el pasado como argumento igual el subject
+                .from("Valkiria <v4lkiria.soporte@gmail.com>") // risko.com requiere dar de alta el dominio y verificar DNS
+                .to(to)  // usar "to" sin "" para que el destinatario use el pasado como argumento igual el subject
                 .subject(subject)
-                .html("<strong>Bienvenido a Riskko!</strong><br>Gracias por registrarte en nuestra web.<br><br>" + message) // Concatenamos el mensaje con el HTML
+                .html("<strong>Bienvenido a Valkiria!</strong><br>Gracias por registrarte en nuestra web.<br><br>" + message) // Concatenamos el mensaje con el HTML
                 .build();
 
         try {
