@@ -1,6 +1,5 @@
 package com.backendIntegrador.jwt;
 
-import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,7 +21,6 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private static final String SECRET_KEY = "586E3272357538782F413F4428472B4B6250655368566B597033733676397924";
     private final JwtService jwtService; // Servicio para trabajar con tokens JWT
     private final UserDetailsService userDetailsService; // Servicio para gestionar detalles de usuarios
 
@@ -38,40 +36,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-
-        username = jwtService.getEmailFromToken(token); // Obtener el nombre de usuario desde el token
+        username = jwtService.getUsernameFromToken(token); // Obtener el nombre de usuario desde el token
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+            UserDetails userDetails = userDetailsService.loadUserByUsername(username); // Cargar detalles del usuario
 
-            // Validar que userDetails no sea null antes de pasarla a isTokenValid
-            if (userDetails != null && jwtService.isTokenValid(token, userDetails)) {
-                Claims claims = jwtService.getAllClaims(token);
-
+            if (jwtService.isTokenValid(token, userDetails)) { // Verificar la validez del token
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails, // Detalles del usuario
                         null,
-                        userDetails.getAuthorities()
+                        userDetails.getAuthorities() // Autoridades del usuario
+
                 );
-            ////if (jwtService.isTokenValid(token, userDetails)) {
-                /////Claims claims = jwtService.getAllClaims(token);
-               /* String clientName = claims.get("clientName", String.class);
-                String role = claims.get("ROLE_", String.class);
-                if(claims.containsKey("isVerified")) {
-                    boolean isVerified = claims.get("isVerified", boolean.class);
-
-                }
-
-                */
-                ///UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                //        userDetails, // Detalles del usuario
-                //        null,
-                //        userDetails.getAuthorities()
-               // );
-
-                // Agregar la autoridad del rol
-
-
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                 // Establecer la autenticación en el contexto de seguridad
@@ -84,7 +60,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     // Método para obtener el token desde el encabezado de la solicitud
     private String getTokenFromRequest( HttpServletRequest request ) {
-
         final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 
         if (StringUtils.hasText(authHeader) && authHeader.startsWith("Bearer ")) {

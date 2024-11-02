@@ -20,12 +20,10 @@ import java.time.LocalDate;
 public class Reserve {
     @Id
     private String id;
-    private String productId;
-    private String productName;
-    private String clientId;
-    private LocalDate startDate;
-    private LocalDate endDate;
-    private String reserveImg;
-
+    private Product product;
+    private Client client;
+    private int count;
+    private LocalDate reserveDate;
+    private LocalDate deliveryDate;
 
 }

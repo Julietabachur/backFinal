@@ -5,7 +5,6 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -18,10 +17,4 @@ public interface ClientRepository extends MongoRepository<Client, String> {
 
     @Query(value = "{'email' : ?0 }")
     Client checkEmail( String email );
-
-    @Query(value = "{'email' : ?0 }")
-    Client findByEmail( String email );
-
-
-
 }
