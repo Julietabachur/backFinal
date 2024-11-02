@@ -271,7 +271,7 @@ public class PublicController {
         return ResponseEntity.ok().body(clientes);
     }
 
-    @PutMapping("/products/{id}")
+    @PutMapping("products/{id}")
     public ResponseEntity<?> update( @PathVariable String id, @RequestBody Product updatedProduct ) {
         try {
             // Verifica si el producto con el ID existe
