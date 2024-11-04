@@ -24,6 +24,9 @@ public interface ProductRepository extends MongoRepository<Product, String> {
     List<Product> findByProductNameRegexIgnoreCase( String productName );
 //    Page<Product> getProductsByProductName( String productName, PageRequest pageable );
 
+    @Query(value = "{ 'features': { $elemMatch: { 'charName': 'TEMPORADA', 'charValue': ?0 } } }")
+    List<Product> findBySeason(String season);
+
     Page<Product> findByIdIn( List<String> productId, Pageable pageable );
 
 

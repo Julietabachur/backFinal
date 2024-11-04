@@ -156,12 +156,32 @@ public class ProductService implements IProductService {
 
     // Método para devolver todos los productos segun busqueda en searchbar
 
-    public Page<Product> getProductsByProductName(String productName, PageRequest pageable) {
+    public Page<Product> searchProductsByProductName(String productName, PageRequest pageable) {
         try {
             List<String> availableProductIds = new ArrayList<>();
 
             // Obtener productos por nombre
             List<Product> products = productRepository.findByProductNameRegexIgnoreCase(productName);
+
+            for (Product product : products) {
+                availableProductIds.add(product.getId());
+
+            }
+
+            // Obtener los productos disponibles paginados
+            return productRepository.findByIdIn(availableProductIds,pageable);
+        } catch (Exception e) {
+            // Manejar excepciones según tus necesidades
+            throw new RuntimeException("Error al buscar productos disponibles: " + e.getMessage());
+        }
+    }
+
+    public Page<Product> searchProductsBySeason(String season, PageRequest pageable) {
+        try {
+            List<String> availableProductIds = new ArrayList<>();
+
+            // Obtener productos por temporada
+            List<Product> products = productRepository.findBySeason(season);
 
             for (Product product : products) {
                 availableProductIds.add(product.getId());
