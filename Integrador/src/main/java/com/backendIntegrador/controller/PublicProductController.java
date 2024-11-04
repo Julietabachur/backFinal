@@ -28,6 +28,7 @@ public class PublicProductController {
     @Autowired
     private CategoryService categoryService;
 
+    //TRAE TODOS LOS PRODUCTOS Y LOS PAGINA
     @GetMapping("")
     public ResponseEntity<?> findAll( @RequestParam Map<String, Object> params, Model model ) {
         // int page = params.get("page") != null ? (Integer.parseInt(params.get("page").toString()) - 1) : 0;
@@ -46,7 +47,7 @@ public class PublicProductController {
             }
         }
 
-        PageRequest pageRequest = PageRequest.of(page, 10);
+        PageRequest pageRequest = PageRequest.of(page, 12);
 
         Page<Product> pageProduct = productService.getAll(pageRequest);
 
@@ -72,7 +73,7 @@ public class PublicProductController {
         return ResponseEntity.ok().body(model);
     }
 
-
+    // TRAE 1 PRODUCTO
     @GetMapping("/{id}")
     public ResponseEntity<?> getProductById( @PathVariable("id") String id ) {
         try {
@@ -88,7 +89,7 @@ public class PublicProductController {
     public ResponseEntity<?> findAll(  @RequestParam List<String> categories,@RequestParam Map<String, Object> params, Model model ) {
         int page = params.get("page") != null ? (Integer.parseInt(params.get("page").toString()) - 1) : 0;
 
-        PageRequest pageRequest = PageRequest.of(page, 10);
+        PageRequest pageRequest = PageRequest.of(page, 12);
 
         Page<Product> pageProduct = productService.findByCategoryIn(pageRequest, categories);
 
@@ -161,21 +162,22 @@ public class PublicProductController {
                     .body("{\"error\":\"Debe proporcionar al menos una categoría.\"}");
         }
 
-        int page = 0;
-        if (params.get("page") != null) {
-            try {
-                page = Integer.parseInt(params.get("page").toString()) - 1;
-                if (page < 0) {
-                    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                            .body("{\"error\":\"El parámetro de página no puede ser menor que 1\"}");
-                }
-            } catch (NumberFormatException e) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .body("{\"error\":\"El parámetro de página debe ser un número válido\"}");
-            }
-        }
+//        int page = 0;
+//        if (params.get("page") != null) {
+//            try {
+//                page = Integer.parseInt(params.get("page").toString()) - 1;
+//                if (page < 0) {
+//                    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+//                            .body("{\"error\":\"El parámetro de página no puede ser menor que 1\"}");
+//                }
+//            } catch (NumberFormatException e) {
+//                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+//                        .body("{\"error\":\"El parámetro de página debe ser un número válido\"}");
+//            }
+//        }
+        int page = params.get("page") != null ? (Integer.parseInt(params.get("page").toString()) - 1) : 0;
 
-        PageRequest pageRequest = PageRequest.of(page, 10);
+        PageRequest pageRequest = PageRequest.of(page, 12);
         Page<Product> pageProduct = productService.getProductsByCategoryNames(categoryNames, pageRequest);
 
         int totalPage = pageProduct.getTotalPages();
