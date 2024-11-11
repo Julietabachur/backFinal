@@ -30,6 +30,10 @@ public class Product {
     private List<String> reserveIds;
     private Integer precio;
 
+    private Integer stock; // Falta manejar el stock cuando se realiza una venta
+
+    private Size size;
+
     public List<String> getReserveIds() {
         if (reserveIds == null) {
             reserveIds = new ArrayList<>();
