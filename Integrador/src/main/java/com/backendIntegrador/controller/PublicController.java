@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -96,6 +97,84 @@ public class PublicController {
         }
     }
 
+    @GetMapping("/products/searchByName")
+    public ResponseEntity<?> searchProductsByName(
+            @RequestParam(required = false) String productName,
+            @RequestParam Map<String, Object> params,
+            Model model
+    ) {
+        try {
+            int page = params.get("page") != null ? (Integer.parseInt(params.get("page").toString()) - 1) : 0;
+            // Establecer valores predeterminados si no se proporcionan fechas
+
+            PageRequest pageable = PageRequest.of(page, 12);
+            Page<Product> results = productService.searchProductsByProductName(productName, pageable);
+
+            int totalPage = results.getTotalPages();
+            if (totalPage > 0) {
+                List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
+                model.addAttribute("pages", pages);
+            }
+            if (page > totalPage) {
+                return ResponseEntity.status((HttpStatus.NOT_FOUND)).body("{\"error\":\"Error. No existe esa pagina\"}");
+            }
+
+            List<Product> productList = results.getContent();
+            Long totalElements = results.getTotalElements();
+
+            model.addAttribute("content", productList);
+            model.addAttribute("current", page + 1);
+            model.addAttribute("next", page + 2);
+            model.addAttribute("prev", page);
+            model.addAttribute("last", totalPage);
+            model.addAttribute("totalElements", totalElements);
+
+            return ResponseEntity.ok().body(model);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @GetMapping("/products/searchBySeason")
+    public ResponseEntity<?> searchProductsBySeason(
+            @RequestParam(required = false) String season,
+            @RequestParam Map<String, Object> params,
+            Model model
+    ) {
+        try {
+            int page = params.get("page") != null ? (Integer.parseInt(params.get("page").toString()) - 1) : 0;
+            // Establecer valores predeterminados si no se proporcionan fechas
+
+            PageRequest pageable = PageRequest.of(page, 5);
+            Page<Product> results = productService.searchProductsBySeason(season, pageable);
+
+            int totalPage = results.getTotalPages();
+            if (totalPage > 0) {
+                List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
+                model.addAttribute("pages", pages);
+            }
+            if (page > totalPage) {
+                return ResponseEntity.status((HttpStatus.NOT_FOUND)).body("{\"error\":\"Error. No existe esa pagina\"}");
+            }
+
+            List<Product> productList = results.getContent();
+            Long totalElements = results.getTotalElements();
+
+            model.addAttribute("content", productList);
+            model.addAttribute("current", page + 1);
+            model.addAttribute("next", page + 2);
+            model.addAttribute("prev", page);
+            model.addAttribute("last", totalPage);
+            model.addAttribute("totalElements", totalElements);
+
+            return ResponseEntity.ok().body(model);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
 
     @GetMapping("/products/all")
     public List<Product> getAllProducts() {
@@ -104,7 +183,7 @@ public class PublicController {
     }
     
 
-
+    //DEVUELVE LAS CATEGORIAS PAGINADAS, NO PRODUCTOS
     @GetMapping("/category")
     public ResponseEntity<?> findAllCategories( @RequestParam Map<String, Object> params, Model model ) throws Exception {
         int page = params.get("page") != null ? (Integer.parseInt(params.get("page").toString()) - 1) : 0;
@@ -272,4 +351,32 @@ public class PublicController {
         return ResponseEntity.ok().body(clientes);
     }
 
+    @PutMapping("products/{id}")
+    public ResponseEntity<?> update( @PathVariable String id, @RequestBody Product updatedProduct ) {
+        try {
+            // Verifica si el producto con el ID existe
+            Product existingProduct = productService.getProductById(id);
+
+            if (existingProduct == null) {
+                // Producto no encontrado, devuelve un error 404
+                return ResponseEntity.notFound().build();
+            }
+
+            // Actualiza los campos relevantes del producto con los datos proporcionados
+            existingProduct.setProductName(updatedProduct.getProductName());
+            existingProduct.setDetail(updatedProduct.getDetail());
+            existingProduct.setThumbnail(updatedProduct.getThumbnail());
+            existingProduct.setGallery(updatedProduct.getGallery());
+            existingProduct.setFeatures(updatedProduct.getFeatures());
+            existingProduct.setCategory(updatedProduct.getCategory());
+
+            // Llama al servicio para realizar la actualización
+            Product updated = productService.update(existingProduct);
+
+            return ResponseEntity.ok(updated);
+        } catch (Exception e) {
+            // Maneja cualquier excepción que pueda ocurrir
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error en la actualización");
+        }
+    }
 }
