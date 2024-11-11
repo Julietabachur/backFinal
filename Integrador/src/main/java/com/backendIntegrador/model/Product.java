@@ -28,20 +28,12 @@ public class Product {
     private List<Characteristic> features;
     private String category;
     private List<String> reserveIds;
-    private Integer precio;
 
     public List<String> getReserveIds() {
         if (reserveIds == null) {
             reserveIds = new ArrayList<>();
         }
         return reserveIds;
-    }
-
-    public Integer getPrecio() {
-        if (precio == null) {
-            precio = 0;
-        }
-        return precio;
     }
 
     public void setReserveIds(List<String> reserveIds) {
