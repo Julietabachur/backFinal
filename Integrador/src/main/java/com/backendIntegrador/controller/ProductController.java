@@ -105,6 +105,8 @@ public class ProductController {
             existingProduct.setFeatures(updatedProduct.getFeatures());
             existingProduct.setCategory(updatedProduct.getCategory());
             existingProduct.setPrecio(updatedProduct.getPrecio());
+            existingProduct.setStock(updatedProduct.getStock());
+            existingProduct.setSize(updatedProduct.getSize());
 
             // Llama al servicio para realizar la actualización
             Product updated = productService.update(existingProduct);
