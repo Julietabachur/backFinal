@@ -28,8 +28,8 @@ public class ClientService implements IClientService {
     @Autowired
     private MongoTemplate mongoTemplate;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+//    @Autowired
+//    private PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional
@@ -107,7 +107,8 @@ public class ClientService implements IClientService {
         existingUser.setFirstName(client.getFirstName());
         existingUser.setLastName(client.getLastName());
         existingUser.setClientName(client.getClientName());
-        existingUser.setPassword(passwordEncoder.encode(client.getPassword()));
+        existingUser.setPassword(client.getPassword());
+//        existingUser.setPassword(passwordEncoder.encode(client.getPassword()));
         existingUser.setRoles(client.getRoles());
         existingUser.setIsVerified(client.getIsVerified());
         existingUser.setEmail(client.getEmail());
