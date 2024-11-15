@@ -88,14 +88,28 @@
             String subject = "Bienvenido a Valkiria,";
 
             // Cuerpo del mensaje en formato HTML
-            String htmlMessage = "<html><body>" +
-                    "<p>Hola " + existingUser.getFirstName() + ",</p>" +
-                    "<p>Sus datos de registro:</p>" +
-                    "<p>Nombre de usuario: " + existingUser.getClientName() + "</p>" +
-                    "<p>E-mail: " + existingUser.getEmail() + "</p>" +
-                    "<p>Para ingresar al sitio, visite: <a href=' nuestro website.'>" + login_url + "</a></p>" +
-                    "<p>Para verificar su mail: <a href='" +front_url + verify_url + "'> Haga Click Aquí </a></p>" +
-                    "</body></html>";
+//            String htmlMessage = "<html><body>" +
+//                    "<p>Hola " + existingUser.getFirstName() + ",</p>" +
+//                    "<p>Sus datos de registro:</p>" +
+//                    "<p>Nombre de usuario: " + existingUser.getClientName() + "</p>" +
+//                    "<p>E-mail: " + existingUser.getEmail() + "</p>" +
+//                    "<p>Para ingresar al sitio, visite: <a href=' nuestro website.'>" + login_url + "</a></p>" +
+//                    "<p>Para verificar su mail: <a href='" +front_url + verify_url + "'> Haga Click Aquí </a></p>" +
+//                    "</body></html>";
+
+            // Cuerpo del mensaje en formato HTML con estilo mejorado
+            String htmlMessage = "<html><body style='font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;'>"
+                    + "<div style='max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); padding: 20px;'>"
+                    + "<h2 style='color: #333;'>¡Bienvenido a Valkiria, " + existingUser.getFirstName() + "!</h2>"
+                    + "<p style='color: #555;'>Gracias por unirse a nuestra plataforma. A continuación, encontrará sus datos de registro:</p>"
+                    + "<ul style='color: #555; line-height: 1.6;'>"
+                    + "<li><strong>Nombre de usuario:</strong> " + existingUser.getClientName() + "</li>"
+                    + "<li><strong>E-mail:</strong> " + existingUser.getEmail() + "</li>"
+                    + "</ul>"
+                    + "<p style='color: #555;'>Por favor, verifique su email haciendo click "
+                    + "<a href='" + front_url + verify_url + "' style='color: #1a73e8;'>aquí</a>.</p>"
+                    + "<p style='color: #888; font-size: 12px; text-align: center;'>Si tiene alguna pregunta, no dude en ponerse en contacto con nuestro equipo de soporte.</p>"
+                    + "</div></body></html>";
 
             // Envía el correo
             emailService.sendEmail(existingUser.getEmail(), subject, htmlMessage);
