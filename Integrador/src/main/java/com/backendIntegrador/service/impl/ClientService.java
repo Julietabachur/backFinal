@@ -8,6 +8,7 @@ import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +27,9 @@ public class ClientService implements IClientService {
 
     @Autowired
     private MongoTemplate mongoTemplate;
+
+//    @Autowired
+//    private PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional
@@ -104,6 +108,7 @@ public class ClientService implements IClientService {
         existingUser.setLastName(client.getLastName());
         existingUser.setClientName(client.getClientName());
         existingUser.setPassword(client.getPassword());
+//        existingUser.setPassword(passwordEncoder.encode(client.getPassword()));
         existingUser.setRoles(client.getRoles());
         existingUser.setIsVerified(client.getIsVerified());
         existingUser.setEmail(client.getEmail());
