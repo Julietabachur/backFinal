@@ -29,10 +29,6 @@ public class Product {
     private String category;
     private List<String> reserveIds;
 
-    private Integer stock; // Falta manejar el stock cuando se realiza una venta
-
-    private Size size;
-
     public List<String> getReserveIds() {
         if (reserveIds == null) {
             reserveIds = new ArrayList<>();
