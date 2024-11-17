@@ -111,7 +111,7 @@
                     + "<p style='color: #888; font-size: 12px; text-align: center;'>Si tiene alguna pregunta, no dude en ponerse en contacto con nuestro equipo de soporte.</p>"
                     + "</div></body></html>";
 
-            // Envía el correo
+            // Envía el correo - prueba cambio
             emailService.sendEmail(existingUser.getEmail(), subject, htmlMessage);
 
         }
