@@ -23,13 +23,18 @@ public class RegisterRequest {
     String clientName;
 
     @NotBlank(message = "El nombre de cliente no puede estar en blanco.")
-    @Pattern(regexp = "^[a-zA-Z]*$", message = "El nombre de cliente debe contener solo letras, números y guiones bajos.")
+    @Pattern(
+            regexp = "^[A-Za-zÀ-ÖØ-öø-ÿ'-]+(?: [A-Za-zÀ-ÖØ-öø-ÿ'-]+)*$",
+            message = "El nombre de cliente debe contener solo letras, números y guiones bajos."
+    )
     @Size(min = 3, max = 30, message = "El nombre de cliente debe tener entre 3 y 30 caracteres.")
     String firstName;
 
     @NotBlank(message = "El apellido de cliente no puede estar en blanco.")
-    @Pattern(regexp = "^[a-zA-Z]+(\\s[a-zA-Z]+)*$", message = "El apellido de cliente debe contener solo letras, números y guiones bajos.")
-    @Size(min = 2, max = 30, message = "El apellido de cliente debe tener entre 3 y 30 caracteres.")
+    @Pattern(
+            regexp = "^[A-Za-zÀ-ÖØ-öø-ÿ'-]+(?: [A-Za-zÀ-ÖØ-öø-ÿ'-]+)*$",
+            message = "El apellido de cliente debe contener solo letras, números y guiones bajos.")
+    @Size(min = 2, max = 50, message = "El apellido de cliente debe tener entre 3 y 30 caracteres.")
     String lastName;
 
     @NotBlank(message = "La contraseña no puede estar en blanco.")
