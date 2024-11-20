@@ -17,6 +17,7 @@ public class SaleService implements ISaleService {
         return saleRepository.save(sale);
     }
 
+
     @Override
     public List<Sale> saleList() throws Exception {
         return saleRepository.findAll();
@@ -26,6 +27,7 @@ public class SaleService implements ISaleService {
     public Sale getSaleById(String id) throws Exception {
         return saleRepository.findById(id).orElse(null);
     }
+
     //agregar bolenano para verticar que exista
     @Override
     public void delete(String id) throws Exception {
