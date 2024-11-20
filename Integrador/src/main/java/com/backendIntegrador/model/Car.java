@@ -21,6 +21,6 @@ public class Car {
     private String id;
     private String idUser;
     private List<ProductDto> products;
-    private Double TotalPrice;
+    private double TotalPrice;
 
 }

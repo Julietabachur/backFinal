@@ -20,6 +20,7 @@ public interface ProductRepository extends MongoRepository<Product, String> {
             "'reserveIds': { $not: { $in: ?1 } } } }")
     Page<Product> searchAvailableProductsByProductNameAndDateRange(
             String productName, List<String> reservedIds, Pageable pageable );
+    //usar para bajar el prducto
 
     List<Product> findByProductNameRegexIgnoreCase( String productName );
 //    Page<Product> getProductsByProductName( String productName, PageRequest pageable );
