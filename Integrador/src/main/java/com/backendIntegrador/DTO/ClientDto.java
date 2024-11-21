@@ -25,7 +25,6 @@ public class ClientDto {
     private Set<Role> roles;
     private String isVerified;
     private String email;
-    private String password; // momentaneo
     private String cel;
     private Address address;
     private List<String> reserveIds;
