@@ -68,7 +68,7 @@ public class AdminController {
 
             // Llama al servicio para realizar la actualización
             // Note: Other fields are not updated here, so they remain unchanged
-            Client updated = clientService.update(existingClient);
+            Client updated = clientService.updateWithoutPassword(existingClient);
             System.out.println("Updated client: " + updated);
             return ResponseEntity.ok(updated);
         } catch (Exception e) {
@@ -111,6 +111,7 @@ public class AdminController {
             clientDto.setCel(client.getCel());
             clientDto.setIsVerified(client.getIsVerified());
             clientDtoList.add(clientDto);
+            clientDto.setPassword(client.getPassword());
 
         }
 
