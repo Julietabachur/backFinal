@@ -30,5 +30,7 @@ public interface IClientService {
 
     Client update( Client client ) throws Exception;
 
+//    Client updatePassword( Client client ) throws Exception;
+
 
 }

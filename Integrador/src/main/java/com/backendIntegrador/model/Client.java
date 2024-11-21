@@ -42,6 +42,15 @@ public class Client implements UserDetails {
         this.clientName = username;
     }
 
+    public Client(String firstName, String lastName, String clientName, String password, Set<Role> roles, String email) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.clientName = clientName;
+        this.password = password;
+        this.roles = roles;
+        this.isVerified = isVerified;
+        this.email = email;
+    }
 
     public List<String> getReserveIds() {
         if (reserveIds == null) {

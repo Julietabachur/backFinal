@@ -28,8 +28,8 @@ public class ClientService implements IClientService {
     @Autowired
     private MongoTemplate mongoTemplate;
 
-//    @Autowired
-//    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional
@@ -99,24 +99,112 @@ public class ClientService implements IClientService {
         return clientRepository.findByEmail(email);
     }
 
+
     @Override
     public Client update(Client client) throws ChangeSetPersister.NotFoundException {
         Client existingUser = clientRepository.findById(client.getId())
                 .orElseThrow(ChangeSetPersister.NotFoundException::new);
         // Actualiza los campos relevantes del usuario con los datos proporcionados
-        existingUser.setFirstName(client.getFirstName());
-        existingUser.setLastName(client.getLastName());
-        existingUser.setClientName(client.getClientName());
-        existingUser.setPassword(client.getPassword());
-//        existingUser.setPassword(passwordEncoder.encode(client.getPassword()));
-        existingUser.setRoles(client.getRoles());
-        existingUser.setIsVerified(client.getIsVerified());
-        existingUser.setEmail(client.getEmail());
-        existingUser.setCel(client.getCel());
-        existingUser.setAddress(client.getAddress());
-        existingUser.setReserveIds(client.getReserveIds());
-        existingUser.setFavorites(client.getFavorites());
+        if ( existingUser != null ) {
+            if ( client.getFirstName() != null ) {
+                existingUser.setFirstName(client.getFirstName());
+            }
+
+            if ( client.getLastName() != null ) {
+                existingUser.setLastName(client.getLastName());
+            }
+
+            if ( client.getClientName() != null ) {
+                existingUser.setClientName(client.getClientName());
+            }
+
+            if (client.getPassword() != null && !client.getPassword().isEmpty()) {
+                if (!passwordEncoder.matches(client.getPassword(), existingUser.getPassword())) {
+                    existingUser.setPassword(passwordEncoder.encode(client.getPassword()));
+                }
+            } else {
+                existingUser.setPassword(existingUser.getPassword());
+            }
+
+            if ( client.getRoles() != null ) {
+                existingUser.setRoles(client.getRoles());
+            }
+
+            if ( client.getIsVerified() != null ) {
+                existingUser.setIsVerified(client.getIsVerified());
+            }
+
+            if ( client.getEmail() != null ) {
+                existingUser.setEmail(client.getEmail());
+            }
+
+            if ( client.getCel() != null ) {
+                existingUser.setCel(client.getCel());
+            }
+
+            if ( client.getAddress() != null ) {
+                existingUser.setAddress(client.getAddress());
+            }
+
+            if ( client.getFavorites() != null ) {
+                existingUser.setFavorites(client.getFavorites());
+            }
+         }
+
+        // existingUser.setReserveIds(client.getReserveIds());
+
         // Guarda el usuario actualizado en el repositorio
+        return clientRepository.save(existingUser);
+    }
+
+    public Client updateWithoutPassword(Client client) throws ChangeSetPersister.NotFoundException {
+        Client existingUser = clientRepository.findById(client.getId())
+                .orElseThrow(ChangeSetPersister.NotFoundException::new);
+
+        if (existingUser != null) {
+            // Copia los campos, excluyendo la contraseña
+            if (client.getFirstName() != null) {
+                existingUser.setFirstName(client.getFirstName());
+            }
+
+            if (client.getLastName() != null) {
+                existingUser.setLastName(client.getLastName());
+            }
+
+            if (client.getClientName() != null) {
+                existingUser.setClientName(client.getClientName());
+            }
+
+            // NO ACTUALIZAR LA CONTRASEÑA
+            // Mantén la contraseña existente en el cliente
+            existingUser.setPassword(existingUser.getPassword());
+
+            if (client.getRoles() != null) {
+                existingUser.setRoles(client.getRoles());
+            }
+
+            if (client.getIsVerified() != null) {
+                existingUser.setIsVerified(client.getIsVerified());
+            }
+
+            if (client.getEmail() != null) {
+                existingUser.setEmail(client.getEmail());
+            }
+
+            if (client.getCel() != null) {
+                existingUser.setCel(client.getCel());
+            }
+
+            if (client.getAddress() != null) {
+                existingUser.setAddress(client.getAddress());
+            }
+
+            if (client.getFavorites() != null) {
+                existingUser.setFavorites(client.getFavorites());
+            }
+        }
+
+        // Guarda el cliente actualizado
         return clientRepository.save(existingUser);
     }
 
