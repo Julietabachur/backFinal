@@ -111,8 +111,6 @@ public class AdminController {
             clientDto.setCel(client.getCel());
             clientDto.setIsVerified(client.getIsVerified());
             clientDtoList.add(clientDto);
-            clientDto.setPassword(client.getPassword());
-
         }
 
 
