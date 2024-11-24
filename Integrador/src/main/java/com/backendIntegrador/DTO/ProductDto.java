@@ -18,6 +18,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductDto {
+    private Long productId;
     private String productName;
     private String thumbnail;
     private Integer Amount;
