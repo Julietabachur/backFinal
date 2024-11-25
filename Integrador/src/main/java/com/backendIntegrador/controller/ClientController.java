@@ -167,7 +167,7 @@ public class ClientController {
             }
 
             // Llama al servicio para realizar la actualización
-            Client updated = clientService.update(existingClient);
+            Client updated = clientService.updateWithoutPassword(existingClient);
 
             return ResponseEntity.ok(updated);
         } catch (Exception e) {

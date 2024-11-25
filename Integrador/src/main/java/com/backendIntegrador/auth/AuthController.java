@@ -94,7 +94,7 @@ public class AuthController {
 
             if ("false".equals(verifiedUser.getIsVerified())) {
                 verifiedUser.setIsVerified("true");
-                Client updated = clientService.update(verifiedUser);
+                Client updated = clientService.updateWithoutPassword(verifiedUser);
                 String token = jwtService.getToken(updated);
 
 
