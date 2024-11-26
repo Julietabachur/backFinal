@@ -1,5 +1,6 @@
 package com.backendIntegrador.service.impl;
 
+import com.backendIntegrador.DTO.ProductDto;
 import com.backendIntegrador.model.Car;
 import com.backendIntegrador.model.Client;
 import com.backendIntegrador.repository.CarRepository;
@@ -17,20 +18,42 @@ public class CarService implements ICarService {
     @Autowired
     private ClientService clientService; //metodos del clientservice para ver si existe el usuario
 
-    @Override
-    public Car save(Car car) throws Exception {
-        Client existingClient = clientService.getClientById(car.getIdUser());
-        if (existingClient == null){
-            throw new Exception();
-        }
-        Car existingCar = carRepository.findByIdUser(car.getIdUser()); // chequea que existe un carrito con ese usuario
-        if (existingCar == null){
-            throw new Exception();
-       }
+   // @Override
+    //public Car save(Car car) throws Exception {
+      //  Client existingClient = clientService.getClientById(car.getIdUser());
+        //if (existingClient == null){
+          //  throw new Exception();
+        //}
+        //Car existingCar = carRepository.findByIdUser(car.getIdUser()); // chequea que existe un carrito con ese usuario
+        //if (existingCar == null){
+          //  throw new Exception();
+       //}
 
-        Car savedCar = carRepository.save(car);
-        return savedCar;
-    }
+        //Car savedCar = carRepository.save(car);
+        //return savedCar;
+    //}
+        @Override
+        public Car save(Car car) throws Exception {
+            Client existingClient = clientService.getClientById(car.getIdUser());
+            if (existingClient == null){
+                throw new Exception();
+            }
+            Car existingCar = carRepository.findByIdUser(car.getIdUser()); // chequea que existe un carrito con ese usuario
+            if (existingCar != null){
+                throw new Exception();
+            }
+            double total = 0.0;
+
+            for(ProductDto product : car.getProducts()){
+                total += product.getPrice() * product.getAmount();
+            }
+
+            car.setTotalPrice(total);
+
+            Car savedCar = carRepository.save(car);
+            return savedCar;
+        }
+
 
     @Override
     public Car findByIdUser(String idUser) throws Exception {

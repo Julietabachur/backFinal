@@ -167,14 +167,17 @@ public class ClientController {
             }
 
             // Llama al servicio para realizar la actualización
-            Client updated = clientService.update(existingClient);
+            Client updated = clientService.updateWithoutPassword(existingClient);
 
             return ResponseEntity.ok(updated);
         } catch (Exception e) {
             // Maneja cualquier excepción que pueda ocurrir
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error en la actualización");
         }
+
+
     }
+
 
     /*
     @PutMapping("/chk/{id}")
@@ -208,5 +211,7 @@ public class ClientController {
     }
 
      */
+
+
 
 }

@@ -1,6 +1,7 @@
 package com.backendIntegrador.model;
 
 
+import com.backendIntegrador.DTO.ProductDto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,8 +22,9 @@ import java.util.List;
 public class Sale {
     @Id
     private String id;
-    private List<Product> productList;
-    private String clientId;
+    private List<ProductDto> productList;
+    private String idUser;
+    private double TotalPrice;
     private LocalDate saleDate;
 
 

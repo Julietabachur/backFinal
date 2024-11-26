@@ -22,6 +22,6 @@ public class ProductDto {
     private String productName;
     private String thumbnail;
     private Integer Amount;
-    private Size size;
-    private Double price;
+    private String size;
+    private double price;
 }
