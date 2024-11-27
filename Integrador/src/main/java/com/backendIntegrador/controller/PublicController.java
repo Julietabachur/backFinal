@@ -49,6 +49,9 @@ public class PublicController {
     @Autowired
     private ClientService clientService;
 
+    @Autowired
+    private final EmailService emailService;
+
 
     @GetMapping("/products/search")
     public ResponseEntity<?> searchProducts(
@@ -379,4 +382,73 @@ public class PublicController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error en la actualización");
         }
     }
+    @PostMapping("email/reset")
+    private void sendNotificationEmailToResetPassword(@RequestBody Map<String, String> body) throws Exception {
+        String email = body.get("email");
+
+        if (email == null || email.isEmpty()) {
+            throw new Exception("Es obligatorio ingresar email");
+        }
+
+        Client existingUser = clientService.getClientByEmail(email);
+
+        if (existingUser == null) {
+            throw new Exception("No existe cliente registrado con el email proporcionado");
+        }
+
+        // Prepara el mensaje y el asunto
+        String subject = "Reseteo de Password";
+
+
+        String htmlMessage = "<html><body style='font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;'>"
+                + "<div style='max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); padding: 20px;'>"
+                + "<h2 style='color: #333;'>Buenas " + existingUser.getClientName() + ",</h2>"
+                + "<p style='color: #555;'>Se ha solicitado un reseteo de contraseña, para completar la acción debe ingresar al siguiente link:</p>"
+                + "<a href='" + "http://localhost:8080/reset" + "' style='color: #1a73e8;'>resetear contraseña</a>.</p>"
+                + "<p style='color: #888; font-size: 12px; text-align: center;'>Si tiene alguna pregunta, no dude en ponerse en contacto con nuestro equipo de soporte.</p>"
+                + "</div></body></html>";
+
+
+
+        emailService.sendEmail(existingUser.getEmail(), subject, htmlMessage);
+
+    }
+
+
+    @PatchMapping("/reset")
+    public ResponseEntity<?> resetPassword(@RequestBody Map<String, String> body) {
+        try {
+            // Obtener email y contraseña del cuerpo de la solicitud
+            String email = body.get("email");
+            String password = body.get("password");
+
+            // Validar que ambos parámetros estén presentes
+            if (email == null || password == null) {
+                return ResponseEntity.badRequest().body("El email y la contraseña son obligatorios.");
+            }
+
+            // Buscar al cliente por email
+            Client existingClient = clientService.getClientByEmail(email);
+
+            if (existingClient == null) {
+                // Cliente no encontrado
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente no encontrado con el email proporcionado.");
+            }
+
+            // Actualizar únicamente la contraseña
+            existingClient.setPassword(password);
+
+            // Guardar los cambios en la base de datos
+            clientService.update(existingClient);
+
+            return ResponseEntity.ok("Contraseña actualizada correctamente.");
+        } catch (Exception e) {
+            // Manejar cualquier error que ocurra
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al actualizar la contraseña.");
+        }
+    }
+
 }
+
+
+

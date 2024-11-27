@@ -19,8 +19,9 @@ public interface ClientRepository extends MongoRepository<Client, String> {
     @Query(value = "{'email' : ?0 }")
     Client checkEmail( String email );
 
-    @Query(value = "{'email' : ?0 }")
-    Client findByEmail( String email );
+    @Query(value = "{'email': {$regex: ?0, $options: 'i'}}")
+    Client findByEmail(String email);
+
 
 
 
