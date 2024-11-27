@@ -122,7 +122,7 @@ public class PublicProductController {
     public ResponseEntity<?> GetFavorites( @RequestParam List<String> productIds,@RequestParam Map<String, Object> params, Model model ) {
         int page = params.get("page") != null ? (Integer.parseInt(params.get("page").toString()) - 1) : 0;
 
-        PageRequest pageRequest = PageRequest.of(page, 10);
+        PageRequest pageRequest = PageRequest.of(page, 12);
 
         Page<Product> pageProduct = productService.findByIdIn(productIds, pageRequest);
 

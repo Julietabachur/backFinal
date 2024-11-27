@@ -79,6 +79,13 @@ public class CarService implements ICarService {
         if (filledCar == null){
             throw new Exception();
         }
+        double total = 0.0;
+
+        for(ProductDto product : car.getProducts()){
+            total += product.getPrice() * product.getAmount();
+        }
+
+        car.setTotalPrice(total);
 
         Car savedCar = carRepository.save(car);
         return savedCar;
