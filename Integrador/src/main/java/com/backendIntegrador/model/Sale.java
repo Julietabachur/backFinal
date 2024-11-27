@@ -24,6 +24,9 @@ public class Sale {
     private String id;
     private List<ProductDto> productList;
     private String idUser;
+    private String entrega;
+    private String domicilio;
+    private String medioDePago;
     private double TotalPrice;
     private LocalDate saleDate;
 
