@@ -385,7 +385,7 @@ public class PublicController {
     @PostMapping("email/reset")
     private void sendNotificationEmailToResetPassword(@RequestBody Map<String, String> body) throws Exception {
         String email = body.get("email");
-
+        System.out.println(email);
         if (email == null || email.isEmpty()) {
             throw new Exception("Es obligatorio ingresar email");
         }
@@ -404,7 +404,7 @@ public class PublicController {
                 + "<div style='max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); padding: 20px;'>"
                 + "<h2 style='color: #333;'>Buenas " + existingUser.getClientName() + ",</h2>"
                 + "<p style='color: #555;'>Se ha solicitado un reseteo de contraseña, para completar la acción debe ingresar al siguiente link:</p>"
-                + "<a href='" + "http://localhost:8080/reset" + "' style='color: #1a73e8;'>resetear contraseña</a>.</p>"
+                + "<a href='" + "http://localhost:5173/resetPassword" + "' style='color: #1a73e8;'>resetear contraseña</a>.</p>"
                 + "<p style='color: #888; font-size: 12px; text-align: center;'>Si tiene alguna pregunta, no dude en ponerse en contacto con nuestro equipo de soporte.</p>"
                 + "</div></body></html>";
 
