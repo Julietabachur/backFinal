@@ -2,7 +2,6 @@ package com.backendIntegrador.repository;
 
 import com.backendIntegrador.model.Product;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
@@ -33,5 +32,11 @@ public interface ProductRepository extends MongoRepository<Product, String> {
 
     @Query(value = "{'category' : { $in: ?0 }}")
     Page<Product> findByCategoryNames(List<String> categoryNames, Pageable pageable);
+
+    //@Aggregation(pipeline = {
+           // "{ $group: { _id: '$category', count: { $sum: 1 } } }"
+    //})
+    //List<Map<String, Object>> countProductsByCategory();
+
 
 }

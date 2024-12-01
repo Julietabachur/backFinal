@@ -124,5 +124,16 @@ public class ProductController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<?> findAllProducts() {
+        try {
+            List<Product> products = productService.findAll();
+            return ResponseEntity.ok(products);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al obtener los productos");
+        }
+    }
+
+
 
 }

@@ -1,20 +1,22 @@
 package com.backendIntegrador.controller;
 
 import com.backendIntegrador.DTO.ClientDto;
+import com.backendIntegrador.DTO.ReportePpCDto;
 import com.backendIntegrador.model.*;
-import com.backendIntegrador.service.impl.CategoryService;
-import com.backendIntegrador.service.impl.CharacteristicService;
-import com.backendIntegrador.service.impl.ClientService;
-import com.backendIntegrador.service.impl.PolicyService;
+import com.backendIntegrador.service.impl.SaleService;
+import com.backendIntegrador.service.impl.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +38,11 @@ public class AdminController {
 
     @Autowired
     private final PolicyService policyService;
+
+    private final ProductService productService;
+
+    @Autowired
+    private SaleService saleService;
 
 
     @PutMapping("/clients/{id}")
@@ -242,4 +249,25 @@ public class AdminController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/products/countByCategory")
+    public ResponseEntity<?> getProductCountByCategory() {
+        try {
+            // Llama al servicio para obtener la cantidad de productos por categoría
+            List<ReportePpCDto> productCounts = productService.getProductCountByCategory();
+
+            // Devuelve los resultados en formato JSON
+            return ResponseEntity.ok(productCounts);
+        } catch (Exception e) {
+            // Maneja cualquier excepción
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al calcular la cantidad de productos por categoría: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/sales/byDate")
+    public List<Sale> getSalesByDateRange(
+            @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) throws Exception {
+        return saleService.findSalesByDateRange(startDate, endDate);
+    }
 }

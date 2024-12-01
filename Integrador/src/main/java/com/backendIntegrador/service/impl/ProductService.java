@@ -1,5 +1,7 @@
 package com.backendIntegrador.service.impl;
 
+import com.backendIntegrador.DTO.ReportePpCDto;
+import com.backendIntegrador.model.Category;
 import com.backendIntegrador.model.Product;
 import com.backendIntegrador.model.Reserve;
 import com.backendIntegrador.repository.CategoryRepository;
@@ -233,6 +235,44 @@ public class ProductService implements IProductService {
 
     public Page<Product> getProductsByCategoryNames(List<String> categoryNames, Pageable pageable) {
         return productRepository.findByCategoryNames(categoryNames, pageable);
+    }
+
+    /*public Map<String, Long> getProductCountByCategory() {
+        // Ejecuta la consulta en el repositorio para contar productos por categoría
+        List<Map<String, Object>> counts = productRepository.countProductsByCategory();
+
+        // Transforma la lista de resultados en un mapa clave-valor (categoría -> cantidad)
+        return counts.stream()
+                .collect(Collectors.toMap(
+                        result -> result.get("_id").toString(), // La categoría (clave)
+                        result -> Long.valueOf(result.get("count").toString()) // La cantidad (valor)
+                ));
+    }*/
+
+    public List<ReportePpCDto> getProductCountByCategory() {
+        List<Product> allProduct = productRepository.findAll();
+        List<Category> allCategory = categoryRepository.findAll();
+        List<ReportePpCDto> allReport= new ArrayList<>();
+
+        for (Category category:allCategory) {
+            ReportePpCDto newReportDto = new ReportePpCDto();
+            newReportDto.setName(category.getCategoryName());
+            newReportDto.setAmount(0);
+            allReport.add(newReportDto);
+        }
+        for (Product product:allProduct) {
+            for (ReportePpCDto reportePpCDto:allReport){
+                if (product.getCategory().equals(reportePpCDto.getName())) {
+                    reportePpCDto.setAmount(reportePpCDto.getAmount()+1);
+                }
+            }
+        }
+
+        return allReport;
+    }
+
+    public List<Product> findAll() {
+        return productRepository.findAll();
     }
 
 
