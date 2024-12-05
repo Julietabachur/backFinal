@@ -385,7 +385,7 @@ public class PublicController {
     @PostMapping("email/reset")
     private void sendNotificationEmailToResetPassword(@RequestBody Map<String, String> body) throws Exception {
         String email = body.get("email");
-
+        System.out.println(email);
         if (email == null || email.isEmpty()) {
             throw new Exception("Es obligatorio ingresar email");
         }
