@@ -1,5 +1,7 @@
 package com.backendIntegrador.service.impl;
 
+import com.backendIntegrador.DTO.ReportePpCDto;
+import com.backendIntegrador.model.Category;
 import com.backendIntegrador.model.Product;
 import com.backendIntegrador.model.Reserve;
 import com.backendIntegrador.repository.CategoryRepository;
@@ -233,6 +235,32 @@ public class ProductService implements IProductService {
 
     public Page<Product> getProductsByCategoryNames(List<String> categoryNames, Pageable pageable) {
         return productRepository.findByCategoryNames(categoryNames, pageable);
+    }
+
+    public List<ReportePpCDto> getProductCountByCategory() {
+        List<Product> allProduct = productRepository.findAll();
+        List<Category> allCategory = categoryRepository.findAll();
+        List<ReportePpCDto> allReport= new ArrayList<>();
+
+        for (Category category:allCategory) {
+            ReportePpCDto newReportDto = new ReportePpCDto();
+            newReportDto.setName(category.getCategoryName());
+            newReportDto.setAmount(0);
+            allReport.add(newReportDto);
+        }
+        for (Product product:allProduct) {
+            for (ReportePpCDto reportePpCDto:allReport){
+                if (product.getCategory().equals(reportePpCDto.getName())) {
+                    reportePpCDto.setAmount(reportePpCDto.getAmount()+1);
+                }
+            }
+        }
+
+        return allReport;
+    }
+
+    public List<Product> findAll() {
+        return productRepository.findAll();
     }
 
 

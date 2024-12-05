@@ -14,10 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.Field;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequestMapping("api/v1/private/clients")
@@ -214,6 +211,15 @@ public class ClientController {
 
      */
 
+    @GetMapping("/all")
+    public ResponseEntity<?> findAllClient() {
+        try {
+            List<Client> client = clientService.getAllClients();
+            return ResponseEntity.ok(client);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al obtener los usuarios");
+        }
+    }
 
 
 }
