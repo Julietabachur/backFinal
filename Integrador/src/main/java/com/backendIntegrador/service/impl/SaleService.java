@@ -6,6 +6,8 @@ import com.backendIntegrador.service.ISaleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 @Service
 public class SaleService implements ISaleService {
@@ -37,5 +39,12 @@ public class SaleService implements ISaleService {
     @Override
     public void delete(String id) throws Exception {
          saleRepository.deleteById(id);
+    }
+
+    @Override
+    public List<Sale> findSalesByDateRange(LocalDate startDate, LocalDate endDate) throws Exception {
+        LocalDateTime startDateTime = startDate.atStartOfDay();
+        LocalDateTime endDateTime = endDate.atTime(23, 59, 59); // Final del día
+        return saleRepository.findAllByDateRange(startDateTime, endDateTime);
     }
 }
