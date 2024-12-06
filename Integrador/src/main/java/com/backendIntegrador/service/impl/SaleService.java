@@ -26,8 +26,8 @@ public class SaleService implements ISaleService {
     }
 
     @Override
-    public List<Sale> saleListByUserId(String userId) throws Exception {
-        return saleRepository.findByUserId(userId).orElse(null);
+    public List<Sale> saleListByIdUser(String idUser) throws Exception {
+        return saleRepository.findByIdUser(idUser).orElse(null);
     }
 
     @Override

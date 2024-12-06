@@ -14,6 +14,6 @@ public interface SaleRepository extends MongoRepository<Sale, String> {
     @Query("{ 'saleDate': { $gte: ?0, $lte: ?1 } }")
     List<Sale> findAllByDateRange(LocalDateTime startDateTime, LocalDateTime endDateTime);
 
-    Optional<List<Sale>> findByUserId (String userId);
+    Optional<List<Sale>> findByIdUser (String idUser);
 
 }

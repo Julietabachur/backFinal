@@ -10,7 +10,7 @@ public interface ISaleService {
 
     List<Sale> saleList() throws Exception;
 
-    List<Sale> saleListByUserId( String id ) throws Exception;
+    List<Sale> saleListByIdUser( String idUser ) throws Exception;
 
     Sale getSaleById( String id ) throws Exception;
 

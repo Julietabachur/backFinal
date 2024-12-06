@@ -32,9 +32,9 @@ public class SaleController {
         return saleService.saleList();
     }
 
-    @GetMapping("/user/{userId}")
-    public List<Sale> saleListByUserId(@PathVariable String userId) throws Exception {
-        return saleService.saleListByUserId(userId);
+    @GetMapping("/user/{idUser}")
+    public List<Sale> saleListByIdUser(@PathVariable String idUser) throws Exception {
+        return saleService.saleListByIdUser(idUser);
     }
 
     @DeleteMapping("/{id}")
