@@ -24,6 +24,11 @@ public class SaleService implements ISaleService {
     }
 
     @Override
+    public List<Sale> saleListByUserId(String userId) throws Exception {
+        return saleRepository.findByUserId(userId).orElse(null);
+    }
+
+    @Override
     public Sale getSaleById(String id) throws Exception {
         return saleRepository.findById(id).orElse(null);
     }

@@ -9,6 +9,8 @@ public interface ISaleService {
 
     List<Sale> saleList() throws Exception;
 
+    List<Sale> saleListByUserId( String id ) throws Exception;
+
     Sale getSaleById( String id ) throws Exception;
 
     void delete(String id ) throws Exception;
