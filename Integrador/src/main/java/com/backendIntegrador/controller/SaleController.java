@@ -17,8 +17,12 @@ public class SaleController {
     @Autowired
     private SaleService saleService;
 
+    @Autowired
+    private EmailController emailController;
+
     @PostMapping("")
     public Sale create (@RequestBody Sale sale) throws Exception {
+        emailController.sendNotificationSale(sale);
         return saleService.save(sale);
     }
 

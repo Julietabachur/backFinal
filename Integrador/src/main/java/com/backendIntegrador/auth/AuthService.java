@@ -34,7 +34,7 @@ public class AuthService {
         // Obtener detalles del usuario desde el repositorio
         Client user = clientRepository.findByEmail(request.getEmail());
         Set<Role> roles = user.getRoles();
-        String isVerified;
+        String  isVerified = user.getIsVerified();
 
         if (user.getIsVerified() == null) {
             throw new IllegalArgumentException("El usuario no está verificado. Por favor, verifica tu cuenta.");
