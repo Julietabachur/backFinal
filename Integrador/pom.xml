@@ -71,6 +71,19 @@
 			<version>3.1.5</version>
 		</dependency>
 
+
+		<dependency>
+			<groupId>com.itextpdf</groupId>
+			<artifactId>kernel</artifactId>
+			<version>7.2.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.itextpdf</groupId>
+			<artifactId>layout</artifactId>
+			<version>7.2.0</version>
+		</dependency>
+
+
 		<!-- Jakarta Validation -->
 		<dependency>
 			<groupId>jakarta.validation</groupId>
