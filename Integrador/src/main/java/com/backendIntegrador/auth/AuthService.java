@@ -34,13 +34,13 @@ public class AuthService {
         // Obtener detalles del usuario desde el repositorio
         Client user = clientRepository.findByEmail(request.getEmail());
         Set<Role> roles = user.getRoles();
-        String isVerified;
+        String  isVerified = user.getIsVerified();
 
-        if (user.getIsVerified() == null) {
-            throw new IllegalArgumentException("El usuario no está verificado. Por favor, verifica tu cuenta.");
-        } else {
-            isVerified = user.getIsVerified();
-        }
+//        if (user.getIsVerified() == null) {
+//            throw new IllegalArgumentException("El usuario no está verificado. Por favor, verifica tu cuenta.");
+//        } else {
+//            isVerified = user.getIsVerified();
+//        }
 
         // Generar un token JWT para el usuario autenticado
         String token = jwtService.getToken(user);

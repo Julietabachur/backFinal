@@ -1,6 +1,9 @@
     package com.backendIntegrador.controller;
 
+    import com.backendIntegrador.DTO.ProductDto;
+    import com.backendIntegrador.model.Car;
     import com.backendIntegrador.model.Client;
+    import com.backendIntegrador.model.Sale;
     import com.backendIntegrador.service.impl.ClientService;
     import com.backendIntegrador.service.impl.EmailService;
     import com.fasterxml.jackson.core.type.TypeReference;
@@ -111,6 +114,46 @@
                     + "</div></body></html>";
 
             // Envía el correo - prueba cambio
+            emailService.sendEmail(existingUser.getEmail(), subject, htmlMessage);
+
+        }
+
+        @PostMapping("/car")
+        public void sendNotificationSale(@RequestBody Sale sale) throws Exception {
+            Client existingUser = clientService.getClientById(sale.getIdUser());
+
+            // Construye la lista de productos en formato HTML
+            StringBuilder productsHtml = new StringBuilder();
+            for (ProductDto product : sale.getProductList()) {
+                productsHtml.append("<li>")
+                        .append("<strong>Producto:</strong> ").append(product.getProductName()).append("<br>")
+                        .append("<strong>Talle:</strong> ").append(product.getSize()).append("<br>")
+                        .append("<strong>Precio:</strong> $").append(product.getPrice()).append("<br>")
+                        .append("</li>");
+            }
+
+            // Prepara el mensaje y el asunto
+            String subject = "Gracias por su compra,";
+
+            String htmlMessage = "<html><body style='font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;'>"
+                    + "<div style='max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); padding: 20px;'>"
+                    + "<h2 style='color: #333;'>¡Buenas, " + existingUser.getFirstName() + " " + existingUser.getLastName() + "!</h2>"
+                    + "<p style='color: #555;'>Gracias por su compra. A continuación, encontrará el detalle de la misma:</p>"
+                    + "<ul style='color: #555; line-height: 1.6;'>"
+                    + "<li><strong>Nombre de usuario:</strong> " + existingUser.getClientName() + "</li>"
+                    + "<li><strong>E-mail:</strong> " + existingUser.getEmail() + "</li>"
+                    + "</ul>"
+                    + "</ul>"
+                    + "<p style='color: #555;'>Productos comprados:</p>"
+                    + "<ul style='color: #555; line-height: 1.6;'>"
+                    + productsHtml
+                    +
+                    "<li> Price: " + sale.getTotalPrice()  + "</li>"
+                    + "</ul>"
+                    + "<p style='color: #888; font-size: 12px; text-align: center;'>Si tiene alguna pregunta, no dude en ponerse en contacto con nuestro equipo de soporte.</p>"
+                    + "</div></body></html>";
+
+
             emailService.sendEmail(existingUser.getEmail(), subject, htmlMessage);
 
         }
