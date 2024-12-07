@@ -11,6 +11,7 @@ import com.itextpdf.layout.borders.Border;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.element.Cell;
+import com.itextpdf.layout.properties.HorizontalAlignment;
 import com.itextpdf.layout.properties.TextAlignment;
 import com.itextpdf.layout.properties.UnitValue;
 import com.itextpdf.layout.properties.VerticalAlignment;
@@ -39,13 +40,13 @@ public class PDFReportGenerator {
 
         document.add(new Paragraph("\n"));
 
-        // Crear tabla principal para las ventas
         Table table = new Table(new float[]{3, 2});
-        table.setWidth(UnitValue.createPercentValue(100));
+        table.setWidth(UnitValue.createPercentValue(80)); // Ajustar ancho de la tabla al 80% del documento
+        table.setHorizontalAlignment(HorizontalAlignment.CENTER);
 
         // Definir colores para los encabezados
-        Color headerBackgroundColor = new DeviceRgb(63, 81, 181); // Azul
-        Color headerTextColor = new DeviceRgb(255, 255, 255); // Blanco
+        Color headerBackgroundColor = new DeviceRgb(225, 188, 106);
+        Color headerTextColor = new DeviceRgb(0, 0, 0);
 
         // Encabezados con estilos
         Cell categoryHeader = new Cell().add(new Paragraph("Categoría"))
@@ -53,16 +54,15 @@ public class PDFReportGenerator {
                 .setFontColor(headerTextColor)
                 .setBold()
                 .setTextAlignment(TextAlignment.CENTER)
-                .setVerticalAlignment(VerticalAlignment.MIDDLE)
-                .setBorder(Border.NO_BORDER);
+                .setVerticalAlignment(VerticalAlignment.MIDDLE);
+
 
         Cell amountHeader = new Cell().add(new Paragraph("Cantidad de Productos"))
                 .setBackgroundColor(headerBackgroundColor)
                 .setFontColor(headerTextColor)
                 .setBold()
                 .setTextAlignment(TextAlignment.CENTER)
-                .setVerticalAlignment(VerticalAlignment.MIDDLE)
-                .setBorder(Border.NO_BORDER);
+                .setVerticalAlignment(VerticalAlignment.MIDDLE);
 
         table.addHeaderCell(categoryHeader);
         table.addHeaderCell(amountHeader);
