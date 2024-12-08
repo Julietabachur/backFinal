@@ -268,5 +268,34 @@ public class AdminController {
         return saleService.findSalesByDateRange(startDate, endDate);
     }
 
+    @GetMapping("/sales")
+    public ResponseEntity<?> getSalesPaginated( @RequestParam Map<String, Object> params, Model model ) {
+        int page = params.get("page") != null ? (Integer.parseInt(params.get("page").toString()) - 1) : 0;
+
+        PageRequest pageRequest = PageRequest.of(page, 10);
+
+        Page<Sale> pageSale = saleService.saleListPaginated(pageRequest);
+
+        int totalPage = pageSale.getTotalPages();
+        if (totalPage > 0) {
+            List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
+            model.addAttribute("pages", pages);
+        }
+        if (page > totalPage) {
+            return ResponseEntity.status((HttpStatus.NOT_FOUND)).body("{\"error\":\"Error. No existe esa pagina\"}");
+        }
+
+        List<Sale> shuffledList = pageSale.getContent();
+
+
+        model.addAttribute("content", shuffledList);
+        model.addAttribute("current", page + 1);
+        model.addAttribute("next", page + 2);
+        model.addAttribute("prev", page);
+        model.addAttribute("last", totalPage);
+        return ResponseEntity.ok().body(model);
+    }
+
+
 
 }

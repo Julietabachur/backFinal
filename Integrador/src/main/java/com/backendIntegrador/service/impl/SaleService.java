@@ -1,9 +1,12 @@
 package com.backendIntegrador.service.impl;
 
+import com.backendIntegrador.model.Product;
 import com.backendIntegrador.model.Sale;
 import com.backendIntegrador.repository.SaleRepository;
 import com.backendIntegrador.service.ISaleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -24,6 +27,17 @@ public class SaleService implements ISaleService {
     public List<Sale> saleList() throws Exception {
         return saleRepository.findAll();
     }
+
+
+
+    public Page<Sale> saleListPaginated(Pageable pageable) {
+        try {
+            return saleRepository.findAll(pageable);
+        } catch (RuntimeException e) {
+            throw new RuntimeException("Error al obtener las ventas paginadas: " + e.getMessage());
+        }
+    }
+
 
     @Override
     public List<Sale> saleListByIdUser(String idUser) throws Exception {
