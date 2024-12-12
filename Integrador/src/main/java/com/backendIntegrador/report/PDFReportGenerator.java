@@ -113,7 +113,7 @@ public class PDFReportGenerator {
 
         document.add(new Paragraph("\n"));
 
-        List<Sale> sales = saleService.findSalesByDateRange(from, to);
+        List<Sale> sales = saleService.findAllByDateRangeWithoutPage(from, to);
 
 
         if (sales.isEmpty()) {
@@ -207,7 +207,7 @@ public class PDFReportGenerator {
 
         document.add(new Paragraph("\n"));
 
-        List<Sale> sales = saleService.findSalesByDateRange(from, to);
+        List<Sale> sales = saleService.findAllByDateRangeWithoutPage(from, to);
 
         if (sales.isEmpty()) {
             document.add(new Paragraph("No se encontraron ventas en el rango de fechas especificado.")

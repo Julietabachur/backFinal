@@ -1,6 +1,8 @@
 package com.backendIntegrador.service;
 
 import com.backendIntegrador.model.Sale;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -16,7 +18,9 @@ public interface ISaleService {
 
     void delete(String id ) throws Exception;
 
-    List<Sale> findSalesByDateRange(LocalDate startDate, LocalDate endDate) throws Exception;
+    List<Sale> findAllByDateRangeWithoutPage(LocalDate startDate, LocalDate endDate) throws Exception;
+
+    Page<Sale> findSalesByDateRange(LocalDate startDate, LocalDate endDate, Pageable pageable) throws Exception;
 
 
 }

@@ -56,9 +56,16 @@ public class SaleService implements ISaleService {
     }
 
     @Override
-    public List<Sale> findSalesByDateRange(LocalDate startDate, LocalDate endDate) throws Exception {
+    public List<Sale> findAllByDateRangeWithoutPage(LocalDate startDate, LocalDate endDate) throws Exception {
         LocalDateTime startDateTime = startDate.atStartOfDay();
         LocalDateTime endDateTime = endDate.atTime(23, 59, 59); // Final del día
-        return saleRepository.findAllByDateRange(startDateTime, endDateTime);
+        return saleRepository.findAllByDateRangeWithoutPage(startDateTime, endDateTime);
+    }
+
+    @Override
+    public Page<Sale> findSalesByDateRange(LocalDate startDate, LocalDate endDate, Pageable pageable) {
+        LocalDateTime startDateTime = startDate.atStartOfDay();
+        LocalDateTime endDateTime = endDate.atTime(23, 59, 59); // Final del día
+        return saleRepository.findAllByDateRange(startDateTime, endDateTime, pageable);
     }
 }

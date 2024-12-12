@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -261,11 +262,50 @@ public class AdminController {
         }
     }
 
-    @GetMapping("/sales/byDate")
-    public List<Sale> getSalesByDateRange(
+    @GetMapping("/sales/byDateWithoutPage")
+    public List<Sale> getSalesByDateRangeWithoutPage(
             @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) throws Exception {
-        return saleService.findSalesByDateRange(startDate, endDate);
+        return saleService.findAllByDateRangeWithoutPage(startDate, endDate);
+    }
+
+    /*@GetMapping("/sales/byDate")
+    public Page<Sale> getSalesByDateRange(
+            @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+            @RequestParam("pageable") Pageable pageable) throws Exception {
+        return saleService.findSalesByDateRange(startDate, endDate, pageable);
+    }*/
+
+    @GetMapping("/sales/byDate")
+    public ResponseEntity<?> getSalesByDateRange(
+            @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+            @RequestParam Map<String, Object> params, Model model ) {
+        int page = params.get("page") != null ? (Integer.parseInt(params.get("page").toString()) - 1) : 0;
+
+        PageRequest pageRequest = PageRequest.of(page, 10);
+
+        Page<Sale> pageSale = saleService.findSalesByDateRange(startDate, endDate, pageRequest);
+
+        int totalPage = pageSale.getTotalPages();
+        if (totalPage > 0) {
+            List<Integer> pages = IntStream.rangeClosed(1, totalPage).boxed().collect(Collectors.toList());
+            model.addAttribute("pages", pages);
+        }
+        if (page > totalPage) {
+            return ResponseEntity.status((HttpStatus.NOT_FOUND)).body("{\"error\":\"Error. No existe esa pagina\"}");
+        }
+
+        List<Sale> shuffledList = pageSale.getContent();
+
+
+        model.addAttribute("content", shuffledList);
+        model.addAttribute("current", page + 1);
+        model.addAttribute("next", page + 2);
+        model.addAttribute("prev", page);
+        model.addAttribute("last", totalPage);
+        return ResponseEntity.ok().body(model);
     }
 
     @GetMapping("/sales")
