@@ -40,11 +40,19 @@
                 Map<String, Object> jsonMap = objectMapper.readValue(datosMailer, new TypeReference<Map<String, Object>>() {
                 });
 
+
                 // Accede a los elementos del objeto JSON según sea necesario
                 id = (String) jsonMap.get("id");
                 front_url = (String) jsonMap.get("front_url");
-                front_url = front_url.substring(0, front_url.length() - 1);
                 verify_url = (String) jsonMap.get("verify_url");
+
+                // Ajustar front_url si contiene "localhost"
+                if (front_url.contains("localhost")) {
+                    front_url = front_url.substring(0, front_url.length() - 1);
+                }
+
+
+
 
 
                 System.out.println("DATOS EMAIL RECIBIDOS");
